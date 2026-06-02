@@ -136,7 +136,7 @@ body: 用一两句话给出你的判断与立场。
 `,
   callout: () => `:::callout
 title: 操作提示
-body: 支持 TIP / NOTE / WARNING 等语义，也可用 GFM 引用语法。
+body: 支持 TIP / NOTE / WARNING 等语义，也可用 Markdown 引用块写法。
 :::
 
 `,
@@ -177,12 +177,6 @@ level: 1
   summary: () => `:::summary
 highlight: 一句话回顾全文
 body: 补充 2～3 个可带走的要点。
-:::
-
-`,
-  engage: () => `:::engage
-title: 感谢阅读，欢迎点赞转发！
-label: THANKS FOR READING
 :::
 
 `,

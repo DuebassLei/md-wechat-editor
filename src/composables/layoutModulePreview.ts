@@ -1,9 +1,12 @@
 import { buildLayoutModuleSnippet } from '@/constants/layoutModuleSnippets'
 import {
   OPEN_RENDER_ENTITLEMENTS,
+  normalizeThemeId,
   preloadLayoutRenderer,
   renderMarkdownWithThemeExtras,
+  type ThemeId,
 } from '@/engine'
+import { getSnippet } from '@/modules'
 
 const cache = new Map<string, string>()
 const pending = new Map<string, Promise<string>>()
@@ -19,10 +22,12 @@ export async function renderLayoutModulePreviewHtml(moduleId: string): Promise<s
   let task = pending.get(moduleId)
   if (!task) {
     task = (async () => {
-      const markdown = buildLayoutModuleSnippet(moduleId)
+      const markdown = getSnippet(moduleId) || buildLayoutModuleSnippet(moduleId)
+      const previewTheme: ThemeId =
+        moduleId === 'ai-indigo-hero' ? 'aiIndigo' : normalizeThemeId('normal')
       const html = await renderMarkdownWithThemeExtras(
         markdown,
-        'normal',
+        previewTheme,
         OPEN_RENDER_ENTITLEMENTS,
         null,
       )

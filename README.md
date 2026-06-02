@@ -15,7 +15,7 @@
 
 ## 功能预览
 
-| 排版工作室 | 插入组件 | 项目说明 |
+| 排版工作室 | 插入组件 | 产品介绍 |
 |:---:|:---:|:---:|
 | ![编辑区、文档侧栏与手机预览](docs/assets/readme-studio.png) | ![按分类浏览 53 种 ::: 模块](docs/assets/readme-modules.png) | ![核心能力与上手步骤](docs/assets/readme-landing.png) |
 
@@ -36,12 +36,12 @@
 
 ## 核心能力
 
-- **Markdown + GFM** — 标题、列表、表格、任务列表、代码块等常用语法完整支持  
+- **常用 Markdown** — 标题、列表、表格、任务列表、代码块等写作语法完整支持  
 - **`:::module` 排版围栏** — 53 种排版组件（封面、步骤、对比、时间轴、CTA、FAQ 等），点击「插入组件」即可写入光标  
 - **多套排版主题** — 39 套主题实时切换，右侧手机框预览，所见即所得  
 - **一键复制公众号 HTML** — 经 juice 内联样式，直接粘贴公众平台正文编辑器  
 - **语法手册内置** — 应用内可查全量模块说明，不必翻外部文档  
-- **界面配色** — 靛蓝 / 护眼 / 紫韵等工作室主题，长时间编辑更舒适  
+- **界面配色** — 9 套强调色 + 浅色/深色/跟随系统外观，下拉即换，长时间编辑更舒适  
 
 ---
 
@@ -84,7 +84,7 @@ chips: 标签1|标签2
 | 证据与配图 | `quote` 引用 · `gallery` 图库 · `image-text` 图文 · `image-compare` 图片对比 · `image-steps` 步骤截图 |
 | 转化与收尾 | `cta` 行动号召 · `faq` 常见问题 · `checklist` 清单 · `summary` 总结 · `pricing` 定价 · `cases` 案例 · `notice` 公告 |
 | 可读性 | `callout` 提示 · `lead` 导语 · `definition` 术语 · `quote-card` 金句卡 · `comparison-table` 对比表 · `changelog` 更新日志 |
-| 品牌与人物 | `author-card` 作者卡 · `people` 人物卡 · `series` 专栏 · `subscribe` 订阅引导 · `engage` 互动引导 |
+| 品牌与人物 | `author-card` 作者卡 · `people` 人物卡 · `series` 专栏 · `subscribe` 订阅引导 |
 | 墨韵扩展 | `p-title` 段落标题 · `reading-path` 阅读路线 · `statement` 金句 · `breaking` 分隔强调 · `case-flow` 案例流程 · `badges` 徽章行 |
 
 **39** 套排版主题（默认、山吹、全栈蓝、凝夜紫、微信格式及 Pro 系列等）在编辑器顶栏切换，与模块独立组合。
@@ -93,7 +93,7 @@ chips: 标签1|标签2
 
 ## 排版语法一览
 
-本工具只使用 **GFM Markdown** + **`:::名称` 围栏**，不依赖第三方 R-Markdown 或 XML 标签。
+本工具只使用 **常用 Markdown** + **`:::名称` 围栏**，不依赖第三方 R-Markdown 或 XML 标签。
 
 ```markdown
 :::hero

@@ -11,6 +11,14 @@ export function registerModule(plugin: LayoutModulePlugin): void {
   plugins.set(plugin.id, plugin)
 }
 
+export function hasRegisteredPlugin(id: string): boolean {
+  return plugins.has(id)
+}
+
+export function getRegisteredPlugin(id: string): LayoutModulePlugin | undefined {
+  return plugins.get(id)
+}
+
 export function listModules(): LayoutModuleMeta[] {
   const builtin = LAYOUT_MODULES
   const extra = [...plugins.values()]

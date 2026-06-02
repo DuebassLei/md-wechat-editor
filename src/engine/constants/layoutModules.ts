@@ -81,7 +81,6 @@ export const LAYOUT_MODULES: LayoutModuleMeta[] = [
   { id: 'gallery', name: '图库', alias: ':::gallery', category: 'extension', tier: 'advanced', bodyFormat: 'fenced', syntax: ':::gallery', description: '多图横向并排' },
   { id: 'badges', name: '徽章行', alias: ':::badges', category: 'extension', tier: 'advanced', bodyFormat: 'fenced', syntax: ':::badges', description: '标签徽章组' },
   { id: 'statement', name: '金句', alias: ':::statement', category: 'extension', tier: 'advanced', bodyFormat: 'fenced', syntax: ':::statement', description: '突出金句段落' },
-  { id: 'engage', name: '互动引导', alias: ':::engage', category: 'extension', tier: 'advanced', bodyFormat: 'fenced', syntax: ':::engage', description: '点赞/在看引导卡' },
   { id: 'reading-path', name: '阅读路线', alias: ':::reading-path', category: 'extension', tier: 'advanced', bodyFormat: 'fenced', syntax: ':::reading-path', description: '章节导航条' },
   { id: 'breaking', name: '分隔强调', alias: ':::breaking', category: 'extension', tier: 'advanced', bodyFormat: 'fenced', syntax: ':::breaking', description: '章节分隔装饰' },
   { id: 'case-flow', name: '案例流程', alias: ':::case-flow', category: 'extension', tier: 'advanced', bodyFormat: 'fenced', syntax: ':::case-flow', description: '案例步骤流' },
@@ -103,7 +102,7 @@ export const LAYOUT_HINT_GROUPS: { label: string; ids: string[] }[] = [
   { label: '判断/观点', ids: ['verdict', 'manifesto', 'bridge', 'audience-fit', 'myth-fact', 'statement'] },
   { label: '结构/数据', ids: ['timeline', 'steps', 'compare', 'metrics', 'infographic', 'stat-row'] },
   { label: '证据/引用', ids: ['quote', 'quote-card', 'image-text', 'gallery'] },
-  { label: '转化/收尾', ids: ['cta', 'faq', 'summary', 'checklist', 'subscribe', 'engage'] },
+  { label: '转化/收尾', ids: ['cta', 'faq', 'summary', 'checklist', 'subscribe'] },
   { label: '可读性', ids: ['callout', 'lead', 'definition', 'question', 'notice', 'breaking'] },
   { label: '品牌/案例', ids: ['author-card', 'cases', 'series', 'case-flow'] },
 ]

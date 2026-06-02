@@ -5,10 +5,10 @@
  *
  * 文首渐变封面：选用本主题时由 buildWechatArticleHtml 自动插入（见 wechatAiIndigoHero.ts）
  * - 默认取文内第一个 # 标题作封面主标题，其后首段作副标题（并从正文移除以免重复）
- * - 可选 YAML：heroTag / heroTitle / heroSubtitle
- * - 标签行：heroTags / tags / keywords（逗号分隔）或正文【标签】a · b
+ * - 无 YAML 时：正文一级标题生成封面（见 wechatAiIndigoHero.ts）
+ * - 标签行：插入组件（如 :::badges）或正文【标签】行；亦支持可选 YAML heroTags
  * - 目录卡：tocTitle、tocPrev、tocPrevUrl 或【目录】【上一篇】
- * - 文末互动 CTA：默认追加；cta: false 关闭；ctaTitle / ctaLabels / ctaThanks 自定义
+ * - 文末互动：使用 :::engage 插件或 :::cta / 其它排版组件，主题不自动追加文末块
  */
 export default `/* 全局属性 */
 #nice .awp-ai-indigo-hero {
@@ -96,57 +96,6 @@ export default `/* 全局属性 */
   font-weight: 500;
   border-bottom: none;
   text-decoration: none;
-}
-
-#nice .awp-ai-indigo-cta {
-  margin: 20px 0 0;
-  padding: 16px 12px 14px;
-  background: #f8f9fb;
-  text-align: center;
-  text-indent: 0;
-  border-bottom: 1px dashed #e2e8f0;
-}
-
-#nice .awp-ai-indigo-cta__title {
-  margin: 0;
-  padding: 0;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.45;
-  color: #1e293b;
-  text-indent: 0;
-}
-
-#nice .awp-ai-indigo-cta__icons {
-  margin: 10px 0 8px;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  text-indent: 0;
-}
-
-#nice .awp-ai-indigo-cta__labels {
-  margin: 0 0 10px;
-  padding: 0;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-  color: #4f46e5;
-  text-indent: 0;
-}
-
-#nice .awp-ai-indigo-cta__thanks {
-  margin: 0;
-  padding: 0;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1.3;
-  color: #cbd5e1;
-  text-indent: 0;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
 #nice {

@@ -1,19 +1,12 @@
 /**
  * AI 排版 · 本地草稿默认样板
- * 覆盖常用 Markdown / GFM 语法，便于切换主题对照预览效果。
- * AI 靛紫主题会读取 frontmatter 生成文首渐变封面。
+ * 覆盖常用 Markdown 语法，便于切换主题对照预览效果。
+ * 不含文首 YAML；AI 靛紫无 YAML 时用一级标题生成封面；文首 YAML/标签等请用「插入组件」中的 AI 靛紫文首。
  * 排版组件语法见「语法手册」与「插入组件」工具栏（::: 围栏）。
  */
-export const STUDIO_SAMPLE_MARKDOWN = `---
-heroTag: 排版样板
-heroTitle: Markdown 排版实验室
-heroSubtitle: 汇集标题、列表、表格、代码与引用等语法，右侧切换主题即可对照公众号成稿效果
-heroTags: DeepSeek-V4-Pro, 永久降价, Coding Plan, API 价格, 缓存命中, 性价比
----
+export const STUDIO_SAMPLE_MARKDOWN = `# 一级标题示例
 
-# 一级标题示例
-
-在 **AI 靛紫** 主题下，文首以 YAML 封面为准；其它主题会正常渲染此一级标题。
+在 **AI 靛紫** 主题下，无 YAML 时以本一级标题生成文首封面；其它主题正常渲染此标题。需要完整封面与标签胶囊时，用「插入组件」→ **AI 靛紫文首**。
 
 ## 正文与强调
 
@@ -37,7 +30,7 @@ heroTags: DeepSeek-V4-Pro, 永久降价, Coding Plan, API 价格, 缓存命中, 
 2. 选择右侧预览主题
 3. 复制 HTML 或导出到公众号
 
-## 任务列表（GFM）
+## 任务列表
 
 - [x] 实时预览已开启
 - [x] 支持多主题切换
@@ -84,5 +77,5 @@ cd frontend && npm run build
 
 ---
 
-*提示：切换 **AI 靛紫** 可预览渐变封面、标签胶囊与文末互动 CTA；YAML 支持 \`heroTags\`、\`ctaTitle\`，\`cta: false\` 可关闭文末块。*
+*提示：切换 **AI 靛紫** 可用一级标题预览封面，或用「AI 靛紫文首」插入 YAML。文末互动需启用 engage 插件后插入。*
 `

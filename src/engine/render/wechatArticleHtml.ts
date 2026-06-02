@@ -2,7 +2,6 @@ import { normalizeMarkdownContent } from '@/utils/normalizeMarkdownContent'
 import { renderMarkdown } from '@/utils/renderMarkdown'
 import { getThemeCss, normalizeThemeId, type ThemeId } from '@/types/theme'
 import { buildWechatHtml } from '@/utils/wechatCopy'
-import { buildAiIndigoCtaHtml, resolveAiIndigoCta } from '@/utils/wechatAiIndigoCta'
 import {
   buildAiIndigoPreambleHtml,
   extractAiIndigoArticleFromMarkdown,
@@ -33,19 +32,6 @@ type ParseLayoutMarkdownFn = (
 let layoutParserModule: { parseLayoutMarkdown: ParseLayoutMarkdownFn } | null = null
 let layoutParserLoading: Promise<{ parseLayoutMarkdown: ParseLayoutMarkdownFn }> | null = null
 
-const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/
-
-function parseFrontmatterForCta(markdown: string): Record<string, string> {
-  const fmMatch = markdown.trimStart().match(FRONTMATTER_RE)
-  if (!fmMatch) return {}
-  const out: Record<string, string> = {}
-  for (const line of fmMatch[1].split('\n')) {
-    const m = line.match(/^([\w-]+):\s*(.+)$/)
-    if (m) out[m[1]] = m[2].trim().replace(/^["']|["']$/g, '')
-  }
-  return out
-}
-
 async function loadLayoutParser(): Promise<ParseLayoutMarkdownFn> {
   if (layoutParserModule) return layoutParserModule.parseLayoutMarkdown
   layoutParserLoading ??= import('@/lib/r-markdown/parseLayoutMarkdown')
@@ -74,7 +60,6 @@ async function renderAiIndigoExtras(
   themeId: ThemeId,
 ): Promise<string> {
   const { body, hero, tags, toc } = extractAiIndigoArticleFromMarkdown(markdown)
-  const cta = resolveAiIndigoCta(parseFrontmatterForCta(markdown))
   let bodyHtml: string
   if (usesRichLayout(body)) {
     const parse = await loadLayoutParser()
@@ -82,8 +67,7 @@ async function renderAiIndigoExtras(
   } else {
     bodyHtml = renderMarkdown(body)
   }
-  const ctaHtml = cta ? buildAiIndigoCtaHtml(cta) : ''
-  return buildAiIndigoPreambleHtml(hero, tags, toc) + bodyHtml + ctaHtml
+  return buildAiIndigoPreambleHtml(hero, tags, toc) + bodyHtml
 }
 
 function buildParseOptions(

@@ -3,8 +3,6 @@ import { parseAttrs, leaf, esc } from './helpers'
 import { Badges_DA01 } from '../editor-components/Badges_DA01'
 import { Statement_DA01 } from '../editor-components/Statement_DA01'
 import { Lead_DA01 } from '../editor-components/Lead_DA01'
-import { Engage_DA01 } from '../editor-components/Engage_DA01'
-import { Engage_DA02 } from '../editor-components/Engage_DA02'
 import { Breaking_DA01 } from '../editor-components/Breaking_DA01'
 import { CaseFlow_DA01 } from '../editor-components/CaseFlow_DA01'
 import { PTitle } from '../editor-components/PTitle_DA01'
@@ -13,7 +11,7 @@ import { CTA_DA01 } from '../editor-components/Cta_DA01'
 
 const MODULE_CLOSE_RE = /^:::\s*$/
 const EXTENSION_FENCED_RE =
-  /^:::\s*(lead|cta|statement|badges|engage|breaking|case-flow|reading-path|gallery|p-title|title-da01)\b(.*)$/i
+  /^:::\s*(lead|cta|statement|badges|breaking|case-flow|reading-path|gallery|p-title|title-da01)\b(.*)$/i
 
 export type PTitleLevel1Item = { num: string; title: string; subtitle: string }
 
@@ -135,12 +133,6 @@ export function tryParseExtensionFencedModule(
     case 'badges': {
       const body = bodyText || bodyLines.join('\n').trim()
       return { html: Badges_DA01.render(attrs, body, t), next }
-    }
-    case 'engage': {
-      if (attrs.type && attrs.type.toUpperCase() === 'DA02') {
-        return { html: Engage_DA02.render(attrs, '', t), next }
-      }
-      return { html: Engage_DA01.render(attrs, '', t), next }
     }
     case 'breaking':
       return { html: Breaking_DA01.render(attrs, bodyText, t), next }

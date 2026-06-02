@@ -53,6 +53,11 @@
     --cinnabar-rgb: 124 58 237;
     --cinnabar-dark-rgb: 109 40 217;
     --cinnabar-light-rgb: 237 233 254;
+    --paper-rgb: 250 245 255;
+    --paper-dim-rgb: 243 232 255;
+    --paper-deep-rgb: 233 213 255;
+    --paper-line-rgb: 221 214 254;
+    --rice: #faf5ff;
     --gold-rgb: 236 72 153;
     --color-seal-from: #c084fc;
     --color-seal-to: #7c3aed;
@@ -60,6 +65,231 @@
     --color-btn-primary-mid: #8b5cf6;
     --color-btn-primary-to: #7c3aed;
     --color-shadow-cinnabar: 124, 58, 237;
+  }
+
+  [data-app-theme='ocean'] {
+    --cinnabar-rgb: 14 165 233;
+    --cinnabar-dark-rgb: 2 132 199;
+    --cinnabar-light-rgb: 224 242 254;
+    --paper-rgb: 240 249 255;
+    --paper-dim-rgb: 224 242 254;
+    --paper-deep-rgb: 186 230 253;
+    --paper-line-rgb: 186 230 253;
+    --rice: #f0f9ff;
+    --color-seal-from: #38bdf8;
+    --color-seal-to: #0284c7;
+    --color-btn-primary-from: #38bdf8;
+    --color-btn-primary-mid: #0ea5e9;
+    --color-btn-primary-to: #0284c7;
+    --color-shadow-cinnabar: 14, 165, 233;
+  }
+
+  [data-app-theme='teal'] {
+    --cinnabar-rgb: 13 148 136;
+    --cinnabar-dark-rgb: 15 118 110;
+    --cinnabar-light-rgb: 204 251 241;
+    --paper-rgb: 240 253 250;
+    --paper-dim-rgb: 204 251 241;
+    --paper-deep-rgb: 153 246 228;
+    --paper-line-rgb: 153 246 228;
+    --rice: #f0fdfa;
+    --color-seal-from: #2dd4bf;
+    --color-seal-to: #0f766e;
+    --color-btn-primary-from: #2dd4bf;
+    --color-btn-primary-mid: #14b8a6;
+    --color-btn-primary-to: #0f766e;
+    --color-shadow-cinnabar: 13, 148, 136;
+  }
+
+  [data-app-theme='rose'] {
+    --cinnabar-rgb: 244 63 94;
+    --cinnabar-dark-rgb: 225 29 72;
+    --cinnabar-light-rgb: 255 228 230;
+    --paper-rgb: 255 241 242;
+    --paper-dim-rgb: 255 228 230;
+    --paper-deep-rgb: 254 205 211;
+    --paper-line-rgb: 254 205 211;
+    --rice: #fff1f2;
+    --color-seal-from: #fb7185;
+    --color-seal-to: #e11d48;
+    --color-btn-primary-from: #fb7185;
+    --color-btn-primary-mid: #f43f5e;
+    --color-btn-primary-to: #e11d48;
+    --color-shadow-cinnabar: 244, 63, 94;
+  }
+
+  [data-app-theme='amber'] {
+    --cinnabar-rgb: 217 119 6;
+    --cinnabar-dark-rgb: 180 83 9;
+    --cinnabar-light-rgb: 254 243 199;
+    --paper-rgb: 255 251 235;
+    --paper-dim-rgb: 254 243 199;
+    --paper-deep-rgb: 253 230 138;
+    --paper-line-rgb: 253 230 138;
+    --rice: #fffbeb;
+    --color-seal-from: #fbbf24;
+    --color-seal-to: #b45309;
+    --color-btn-primary-from: #fbbf24;
+    --color-btn-primary-mid: #d97706;
+    --color-btn-primary-to: #b45309;
+    --color-shadow-cinnabar: 217, 119, 6;
+  }
+
+  [data-app-theme='crimson'] {
+    --cinnabar-rgb: 220 38 38;
+    --cinnabar-dark-rgb: 185 28 28;
+    --cinnabar-light-rgb: 254 226 226;
+    --paper-rgb: 254 242 242;
+    --paper-dim-rgb: 254 226 226;
+    --paper-deep-rgb: 254 202 202;
+    --paper-line-rgb: 254 202 202;
+    --rice: #fef2f2;
+    --color-seal-from: #f87171;
+    --color-seal-to: #b91c1c;
+    --color-btn-primary-from: #f87171;
+    --color-btn-primary-mid: #dc2626;
+    --color-btn-primary-to: #b91c1c;
+    --color-shadow-cinnabar: 220, 38, 38;
+  }
+
+  [data-app-theme='slate'] {
+    --cinnabar-rgb: 71 85 105;
+    --cinnabar-dark-rgb: 51 65 85;
+    --cinnabar-light-rgb: 241 245 249;
+    --paper-rgb: 248 250 252;
+    --paper-dim-rgb: 241 245 249;
+    --paper-deep-rgb: 226 232 240;
+    --paper-line-rgb: 203 213 225;
+    --rice: #f8fafc;
+    --color-seal-from: #94a3b8;
+    --color-seal-to: #334155;
+    --color-btn-primary-from: #94a3b8;
+    --color-btn-primary-mid: #64748b;
+    --color-btn-primary-to: #334155;
+    --color-shadow-cinnabar: 71, 85, 105;
+  }
+
+  /* 暗黑模式：统一深色底，各主题仅调整强调色 */
+  [data-color-scheme='dark'] {
+    --ink-rgb: 241 245 249;
+    --ink-soft-rgb: 203 213 225;
+    --ink-muted-rgb: 148 163 184;
+    --ink-faint-rgb: 100 116 139;
+    --paper-rgb: 15 23 42;
+    --paper-bright-rgb: 30 41 59;
+    --paper-dim-rgb: 15 23 42;
+    --paper-deep-rgb: 51 65 85;
+    --paper-line-rgb: 51 65 85;
+    --rice: #0f172a;
+    --color-shadow-ink: 0, 0, 0;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='default'] {
+    --cinnabar-rgb: 129 140 248;
+    --cinnabar-dark-rgb: 165 180 252;
+    --cinnabar-light-rgb: 49 46 129;
+    --color-seal-from: #818cf8;
+    --color-seal-to: #6366f1;
+    --color-btn-primary-from: #a5b4fc;
+    --color-btn-primary-mid: #818cf8;
+    --color-btn-primary-to: #6366f1;
+    --color-shadow-cinnabar: 99, 102, 241;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='eye-care'] {
+    --cinnabar-rgb: 52 211 153;
+    --cinnabar-dark-rgb: 110 231 183;
+    --cinnabar-light-rgb: 6 78 59;
+    --color-seal-from: #34d399;
+    --color-seal-to: #059669;
+    --color-btn-primary-from: #6ee7b7;
+    --color-btn-primary-mid: #34d399;
+    --color-btn-primary-to: #059669;
+    --color-shadow-cinnabar: 16, 185, 129;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='violet'] {
+    --cinnabar-rgb: 167 139 250;
+    --cinnabar-dark-rgb: 196 181 253;
+    --cinnabar-light-rgb: 76 29 149;
+    --color-seal-from: #c084fc;
+    --color-seal-to: #8b5cf6;
+    --color-btn-primary-from: #d8b4fe;
+    --color-btn-primary-mid: #a78bfa;
+    --color-btn-primary-to: #7c3aed;
+    --color-shadow-cinnabar: 124, 58, 237;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='ocean'] {
+    --cinnabar-rgb: 56 189 248;
+    --cinnabar-dark-rgb: 125 211 252;
+    --cinnabar-light-rgb: 12 74 110;
+    --color-seal-from: #38bdf8;
+    --color-seal-to: #0284c7;
+    --color-btn-primary-from: #7dd3fc;
+    --color-btn-primary-mid: #38bdf8;
+    --color-btn-primary-to: #0284c7;
+    --color-shadow-cinnabar: 14, 165, 233;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='teal'] {
+    --cinnabar-rgb: 45 212 191;
+    --cinnabar-dark-rgb: 94 234 212;
+    --cinnabar-light-rgb: 19 78 74;
+    --color-seal-from: #2dd4bf;
+    --color-seal-to: #0f766e;
+    --color-btn-primary-from: #5eead4;
+    --color-btn-primary-mid: #2dd4bf;
+    --color-btn-primary-to: #0f766e;
+    --color-shadow-cinnabar: 13, 148, 136;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='rose'] {
+    --cinnabar-rgb: 251 113 133;
+    --cinnabar-dark-rgb: 253 164 175;
+    --cinnabar-light-rgb: 136 19 55;
+    --color-seal-from: #fb7185;
+    --color-seal-to: #e11d48;
+    --color-btn-primary-from: #fda4af;
+    --color-btn-primary-mid: #fb7185;
+    --color-btn-primary-to: #e11d48;
+    --color-shadow-cinnabar: 244, 63, 94;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='amber'] {
+    --cinnabar-rgb: 251 191 36;
+    --cinnabar-dark-rgb: 253 224 71;
+    --cinnabar-light-rgb: 120 53 15;
+    --color-seal-from: #fbbf24;
+    --color-seal-to: #b45309;
+    --color-btn-primary-from: #fcd34d;
+    --color-btn-primary-mid: #f59e0b;
+    --color-btn-primary-to: #b45309;
+    --color-shadow-cinnabar: 217, 119, 6;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='crimson'] {
+    --cinnabar-rgb: 248 113 113;
+    --cinnabar-dark-rgb: 252 165 165;
+    --cinnabar-light-rgb: 127 29 29;
+    --color-seal-from: #f87171;
+    --color-seal-to: #b91c1c;
+    --color-btn-primary-from: #fca5a5;
+    --color-btn-primary-mid: #ef4444;
+    --color-btn-primary-to: #b91c1c;
+    --color-shadow-cinnabar: 220, 38, 38;
+  }
+
+  [data-color-scheme='dark'][data-app-theme='slate'] {
+    --cinnabar-rgb: 148 163 184;
+    --cinnabar-dark-rgb: 203 213 225;
+    --cinnabar-light-rgb: 51 65 85;
+    --color-seal-from: #94a3b8;
+    --color-seal-to: #475569;
+    --color-btn-primary-from: #cbd5e1;
+    --color-btn-primary-mid: #94a3b8;
+    --color-btn-primary-to: #475569;
+    --color-shadow-cinnabar: 71, 85, 105;
   }
 
   html {
@@ -73,6 +303,12 @@
       radial-gradient(ellipse 120% 80% at 50% -20%, rgb(var(--cinnabar-light-rgb) / 0.45), transparent 55%),
       linear-gradient(180deg, rgb(var(--paper-bright-rgb)) 0%, var(--rice) 100%);
     min-height: 100vh;
+  }
+
+  [data-color-scheme='dark'] body {
+    background-image:
+      radial-gradient(ellipse 120% 80% at 50% -20%, rgb(var(--cinnabar-rgb) / 0.12), transparent 55%),
+      linear-gradient(180deg, rgb(var(--paper-bright-rgb)) 0%, var(--rice) 100%);
   }
 
   ::selection {

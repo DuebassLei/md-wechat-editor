@@ -107,7 +107,7 @@ function sectionLabel(section: ModuleSyntaxSection): string {
             <div class="min-w-0">
               <p id="syntax-drawer-title" class="text-base font-semibold text-ink">排版语法手册</p>
               <p class="mt-0.5 text-[11px] leading-relaxed text-ink-muted">
-                ::: 排版模块 + 行内修饰；GFM 基础语法见编辑区工具栏
+                ::: 排版模块 + 行内修饰；Markdown 基础语法见编辑区工具栏
               </p>
             </div>
             <button

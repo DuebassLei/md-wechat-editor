@@ -76,6 +76,10 @@
     @apply rounded-[var(--radius-control)] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700;
   }
 
+  [data-color-scheme='dark'] .alert-error {
+    @apply border-red-900/60 bg-red-950/50 text-red-300;
+  }
+
   .state-empty {
     @apply rounded-[var(--radius-card)] border border-dashed border-paper-deep bg-paper-dim/50 px-6 py-10 text-center text-sm text-ink-muted;
   }

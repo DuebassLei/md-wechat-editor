@@ -2,7 +2,7 @@
 export const MODULE_SAMPLE_MARKDOWN = `:::hero
 eyebrow: DEMO
 title: 墨韵简排 · ::: 语法演示
-subtitle: GFM + 排版模块围栏
+subtitle: 常用 Markdown + 排版模块围栏
 chips: 组件|预览|复制
 :::
 
@@ -56,7 +56,7 @@ subtitle: 全面采用 ::: 围栏语法
 
 :::callout
 title: 提示
-body: 亦可用 GFM 写法：> [TIP] 操作小贴士
+body: 亦可用引用块写法：> [TIP] 操作小贴士
 :::
 
 :::gallery
@@ -78,10 +78,5 @@ Vue|TypeScript|公众号
 :::
 
 :::cta label="GET STARTED" title="准备好发布了吗？" button="复制 HTML"
-:::
-
-:::engage
-title: 感谢阅读，欢迎点赞转发！
-label: THANKS FOR READING
 :::
 `

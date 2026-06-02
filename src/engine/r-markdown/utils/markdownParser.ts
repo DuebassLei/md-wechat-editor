@@ -8,6 +8,7 @@ import {
   collectPTitleLevel1,
   tryParseExtensionFencedModule,
 } from './fencedModule'
+import { tryParsePluginFencedModule } from '@/modules/pluginFenced'
 import { flushGfmMarkdownBuffer } from '@/utils/gfmThemeWrapper'
 
 export function parseMarkdown(md: string, t: ThemeColors, opts?: ParseMarkdownOptions): string {
@@ -47,6 +48,16 @@ export function parseMarkdown(md: string, t: ThemeColors, opts?: ParseMarkdownOp
         const locked = guardLayoutModule(moduleId, opts)
         html += locked ?? ext.html
         i = ext.next
+        continue
+      }
+
+      const pluginFenced = tryParsePluginFencedModule(lines, i, t)
+      if (pluginFenced) {
+        flushGfm()
+        const moduleId = lines[i].match(/^:::\s*([\w-]+)/i)?.[1]?.toLowerCase() ?? ''
+        const locked = guardLayoutModule(moduleId, opts)
+        html += locked ?? pluginFenced.html
+        i = pluginFenced.next
         continue
       }
 

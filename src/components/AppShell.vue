@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
-import { useAppTheme } from '@/composables/useAppTheme'
+import { computed, ref } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
+import AppThemePicker from '@/components/AppThemePicker.vue'
 import { GITHUB_REPO_URL, WECHAT_MP_PROMO } from '@/meta/site'
 import WechatMpQrModal from '@/components/WechatMpQrModal.vue'
-import ProjectAboutModal from '@/components/ProjectAboutModal.vue'
 
 const promo = WECHAT_MP_PROMO
-const promoLabel = `关注 ${promo.accountName} 公众号`
+const promoLabel = promo.accountName
 const qrOpen = ref(false)
-const aboutOpen = ref(false)
+const route = useRoute()
+const isStudio = computed(() => route.name === 'studio')
+const isAbout = computed(() => route.name === 'about')
 
 defineProps<{
   studio?: boolean
 }>()
 
-const { cycle, label } = useAppTheme()
 </script>
 
 <template>
@@ -46,7 +46,7 @@ const { cycle, label } = useAppTheme()
           </svg>
         </span>
         <span class="app-header__promo-text">
-          <span class="app-header__promo-eyebrow">微信公众号</span>
+          <span class="app-header__promo-eyebrow">AI 编程 · Vibe Coding</span>
           <span class="app-header__promo-title">{{ promoLabel }}</span>
           <span class="app-header__promo-hint">{{ promo.hint }}</span>
         </span>
@@ -54,13 +54,11 @@ const { cycle, label } = useAppTheme()
       </button>
 
       <WechatMpQrModal v-model:open="qrOpen" />
-      <ProjectAboutModal v-model:open="aboutOpen" />
 
       <div class="app-header__actions">
-        <button type="button" class="chip-btn" :aria-label="`切换界面配色，当前${label()}`" @click="cycle">
-          配色 · {{ label() }}
-        </button>
-        <button type="button" class="btn-ghost btn-sm" @click="aboutOpen = true">项目说明</button>
+        <AppThemePicker />
+        <RouterLink v-if="isStudio" to="/about" class="btn-ghost btn-sm no-underline">产品介绍</RouterLink>
+        <RouterLink v-if="isAbout" to="/" class="btn-primary btn-sm no-underline">打开编辑器</RouterLink>
         <a
           class="btn btn-ghost btn-sm app-header__github"
           :href="GITHUB_REPO_URL"
@@ -93,7 +91,8 @@ const { cycle, label } = useAppTheme()
 
 <style scoped>
 .app-header {
-  @apply grid shrink-0 items-center gap-x-3 gap-y-2 border-b border-paper-line/90 bg-paper-bright/80 px-4 py-3 backdrop-blur-sm;
+  @apply relative z-40 grid shrink-0 items-center gap-x-3 gap-y-2 border-b border-paper-line/90 bg-paper-bright/95 px-4 py-3 backdrop-blur-sm;
+  isolation: isolate;
   grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-areas: 'brand promo actions';
 }

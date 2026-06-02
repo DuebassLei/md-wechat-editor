@@ -27,9 +27,8 @@ const emit = defineEmits<{
   insert: [snippet: string, module: LayoutModuleMeta]
 }>()
 
-const DEFAULT_EXPANDED: LayoutCategory[] = ['opening', 'extension']
 const search = ref('')
-const expanded = ref(new Set<LayoutCategory>(DEFAULT_EXPANDED))
+const expanded = ref(new Set<LayoutCategory>())
 const copyHint = ref('')
 const hoveredId = ref<string | null>(null)
 const previewSession = ref(0)
@@ -118,6 +117,7 @@ watch(
   () => props.open,
   async (isOpen) => {
     if (isOpen) {
+      if (!search.value.trim()) expanded.value = new Set()
       markPickerOpenStart()
       preloadLayoutModulePreviewRenderer()
       await nextTick()

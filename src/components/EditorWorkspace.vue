@@ -155,7 +155,7 @@ onMounted(() => {
       <div class="workspace__actions">
         <button type="button" class="btn-secondary btn-sm lg:hidden" @click="emit('openDocs')">文档</button>
         <ThemePicker v-model="themeRef" />
-        <button type="button" class="btn-ghost btn-sm" @click="loadSample">GFM 样板</button>
+        <button type="button" class="btn-ghost btn-sm" @click="loadSample">语法样板</button>
         <button type="button" class="btn-ghost btn-sm" @click="loadModuleSample">排版样板</button>
         <button type="button" class="btn-primary btn-sm" :disabled="copying" @click="copyHtml">
           {{ copying ? '复制中…' : '复制公众号 HTML' }}
@@ -223,7 +223,8 @@ onMounted(() => {
   @apply flex min-h-0 flex-1 flex-col;
 }
 .workspace__toolbar {
-  @apply flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper-line px-3 py-2;
+  @apply relative z-30 flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper-line bg-paper-bright/95 px-3 py-2 backdrop-blur-sm;
+  isolation: isolate;
 }
 .workspace__actions {
   @apply flex flex-wrap items-center gap-2;

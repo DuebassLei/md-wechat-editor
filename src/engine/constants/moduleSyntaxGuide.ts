@@ -178,7 +178,7 @@ chips: 高效|美观
 title: 操作提示
 body: 正文说明
 :::`,
-        note: '亦可用 GFM：> [TIP] 提示正文',
+        note: '亦可用引用块：> [TIP] 提示正文',
       },
       {
         title: '案例流 case-flow',
@@ -240,19 +240,12 @@ Vue|TypeScript|Vite
         syntax: `:::cta label="GET STARTED" title="准备好了吗？" button="立即行动"
 :::`,
       },
-      {
-        title: '文末互动 engage',
-        syntax: `:::engage
-title: 感谢阅读，欢迎点赞转发！
-label: THANKS FOR READING
-:::`,
-      },
     ],
   },
   {
     id: 'gfm',
     title: '标准 Markdown',
-    subtitle: '与 GFM 一致',
+    subtitle: '与编辑区工具栏一致',
     items: [
       { title: '标题', syntax: '# 一级\n## 二级\n### 三级' },
       { title: '列表', syntax: '- 无序\n1. 有序\n- [x] 任务' },

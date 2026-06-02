@@ -6,17 +6,17 @@ import { GITHUB_REPO_URL } from '@/meta/site'
 <template>
   <div class="project-about space-y-5">
     <p class="text-sm leading-relaxed text-ink-soft">
-      写好 Markdown，简排进公众号。支持 GFM、{{ PRODUCT_TAGLINE }}，浏览器内完成预览与复制，无需登录。
+      写好 Markdown，简排进公众号。支持常用 Markdown、{{ PRODUCT_TAGLINE }}，浏览器内完成预览与复制，无需登录。
     </p>
 
     <section class="card">
       <div class="card-header">核心能力</div>
       <ul class="card-body list-disc space-y-2 pl-5 text-sm text-ink-soft">
-        <li>Markdown + GFM + ::: 排版模块语法</li>
+        <li>常用 Markdown + ::: 排版模块语法</li>
         <li>实时手机预览与主题切换</li>
         <li>一键复制 juice 内联 HTML，直接粘贴公众平台</li>
         <li>本地文档列表，支持导入/导出 .md</li>
-        <li>界面配色一键切换（靛蓝 / 护眼 / 紫韵）</li>
+        <li>界面配色 9 套强调色，支持浅色/深色/跟随系统，下拉即换</li>
       </ul>
     </section>
 

@@ -7,8 +7,18 @@ import {
   type ThemeTier,
   type ThemeOption,
 } from '@/themes/index'
+import { getThemeSwatch } from '@/utils/themeSwatch'
 
-export { THEME_OPTIONS, getThemeCss, THEMES, getThemeTier, isProTheme, type ThemeTier, type ThemeOption }
+export {
+  THEME_OPTIONS,
+  getThemeCss,
+  getThemeSwatch,
+  THEMES,
+  getThemeTier,
+  isProTheme,
+  type ThemeTier,
+  type ThemeOption,
+}
 
 export type ThemeId = (typeof THEME_OPTIONS)[number]['id']
 

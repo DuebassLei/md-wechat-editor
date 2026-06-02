@@ -1,9 +1,10 @@
 import { onMounted, onUnmounted, type Ref } from 'vue'
 
-/** 点击外部或按 Esc 关闭浮层 */
+/** 点击外部或按 Esc 关闭浮层；extraRefs 用于 Teleport 到 body 的浮层节点 */
 export function useDismissible(
   open: Ref<boolean>,
   rootRef: Ref<HTMLElement | null>,
+  extraRefs: Ref<HTMLElement | null>[] = [],
   onClose?: () => void,
 ) {
   function close() {
@@ -11,10 +12,15 @@ export function useDismissible(
     onClose?.()
   }
 
+  function containsTarget(target: Node) {
+    if (rootRef.value?.contains(target)) return true
+    return extraRefs.some((r) => r.value?.contains(target))
+  }
+
   function onPointerDown(e: PointerEvent) {
     if (!open.value || !rootRef.value) return
     const target = e.target as Node | null
-    if (target && !rootRef.value.contains(target)) close()
+    if (target && !containsTarget(target)) close()
   }
 
   function onKeyDown(e: KeyboardEvent) {

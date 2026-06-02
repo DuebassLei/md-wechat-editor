@@ -9,4 +9,10 @@ export {
 
 export { OPEN_RENDER_ENTITLEMENTS } from '@/utils/renderEntitlements'
 export { markdownUsesLayoutModules } from '@/utils/detectLayoutModules'
-export { THEME_OPTIONS, normalizeThemeId, getThemeName, type ThemeId } from '@/types/theme'
+export {
+  THEME_OPTIONS,
+  normalizeThemeId,
+  getThemeName,
+  getThemeSwatch,
+  type ThemeId,
+} from '@/types/theme'
