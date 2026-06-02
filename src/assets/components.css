@@ -1,0 +1,96 @@
+@layer components {
+  .app-canvas {
+    @apply min-h-screen flex flex-col overflow-x-hidden;
+  }
+
+  .app-canvas--studio {
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .seal-mark {
+    @apply relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-sans text-sm font-bold text-white;
+    background: linear-gradient(135deg, var(--color-seal-from) 0%, var(--color-seal-to) 100%);
+    box-shadow: 0 4px 14px rgba(var(--color-shadow-cinnabar), 0.28);
+  }
+
+  .card {
+    @apply rounded-[var(--radius-card)] border border-paper-line/90 bg-paper-bright shadow-card;
+  }
+
+  .card-header {
+    @apply flex items-center justify-between gap-2 border-b border-paper-line px-4 py-3 text-sm font-semibold text-ink;
+  }
+
+  .card-body {
+    @apply space-y-3 p-4 sm:p-5;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-[var(--radius-control)] font-medium transition-all duration-200
+      disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn px-4 py-2 text-sm text-white shadow-pop;
+    background: linear-gradient(
+      135deg,
+      var(--color-btn-primary-from) 0%,
+      var(--color-btn-primary-mid) 50%,
+      var(--color-btn-primary-to) 100%
+    );
+  }
+
+  .btn-secondary {
+    @apply btn border border-paper-deep bg-paper-bright px-4 py-2 text-sm text-ink-soft shadow-sm hover:bg-paper-dim;
+  }
+
+  .btn-ghost {
+    @apply btn px-3 py-2 text-sm text-ink-muted hover:bg-cinnabar-light/90 hover:text-cinnabar-dark;
+  }
+
+  .btn-sm {
+    @apply rounded-[var(--radius-control)] px-3 py-1.5 text-xs;
+  }
+
+  .input {
+    @apply w-full rounded-[var(--radius-control)] border border-paper-line bg-paper-bright px-3 py-2 text-sm text-ink
+      placeholder:text-ink-faint focus:border-cinnabar/50 focus:outline-none focus:ring-2 focus:ring-cinnabar/20;
+  }
+
+  .segmented-control {
+    @apply inline-flex rounded-[var(--radius-pill)] border border-paper-line bg-paper-dim/80 p-0.5;
+  }
+
+  .segmented-control__tab {
+    @apply rounded-[var(--radius-pill)] px-3 py-1.5 text-xs font-medium text-ink-muted transition-colors;
+  }
+
+  .segmented-control__tab[aria-selected='true'] {
+    @apply bg-paper-bright text-cinnabar-dark shadow-sm;
+  }
+
+  .alert-error {
+    @apply rounded-[var(--radius-control)] border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700;
+  }
+
+  .state-empty {
+    @apply rounded-[var(--radius-card)] border border-dashed border-paper-deep bg-paper-dim/50 px-6 py-10 text-center text-sm text-ink-muted;
+  }
+
+  .chip-btn {
+    @apply inline-flex items-center rounded-[var(--radius-pill)] border border-paper-line bg-paper-bright px-2.5 py-1 text-xs
+      text-ink-muted hover:border-cinnabar/30 hover:text-cinnabar-dark;
+  }
+
+  .doc-row {
+    @apply flex cursor-pointer items-center gap-2 rounded-[var(--radius-control)] px-3 py-2 text-sm text-ink-soft
+      hover:bg-paper-dim;
+  }
+
+  .doc-row--active {
+    @apply bg-cinnabar-light/80 font-medium text-cinnabar-dark;
+  }
+}

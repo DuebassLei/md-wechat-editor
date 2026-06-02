@@ -1,0 +1,85 @@
+@layer base {
+  :root,
+  [data-app-theme='default'] {
+    --ink-rgb: 15 23 42;
+    --ink-soft-rgb: 51 65 85;
+    --ink-muted-rgb: 100 116 139;
+    --ink-faint-rgb: 148 163 184;
+    --paper-rgb: 248 250 252;
+    --paper-bright-rgb: 255 255 255;
+    --paper-dim-rgb: 241 245 249;
+    --paper-deep-rgb: 226 232 240;
+    --paper-line-rgb: 226 232 240;
+    --cinnabar-rgb: 99 102 241;
+    --cinnabar-dark-rgb: 79 70 229;
+    --cinnabar-light-rgb: 238 242 255;
+    --jade-rgb: 16 185 129;
+    --jade-light-rgb: 209 250 229;
+    --jade-dark-rgb: 5 150 105;
+    --gold-rgb: 139 92 246;
+    --gold-light-rgb: 245 243 255;
+    --gold-dark-rgb: 109 40 217;
+    --rice: #f8fafc;
+    --color-seal-from: #818cf8;
+    --color-seal-to: #4f46e5;
+    --color-btn-primary-from: #818cf8;
+    --color-btn-primary-mid: #6366f1;
+    --color-btn-primary-to: #4f46e5;
+    --color-shadow-ink: 15, 23, 42;
+    --color-shadow-cinnabar: 99, 102, 241;
+    --radius-card: 1.25rem;
+    --radius-control: 0.875rem;
+    --radius-pill: 9999px;
+  }
+
+  [data-app-theme='eye-care'] {
+    --cinnabar-rgb: 5 150 105;
+    --cinnabar-dark-rgb: 4 120 87;
+    --cinnabar-light-rgb: 209 250 229;
+    --paper-rgb: 236 253 245;
+    --paper-dim-rgb: 220 252 231;
+    --paper-deep-rgb: 187 247 208;
+    --paper-line-rgb: 167 243 208;
+    --rice: #ecfdf5;
+    --color-seal-from: #34d399;
+    --color-seal-to: #059669;
+    --color-btn-primary-from: #34d399;
+    --color-btn-primary-mid: #10b981;
+    --color-btn-primary-to: #059669;
+    --color-shadow-cinnabar: 5, 150, 105;
+  }
+
+  [data-app-theme='violet'] {
+    --cinnabar-rgb: 124 58 237;
+    --cinnabar-dark-rgb: 109 40 217;
+    --cinnabar-light-rgb: 237 233 254;
+    --gold-rgb: 236 72 153;
+    --color-seal-from: #c084fc;
+    --color-seal-to: #7c3aed;
+    --color-btn-primary-from: #c084fc;
+    --color-btn-primary-mid: #8b5cf6;
+    --color-btn-primary-to: #7c3aed;
+    --color-shadow-cinnabar: 124, 58, 237;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    @apply font-sans text-ink antialiased;
+    background-color: var(--rice);
+    background-image:
+      radial-gradient(ellipse 120% 80% at 50% -20%, rgb(var(--cinnabar-light-rgb) / 0.45), transparent 55%),
+      linear-gradient(180deg, rgb(var(--paper-bright-rgb)) 0%, var(--rice) 100%);
+    min-height: 100vh;
+  }
+
+  ::selection {
+    @apply bg-cinnabar-light text-cinnabar-dark;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-cinnabar/50;
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "name": "md-wechat-editor",
+  "private": true,
+  "version": "1.0.0",
+  "description": "墨韵简排 — Markdown 微信排版工具",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "test:engine": "node --import ./scripts/register-aliases.mjs scripts/smoke-layout-engine.mjs",
+    "bench:picker": "node --import ./scripts/register-aliases.mjs scripts/bench-layout-module-picker.mjs",
+    "gen:module-thumbs": "node --import ./scripts/register-aliases.mjs scripts/gen-module-thumbs.mjs",
+    "lint": "eslint src scripts --max-warnings 0"
+  },
+  "dependencies": {
+    "@codemirror/commands": "^6.10.3",
+    "@codemirror/lang-markdown": "^6.5.0",
+    "@codemirror/language": "^6.12.3",
+    "@codemirror/state": "^6.6.0",
+    "@codemirror/view": "^6.43.0",
+    "codemirror": "^6.0.2",
+    "juice": "^11.1.1",
+    "marked": "^18.0.4",
+    "@tanstack/vue-virtual": "^3.13.12",
+    "vue": "^3.5.34",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "playwright": "^1.52.0",
+    "@eslint/js": "^9.39.1",
+    "@types/marked": "^5.0.2",
+    "@types/node": "^24.12.3",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "@vue/tsconfig": "^0.9.1",
+    "autoprefixer": "^10.5.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-vue": "^10.6.2",
+    "globals": "^16.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.48.0",
+    "vite": "^8.0.12",
+    "vue-eslint-parser": "^10.4.0",
+    "vue-tsc": "^3.2.8"
+  }
+}

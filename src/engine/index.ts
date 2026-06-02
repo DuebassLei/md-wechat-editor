@@ -1,0 +1,12 @@
+export {
+  buildWechatArticleHtml,
+  renderMarkdownWithThemeExtras,
+  preloadLayoutRenderer,
+  usesRichLayout,
+  type ArticleRenderOptions,
+  type RenderEntitlements,
+} from '@/utils/wechatArticleHtml'
+
+export { OPEN_RENDER_ENTITLEMENTS } from '@/utils/renderEntitlements'
+export { markdownUsesLayoutModules } from '@/utils/detectLayoutModules'
+export { THEME_OPTIONS, normalizeThemeId, getThemeName, type ThemeId } from '@/types/theme'

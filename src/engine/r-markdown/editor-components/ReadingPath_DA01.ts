@@ -1,0 +1,99 @@
+import { leaf } from '../utils/helpers'
+import type { ThemeColors } from '../themeColors'
+
+/**
+ * Reading Path - 阅读路线导航
+ *
+ * 编辑器语法：
+ *   :::reading-path
+ *   :::
+ *
+ * 根据文中一级 :::p-title（level: 1）自动生成章节导航。
+ * 由 markdownParser 收集 p-title 列表后渲染。
+ */
+
+// ── 样式常量 ──────────────────────────────────────────
+const S = {
+  wrapper: 'margin:0px 0px 30px',
+  header:
+    'display:flex;align-items:flex-end;justify-content:space-between;' +
+    'padding-bottom:14px;gap:12px',
+  label:
+    'margin:0px;padding:0px 0px 6px;font-size:10px;color:rgb(100,116,139);' +
+    'text-transform:uppercase;letter-spacing:2.8px;font-weight:800;white-space:nowrap',
+  heading: 'margin:0px;font-size:16px;line-height:1.35;color:rgb(17,24,39);font-weight:800',
+  count: 'margin:0px;font-size:10px;color:rgb(148,163,184);white-space:nowrap',
+  track:
+    'padding:14px 12px 12px;border:1px solid rgb(229,231,235);border-radius:13px;' +
+    'background:linear-gradient(rgb(255,255,255) 0%,rgb(248,250,252) 100%);' +
+    'box-shadow:rgba(15,23,42,0.04) 0px 12px 30px;overflow-x:auto;white-space:nowrap;font-size:0px',
+  step: 'display:inline-flex;vertical-align:middle;align-items:center',
+  cell: 'display:inline-block;vertical-align:top;width:126px;white-space:normal;text-align:center',
+  numWrap: 'display:flex;justify-content:center;margin-bottom:10px',
+  num: (active: boolean, color: string) =>
+    `display:inline-flex;align-items:center;justify-content:center;` +
+    `width:34px;height:34px;border-radius:999px;` +
+    `background:${active ? color : 'rgb(255,255,255)'};` +
+    `color:${active ? 'rgb(255,255,255)' : 'rgb(17,24,39)'};` +
+    `border:1px solid ${active ? color : 'rgb(219,227,238)'};` +
+    'font-size:11px;font-weight:900;letter-spacing:1.2px;white-space:nowrap',
+  label_: (active: boolean) =>
+    'margin:0px;font-size:13px;line-height:1.55;' +
+    `color:${active ? 'rgb(17,24,39)' : 'rgb(31,41,55)'};` +
+    'font-weight:800;letter-spacing:0.05px;white-space:normal;word-break:break-all',
+  line:
+    'display:inline-block;vertical-align:middle;width:32px;height:1px;' +
+    'line-height:1px;margin:0px 8px;' +
+    'background:linear-gradient(90deg,rgba(148,163,184,0.35),rgba(148,163,184,0.85));' +
+    'color:transparent;overflow:hidden',
+}
+
+// ── 组件定义 ──────────────────────────────────────────
+export const ReadingPath_DA01 = {
+  id: 'ReadingPath_DA01',
+  name: '阅读路线',
+  tag: 'reading-path',
+  attrs: [],
+
+  render(pTitleList: { num: string; title: string; subtitle: string }[], t: ThemeColors): string {
+    if (pTitleList.length <= 1) return ''
+
+    const steps = pTitleList
+      .map((item, idx) => {
+        const label = item.title
+          .replace(/::.*/, '')
+          .trim()
+          .replace(/^\d+\s*/, '')
+        const num = item.num || String(idx + 1).padStart(2, '0')
+        const active = idx === 0
+        const connector =
+          idx < pTitleList.length - 1 ? `<span style="${S.line}">${leaf('-')}</span>` : ''
+
+        return `
+        <section style="${S.step}">
+          <section style="${S.cell}">
+            <section style="${S.numWrap}">
+              <span style="${S.num(active, t.accent)}">${leaf(num)}</span>
+            </section>
+            <p style="${S.label_(active)}">${leaf(label)}</p>
+          </section>
+          ${connector}
+        </section>`
+      })
+      .join('')
+
+    return `
+      <section style="${S.wrapper}"><section>
+        <section style="${S.header}">
+          <section style="flex-shrink:0">
+            <p style="${S.label}">${leaf('READING PATH')}</p>
+            <p style="${S.heading}">${leaf('阅读路线')}</p>
+          </section>
+          <p style="${S.count}">${leaf(pTitleList.length + ' 个章节')}</p>
+        </section>
+        <section style="${S.track}">
+          ${steps}
+        </section>
+      </section></section>`
+  },
+}

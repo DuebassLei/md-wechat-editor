@@ -1,0 +1,26 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "types": ["vite/client"],
+
+    /* Linting */
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/lib/r-markdown/*": ["src/engine/r-markdown/*"],
+      "@/themes/*": ["src/engine/themes/*"],
+      "@/constants/*": ["src/engine/constants/*"],
+      "@/utils/*": ["src/engine/render/*"],
+      "@/types/theme": ["src/types/theme.ts"],
+      "@/types/templateEntitlements": ["src/engine/types/templateEntitlements.ts"],
+      "@/api/templateEntitlements": ["src/api/templateEntitlements.ts"]
+    },
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
