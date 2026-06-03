@@ -2,6 +2,8 @@ import { renderMarkdown } from '@/utils/renderMarkdown'
 import { getThemeCss } from '@/types/theme'
 import { buildWechatHtml } from '@/utils/wechatCopy'
 import type { ThemeId } from '@/types/theme'
+import { injectSyncAttrsOnRoot } from './editorSyncAnchors'
+import type { ParseMarkdownOptions } from '@/lib/r-markdown/parseOptions'
 
 /** 混合排版中 GFM 片段的包裹类，用于 scoped 主题 CSS */
 export const AWP_GFM_THEME_CLASS = 'awp-gfm-theme'
@@ -11,12 +13,20 @@ export function wrapGfmThemeHtml(markdownHtml: string): string {
   return `<div class="${AWP_GFM_THEME_CLASS}">${markdownHtml}</div>`
 }
 
-export function flushGfmMarkdownBuffer(lines: string[]): string {
+export function flushGfmMarkdownBuffer(
+  lines: string[],
+  lineStart = 1,
+  opts?: Pick<ParseMarkdownOptions, 'editorSyncAnchors'>,
+): string {
   if (!lines.length) return ''
   const content = lines.join('\n').trim()
   lines.length = 0
   if (!content) return ''
-  return wrapGfmThemeHtml(renderMarkdown(content))
+  let html = wrapGfmThemeHtml(renderMarkdown(content))
+  if (opts?.editorSyncAnchors) {
+    html = injectSyncAttrsOnRoot(html, lineStart)
+  }
+  return html
 }
 
 const GFM_THEME_BLOCK_RE = new RegExp(

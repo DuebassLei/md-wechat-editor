@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import MarkdownEditor from '@/components/MarkdownEditor.vue'
 import LegacySyntaxBanner from '@/components/LegacySyntaxBanner.vue'
 import { detectLegacyLayoutSyntax } from '@/utils/detectLegacyLayoutSyntax'
@@ -13,9 +13,11 @@ import { MODULE_SAMPLE_MARKDOWN } from '@/constants/moduleSampleMarkdown'
 import {
   buildWechatArticleHtml,
   OPEN_RENDER_ENTITLEMENTS,
+  stripEditorSyncAttributes,
   usesRichLayout,
   type ThemeId,
 } from '@/engine'
+import { useEditorPreviewSync } from '@/composables/useEditorPreviewSync'
 import { copyRichText, preloadJuice } from '@/utils/wechatCopy'
 import { normalizeThemeId } from '@/types/theme'
 
@@ -30,6 +32,8 @@ const mobileTab = ref<'edit' | 'preview'>('edit')
 const copying = ref(false)
 const toast = ref('')
 const editorRef = ref<InstanceType<typeof MarkdownEditor> | null>(null)
+const previewFrameRef = ref<InstanceType<typeof WechatPreviewFrame> | null>(null)
+const sideBySide = ref(false)
 const legacyDismissed = ref(
   typeof sessionStorage !== 'undefined' &&
     sessionStorage.getItem('legacy-syntax-dismissed') === '1',
@@ -84,6 +88,44 @@ const { html, loading, error } = usePreviewHtml(content, themeRef)
 const { deviceShell } = usePreviewShell()
 const richLayout = computed(() => usesRichLayout(content.value))
 
+const editorView = computed(() => editorRef.value?.editorView ?? null)
+
+useEditorPreviewSync({
+  editorView,
+  getScrollRoot: () => {
+    const root = previewFrameRef.value?.rootEl ?? null
+    if (!root) return null
+    const shell = root.querySelector<HTMLElement>('.wechat-shell__scroll')
+    if (shell) return shell
+    if (!root.classList.contains('preview-root--device')) return root
+    return root
+  },
+  previewLoading: loading,
+  previewHtml: html,
+  sideBySide,
+  previewLayoutKey: deviceShell,
+  onRequestEditTab: () => {
+    mobileTab.value = 'edit'
+  },
+})
+
+let mqCleanup: (() => void) | null = null
+
+onMounted(() => {
+  preloadJuice()
+  const mq = window.matchMedia('(min-width: 1024px)')
+  sideBySide.value = mq.matches
+  const onMq = () => {
+    sideBySide.value = mq.matches
+  }
+  mq.addEventListener('change', onMq)
+  mqCleanup = () => mq.removeEventListener('change', onMq)
+})
+
+onUnmounted(() => {
+  mqCleanup?.()
+})
+
 async function copyHtml() {
   copying.value = true
   toast.value = ''
@@ -93,8 +135,9 @@ async function copyHtml() {
       themeRef.value,
       OPEN_RENDER_ENTITLEMENTS,
       null,
+      { editorSyncAnchors: false },
     )
-    const ok = await copyRichText(full)
+    const ok = await copyRichText(stripEditorSyncAttributes(full))
     toast.value = ok ? '已复制公众号 HTML，可到微信公众平台粘贴' : '复制失败，请检查浏览器权限'
   } catch (e) {
     toast.value = e instanceof Error ? e.message : '复制失败'
@@ -124,9 +167,6 @@ function openSyntaxHandbook() {
   editorRef.value?.openSyntaxDrawer()
 }
 
-onMounted(() => {
-  preloadJuice()
-})
 </script>
 
 <template>
@@ -209,6 +249,7 @@ onMounted(() => {
         <div v-if="loading" class="state-empty m-4">预览渲染中…</div>
         <WechatPreviewFrame
           v-else
+          ref="previewFrameRef"
           :html="html"
           :device-shell="deviceShell"
           :rich-layout="richLayout"

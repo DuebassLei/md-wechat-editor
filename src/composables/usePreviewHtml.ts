@@ -25,6 +25,7 @@ export function usePreviewHtml(markdown: Ref<string>, themeId: Ref<ThemeId>) {
         themeId.value,
         OPEN_RENDER_ENTITLEMENTS,
         null,
+        { editorSyncAnchors: true },
       )
       if (id === seq) html.value = result
     } catch (e) {

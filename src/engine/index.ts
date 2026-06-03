@@ -3,6 +3,7 @@ export {
   renderMarkdownWithThemeExtras,
   preloadLayoutRenderer,
   usesRichLayout,
+  stripEditorSyncAttributes,
   type ArticleRenderOptions,
   type RenderEntitlements,
 } from '@/utils/wechatArticleHtml'

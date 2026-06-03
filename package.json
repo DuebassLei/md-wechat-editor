@@ -9,6 +9,7 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test:engine": "node --import ./scripts/register-aliases.mjs scripts/smoke-layout-engine.mjs",
+    "test:sync": "node --import ./scripts/register-aliases.mjs scripts/smoke-editor-sync-anchors.mjs",
     "bench:picker": "node --import ./scripts/register-aliases.mjs scripts/bench-layout-module-picker.mjs",
     "gen:module-thumbs": "node --import ./scripts/register-aliases.mjs scripts/gen-module-thumbs.mjs",
     "lint": "eslint src scripts --max-warnings 0"

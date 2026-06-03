@@ -10,15 +10,22 @@ import {
 } from './fencedModule'
 import { tryParsePluginFencedModule } from '@/modules/pluginFenced'
 import { flushGfmMarkdownBuffer } from '@/utils/gfmThemeWrapper'
+import { injectSyncAttrsOnRoot } from '@/utils/editorSyncAnchors'
+
+function wrapModuleHtml(fragment: string, lineIndex0: number, opts?: ParseMarkdownOptions): string {
+  if (!opts?.editorSyncAnchors) return fragment
+  return injectSyncAttrsOnRoot(fragment, lineIndex0 + 1)
+}
 
 export function parseMarkdown(md: string, t: ThemeColors, opts?: ParseMarkdownOptions): string {
   const lines = md.split('\n')
   let html = ''
   const gfmBuffer: string[] = []
+  let gfmStartLine = 1
   let i = 0
 
   function flushGfm(): void {
-    html += flushGfmMarkdownBuffer(gfmBuffer)
+    html += flushGfmMarkdownBuffer(gfmBuffer, gfmStartLine, opts)
   }
 
   const pTitleLevel1List = collectPTitleLevel1(lines)
@@ -36,7 +43,7 @@ export function parseMarkdown(md: string, t: ThemeColors, opts?: ParseMarkdownOp
       const compareRich = tryParseCompareFenced(lines, i, t, opts)
       if (compareRich) {
         flushGfm()
-        html += compareRich.html
+        html += wrapModuleHtml(compareRich.html, i, opts)
         i = compareRich.next
         continue
       }
@@ -46,7 +53,7 @@ export function parseMarkdown(md: string, t: ThemeColors, opts?: ParseMarkdownOp
         flushGfm()
         const moduleId = lines[i].match(/^:::\s*([\w-]+)/i)?.[1]?.toLowerCase() ?? ''
         const locked = guardLayoutModule(moduleId, opts)
-        html += locked ?? ext.html
+        html += wrapModuleHtml(locked ?? ext.html, i, opts)
         i = ext.next
         continue
       }
@@ -56,7 +63,7 @@ export function parseMarkdown(md: string, t: ThemeColors, opts?: ParseMarkdownOp
         flushGfm()
         const moduleId = lines[i].match(/^:::\s*([\w-]+)/i)?.[1]?.toLowerCase() ?? ''
         const locked = guardLayoutModule(moduleId, opts)
-        html += locked ?? pluginFenced.html
+        html += wrapModuleHtml(locked ?? pluginFenced.html, i, opts)
         i = pluginFenced.next
         continue
       }
@@ -64,7 +71,7 @@ export function parseMarkdown(md: string, t: ThemeColors, opts?: ParseMarkdownOp
       const md2w = tryParseMd2wechatModule(lines, i, t, md, opts)
       if (md2w) {
         flushGfm()
-        html += md2w.html
+        html += wrapModuleHtml(md2w.html, i, opts)
         i = md2w.next
         continue
       }
@@ -74,11 +81,12 @@ export function parseMarkdown(md: string, t: ThemeColors, opts?: ParseMarkdownOp
       flushGfm()
       const locked = guardLayoutModule('callout', opts)
       const r = parseCallout(lines, i, t)
-      html += locked ?? r.html
+      html += wrapModuleHtml(locked ?? r.html, i, opts)
       i = r.next
       continue
     }
 
+    if (gfmBuffer.length === 0) gfmStartLine = i + 1
     gfmBuffer.push(line)
     i++
   }

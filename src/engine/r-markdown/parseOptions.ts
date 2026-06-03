@@ -7,6 +7,8 @@ export interface ParseMarkdownOptions {
   templateEntitlements?: TemplateEntitlementMap | null
   componentAccent?: string | null
   themeTokens?: ThemeColors
+  /** Studio 预览：在块级 HTML 写入 data-md-line-start */
+  editorSyncAnchors?: boolean
 }
 
 /** 墨韵简排：不展示锁定占位 */

@@ -16,12 +16,16 @@ import type { TemplateEntitlementMap } from '@/types/templateEntitlements'
 import { markdownUsesLayoutModules } from '@/utils/detectLayoutModules'
 import { juiceGfmThemeBlocks } from '@/utils/gfmThemeWrapper'
 import { prepareWechatPasteHtml } from '@/utils/wechatPasteHtml'
+import { annotateArticleHtmlForSync } from './editorSyncAnchors'
 
 export type { RenderEntitlements }
+export { stripEditorSyncAttributes } from './editorSyncAnchors'
 
 export interface ArticleRenderOptions {
   /** 排版组件强调色；null/省略则跟随当前文章主题色板 */
   componentAccent?: string | null
+  /** 仅 Studio 预览：写入 data-md-line-start；复制必须为 false/省略 */
+  editorSyncAnchors?: boolean
 }
 
 type ParseLayoutMarkdownFn = (
@@ -79,6 +83,7 @@ function buildParseOptions(
     layoutTier: entitlements.layoutTier,
     templateEntitlements: templateEntitlements ?? null,
     componentAccent: renderOptions?.componentAccent ?? null,
+    editorSyncAnchors: renderOptions?.editorSyncAnchors ?? false,
   }
 }
 
@@ -143,16 +148,20 @@ export async function buildWechatArticleHtml(
     renderOptions,
   )
 
+  let result: string
   if (usesRichLayout(markdown)) {
     const juiced = await juiceGfmThemeBlocks(markdownHtml, entitledTheme)
-    return buildRichLayoutWechatHtml(juiced)
-  }
-
-  if (entitledTheme === 'aiIndigo') {
+    result = buildRichLayoutWechatHtml(juiced)
+  } else if (entitledTheme === 'aiIndigo') {
     const themeCss = getThemeCss('aiIndigo', '#nice')
-    return await buildWechatHtml(markdownHtml, themeCss)
+    result = await buildWechatHtml(markdownHtml, themeCss)
+  } else {
+    const themeCss = getThemeCss(entitledTheme, '#nice')
+    result = await buildWechatHtml(markdownHtml, themeCss)
   }
 
-  const themeCss = getThemeCss(entitledTheme, '#nice')
-  return await buildWechatHtml(markdownHtml, themeCss)
+  if (renderOptions?.editorSyncAnchors) {
+    result = annotateArticleHtmlForSync(markdown, result)
+  }
+  return result
 }

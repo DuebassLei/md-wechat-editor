@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 withDefaults(
   defineProps<{
     html: string
@@ -7,10 +9,13 @@ withDefaults(
   }>(),
   { deviceShell: true, richLayout: false },
 )
+
+const rootRef = ref<HTMLElement | null>(null)
+defineExpose({ rootEl: rootRef })
 </script>
 
 <template>
-  <div class="preview-root" :class="{ 'preview-root--device': deviceShell }">
+  <div ref="rootRef" class="preview-root" :class="{ 'preview-root--device': deviceShell }">
     <!-- 手机套壳：仿公众号阅读器，非厚重 iPhone 边框 -->
     <div v-if="deviceShell" class="wechat-shell">
       <div class="wechat-shell__frame">
@@ -149,6 +154,13 @@ withDefaults(
 
 .preview-body--rich :deep(section) {
   max-width: 100%;
+}
+
+.preview-body :deep([data-md-sync].preview-sync-active) {
+  outline: 2px solid rgb(var(--color-jade) / 0.55);
+  outline-offset: 2px;
+  border-radius: 4px;
+  transition: outline-color 0.15s ease;
 }
 
 .preview-body--flat {

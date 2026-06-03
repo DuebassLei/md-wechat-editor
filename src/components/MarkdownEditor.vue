@@ -72,7 +72,7 @@ function openSyntaxDrawer() {
   syntaxOpen.value = true
 }
 
-defineExpose({ insertAtCursor, openSyntaxDrawer })
+defineExpose({ insertAtCursor, openSyntaxDrawer, editorView })
 </script>
 
 <template>
