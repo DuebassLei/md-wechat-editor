@@ -114,7 +114,7 @@ export function tryParseMd2wechatModule(
     } else if (!body.rows.length) {
       body.rows.push([left, right].filter(Boolean))
     }
-  } else if (openInline && name !== 'compare') {
+  } else if (openInline && name !== 'compare' && !OPEN_ATTR_MODULES.has(name)) {
     body.fields.title = openInline
   }
 

@@ -47,6 +47,10 @@ const checks = [
     prepareLayoutInput('---\ntitle: 封面\n---\n\n正文').startsWith(':::hero'),
   ],
   ['steps open-line attrs', parseLayoutMarkdown(stepsMd, opts).includes('FLOW')],
+  [
+    'steps attrs not leaked as title',
+    !parseLayoutMarkdown(stepsMd, opts).includes('label="FLOW"'),
+  ],
   ['compare rich', parseLayoutMarkdown(compareRich, opts).includes('左侧内容')],
   ['p-title', parseLayoutMarkdown(pTitleMd, opts).includes('章节一')],
   ['ai indigo lead', parseLayoutMarkdown(leadMd, { ...opts, themeId: 'aiIndigo' }).length > 10],
