@@ -17,9 +17,9 @@
 
 | 排版工作室 | 插入组件 | 产品介绍 |
 |:---:|:---:|:---:|
-| ![编辑区、文档侧栏与手机预览](docs/assets/readme-studio.png) | ![按分类浏览 53 种 ::: 模块](docs/assets/readme-modules.png) | ![核心能力与上手步骤](docs/assets/readme-landing.png) |
+| ![编辑区、文档侧栏与手机预览](.github/readme/readme-studio.png) | ![按分类浏览 53 种 ::: 模块](.github/readme/readme-modules.png) | ![核心能力与上手步骤](.github/readme/readme-landing.png) |
 
-截图位于 `docs/assets/`（本地 `npm run dev` 截取，可自行替换更新）。
+截图位于 `.github/readme/`（可用 Playwright 本地重截更新）。
 
 ---
 
@@ -52,9 +52,9 @@
 路径 **`/cards`**（顶栏「知识卡片」）。
 
 - **Markdown 写卡片** — 标题、列表、引用、代码、表格、任务列表等标准语法
-- **14 套内容主题** — 清爽知识、莫兰迪、杂志极简、金句黑金等（对标 [MD2Card 主题市场](https://md2card.com/zh/theme-store)）
+- **14 套内容主题** — 清爽知识、莫兰迪、杂志极简、金句黑金等，含纹理图案与多种封面版式
 - **封面大字报首图** — YAML / `:::hero` 元数据生成封面，可开关
-- **顶栏装饰** — MD2Card 式 accent 顶栏（随主题变化）
+- **顶栏装饰** — 彩色 accent 顶栏（随主题变化）
 - **智能分页** — 默认自动分页；`---` 或 `:::page` 手动断页；可切换单卡模式
 - **导出** — 3:4 / 1:1 高清 PNG，支持 ZIP 打包
 - **本地持久化** — 浏览器 localStorage 自动保存
