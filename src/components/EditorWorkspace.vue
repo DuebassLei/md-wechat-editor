@@ -11,15 +11,24 @@ import { usePreviewShell } from '@/composables/usePreviewShell'
 import { STUDIO_SAMPLE_MARKDOWN } from '@/constants/studioSampleMarkdown'
 import { MODULE_SAMPLE_MARKDOWN } from '@/constants/moduleSampleMarkdown'
 import {
+  buildPlatformMarkdown,
   buildWechatArticleHtml,
+  copyPlainText,
+  markdownUsesLayoutModules,
   OPEN_RENDER_ENTITLEMENTS,
   stripEditorSyncAttributes,
   usesRichLayout,
+  type PlatformExportResult,
+  type PlatformTarget,
   type ThemeId,
 } from '@/engine'
 import { useEditorPreviewSync } from '@/composables/useEditorPreviewSync'
 import { copyRichText, preloadJuice } from '@/utils/wechatCopy'
 import { normalizeThemeId } from '@/types/theme'
+import PlatformCopyConfirmModal from '@/components/PlatformCopyConfirmModal.vue'
+import PlatformCopyIconButton from '@/components/PlatformCopyIconButton.vue'
+import XhsExporterModal from '@/components/XhsExporterModal.vue'
+import WechatTietuExporterModal from '@/components/WechatTietuExporterModal.vue'
 
 const content = defineModel<string>({ required: true })
 const themeId = defineModel<ThemeId>('themeId', { default: 'normal' })
@@ -30,9 +39,15 @@ const emit = defineEmits<{
 
 const mobileTab = ref<'edit' | 'preview'>('edit')
 const copying = ref(false)
+const copyingPlatform = ref<PlatformTarget | null>(null)
+const confirmOpen = ref(false)
+const pendingExport = ref<PlatformExportResult | null>(null)
+const pendingPlatform = ref<PlatformTarget>('juejin')
 const toast = ref('')
 const editorRef = ref<InstanceType<typeof MarkdownEditor> | null>(null)
 const previewFrameRef = ref<InstanceType<typeof WechatPreviewFrame> | null>(null)
+const xhsVisible = ref(false)
+const wechatTietuVisible = ref(false)
 const sideBySide = ref(false)
 const legacyDismissed = ref(
   typeof sessionStorage !== 'undefined' &&
@@ -87,6 +102,14 @@ const themeRef = computed({
 const { html, loading, error } = usePreviewHtml(content, themeRef)
 const { deviceShell } = usePreviewShell()
 const richLayout = computed(() => usesRichLayout(content.value))
+
+const previewContentWidth = computed(() => {
+  const root = previewFrameRef.value?.rootEl
+  if (!root) return 375
+  const body = root.querySelector<HTMLElement>('.preview-body')
+  const w = body?.clientWidth ?? 0
+  return w > 80 ? w : 375
+})
 
 const editorView = computed(() => editorRef.value?.editorView ?? null)
 
@@ -149,6 +172,54 @@ async function copyHtml() {
   }
 }
 
+function sourceExcerpt(md: string, maxLines = 12): string {
+  return md.split('\n').slice(0, maxLines).join('\n')
+}
+
+function showToastLater(msg: string) {
+  toast.value = msg
+  setTimeout(() => {
+    toast.value = ''
+  }, 4000)
+}
+
+async function finalizePlatformCopy(platform: PlatformTarget, result: PlatformExportResult) {
+  if (!result.markdown.trim()) {
+    showToastLater('降级结果为空，无法复制')
+    return
+  }
+  copyingPlatform.value = platform
+  const ok = await copyPlainText(result.markdown)
+  const label = platform === 'juejin' ? '掘金' : 'CSDN'
+  showToastLater(
+    ok ? `已复制${label} Markdown，可到${label}编辑器粘贴` : '复制失败，请检查浏览器权限',
+  )
+  copyingPlatform.value = null
+}
+
+async function copyPlatformMarkdown(platform: PlatformTarget) {
+  if (!content.value.trim()) {
+    showToastLater('内容为空')
+    return
+  }
+  toast.value = ''
+  const result = buildPlatformMarkdown(content.value, platform)
+
+  if (markdownUsesLayoutModules(content.value)) {
+    pendingExport.value = result
+    pendingPlatform.value = platform
+    confirmOpen.value = true
+    return
+  }
+
+  await finalizePlatformCopy(platform, result)
+}
+
+function onConfirmPlatformCopy() {
+  if (!pendingExport.value || !pendingPlatform.value) return
+  void finalizePlatformCopy(pendingPlatform.value, pendingExport.value)
+}
+
 function loadSample() {
   if (content.value.trim() && !confirm('将用样板 Markdown 替换当前内容，是否继续？')) {
     return
@@ -197,11 +268,63 @@ function openSyntaxHandbook() {
         <ThemePicker v-model="themeRef" />
         <button type="button" class="btn-ghost btn-sm" @click="loadSample">语法样板</button>
         <button type="button" class="btn-ghost btn-sm" @click="loadModuleSample">排版样板</button>
-        <button type="button" class="btn-primary btn-sm" :disabled="copying" @click="copyHtml">
-          {{ copying ? '复制中…' : '复制公众号 HTML' }}
-        </button>
+        <PlatformCopyIconButton
+          platform="wechat"
+          :loading="copying"
+          :disabled="copying || copyingPlatform !== null"
+          title="复制公众号 HTML"
+          @click="copyHtml"
+        />
+        <PlatformCopyIconButton
+          platform="juejin"
+          :loading="copyingPlatform === 'juejin'"
+          :disabled="copying || copyingPlatform !== null"
+          title="复制掘金 Markdown"
+          @click="copyPlatformMarkdown('juejin')"
+        />
+        <PlatformCopyIconButton
+          platform="csdn"
+          :loading="copyingPlatform === 'csdn'"
+          :disabled="copying || copyingPlatform !== null"
+          title="复制 CSDN Markdown"
+          @click="copyPlatformMarkdown('csdn')"
+        />
+        <PlatformCopyIconButton
+          platform="xhs"
+          title="导出小红书图（首图 + 自动分页内容图）"
+          @click="xhsVisible = true"
+        />
+        <PlatformCopyIconButton
+          platform="wechat-tietu"
+          title="导出微信贴图（3:4 首图 + 自动分页，支持上传优化）"
+          @click="wechatTietuVisible = true"
+        />
       </div>
     </div>
+    <XhsExporterModal
+      :visible="xhsVisible"
+      :markdown="content"
+      :theme-id="themeRef"
+      :preview-content-width="previewContentWidth"
+      @close="xhsVisible = false"
+    />
+    <WechatTietuExporterModal
+      :visible="wechatTietuVisible"
+      :markdown="content"
+      :theme-id="themeRef"
+      :preview-content-width="previewContentWidth"
+      @close="wechatTietuVisible = false"
+    />
+    <PlatformCopyConfirmModal
+      v-if="pendingExport"
+      v-model:open="confirmOpen"
+      :platform="pendingPlatform"
+      :source-excerpt="sourceExcerpt(content)"
+      :preview-markdown="pendingExport.markdown"
+      :report="pendingExport.report"
+      :empty-preview="!pendingExport.markdown.trim()"
+      @confirm="onConfirmPlatformCopy"
+    />
     <LegacySyntaxBanner
       v-if="showLegacyBanner"
       :tags="legacyReport.tags"

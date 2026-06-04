@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
+import AppStudioNav from '@/components/AppStudioNav.vue'
 import AppThemePicker from '@/components/AppThemePicker.vue'
 import { GITHUB_REPO_URL, WECHAT_MP_PROMO } from '@/meta/site'
 import WechatMpQrModal from '@/components/WechatMpQrModal.vue'
@@ -9,18 +10,16 @@ const promo = WECHAT_MP_PROMO
 const promoLabel = promo.accountName
 const qrOpen = ref(false)
 const route = useRoute()
-const isStudio = computed(() => route.name === 'studio')
 const isAbout = computed(() => route.name === 'about')
 
 defineProps<{
   studio?: boolean
 }>()
-
 </script>
 
 <template>
   <div class="app-canvas" :class="{ 'app-canvas--studio': studio }">
-    <header class="app-header">
+    <header class="app-header" :class="{ 'app-header--has-promo': promo.enabled }">
       <RouterLink to="/" class="app-header__brand">
         <span class="seal-mark" aria-hidden="true">简</span>
         <span class="app-header__titles">
@@ -28,6 +27,8 @@ defineProps<{
           <span class="app-header__tagline">Markdown 微信排版工具</span>
         </span>
       </RouterLink>
+
+      <AppStudioNav class="app-header__nav" />
 
       <button
         v-if="promo.enabled"
@@ -57,20 +58,20 @@ defineProps<{
 
       <div class="app-header__actions">
         <AppThemePicker />
-        <RouterLink v-if="isStudio" to="/about" class="btn-ghost btn-sm no-underline">产品介绍</RouterLink>
         <RouterLink v-if="isAbout" to="/" class="btn-primary btn-sm no-underline">打开编辑器</RouterLink>
         <a
-          class="btn btn-ghost btn-sm app-header__github"
+          class="app-header__github chip-btn inline-flex items-center gap-1.5 no-underline"
           :href="GITHUB_REPO_URL"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="在 GitHub 查看源码"
+          title="GitHub 开源仓库"
         >
           <svg
             class="app-header__github-icon"
             viewBox="0 0 24 24"
-            width="16"
-            height="16"
+            width="18"
+            height="18"
             fill="currentColor"
             aria-hidden="true"
           >
@@ -80,6 +81,7 @@ defineProps<{
               d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"
             />
           </svg>
+          <span class="app-header__github-label">GitHub</span>
         </a>
       </div>
     </header>
@@ -94,7 +96,17 @@ defineProps<{
   @apply relative z-40 grid shrink-0 items-center gap-x-3 gap-y-2 border-b border-paper-line/90 bg-paper-bright/95 px-4 py-3 backdrop-blur-sm;
   isolation: isolate;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-areas: 'brand promo actions';
+  grid-template-areas: 'brand nav actions';
+}
+
+.app-header--has-promo {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: 'brand nav promo actions';
+}
+
+.app-header__nav {
+  grid-area: nav;
+  @apply min-w-0 justify-self-center px-1;
 }
 
 @media (max-width: 767px) {
@@ -102,16 +114,31 @@ defineProps<{
     grid-template-columns: 1fr auto;
     grid-template-areas:
       'brand actions'
-      'promo promo';
+      'nav nav';
+  }
+
+  .app-header--has-promo {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'brand actions'
+      'nav promo';
+  }
+
+  .app-header__nav {
+    @apply justify-self-stretch overflow-x-auto pb-0.5;
+  }
+
+  .app-header__titles {
+    @apply hidden sm:flex;
   }
 }
 
 .app-header__promo {
-  @apply flex min-w-0 items-center gap-2.5 rounded-[var(--radius-control)] border px-3 py-2 text-left no-underline;
+  @apply flex min-w-0 items-center gap-2 rounded-[var(--radius-control)] border px-2.5 py-1.5 text-left no-underline;
   grid-area: promo;
-  justify-self: center;
-  max-width: 28rem;
-  width: 100%;
+  justify-self: end;
+  max-width: 18rem;
+  width: auto;
   border-color: rgb(var(--cinnabar-rgb) / 0.22);
   background: linear-gradient(
     135deg,
@@ -122,10 +149,33 @@ defineProps<{
   box-shadow: 0 1px 0 rgb(var(--paper-bright-rgb) / 0.8) inset;
 }
 
+@media (max-width: 1100px) {
+  .app-header__promo-hint,
+  .app-header__promo-eyebrow {
+    @apply hidden;
+  }
+
+  .app-header__promo {
+    max-width: 14rem;
+  }
+}
+
 @media (max-width: 767px) {
   .app-header__promo {
-    justify-self: stretch;
     max-width: none;
+    @apply flex-1 justify-self-stretch;
+  }
+
+  .app-header__promo-text {
+    @apply min-w-0;
+  }
+
+  .app-header__promo-title {
+    @apply text-xs;
+  }
+
+  .app-header__promo-cta {
+    @apply hidden;
   }
 }
 
@@ -145,7 +195,7 @@ defineProps<{
 }
 
 .app-header__promo-icon {
-  @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-cinnabar-dark;
+  @apply flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-cinnabar-dark;
   background: rgb(var(--paper-bright-rgb) / 0.9);
   border: 1px solid rgb(var(--cinnabar-rgb) / 0.15);
 }
@@ -194,12 +244,36 @@ defineProps<{
   grid-area: actions;
 }
 .app-header__github {
-  @apply shrink-0 !px-2 leading-none text-ink-muted no-underline hover:text-ink;
+  @apply shrink-0 font-semibold text-ink-soft;
+  box-shadow: 0 1px 2px rgb(var(--color-shadow-ink) / 0.04);
 }
+
+.app-header__github:hover {
+  @apply text-cinnabar-dark;
+  box-shadow: 0 2px 8px rgb(var(--cinnabar-rgb) / 0.12);
+}
+
+.app-header__github:focus-visible {
+  @apply outline-none ring-2 ring-cinnabar/35 ring-offset-2 ring-offset-paper-bright;
+}
+
 .app-header__github-icon {
   display: block;
   flex-shrink: 0;
-  overflow: visible;
+}
+
+.app-header__github-label {
+  @apply text-xs leading-none;
+}
+
+@media (max-width: 480px) {
+  .app-header__github-label {
+    @apply sr-only;
+  }
+
+  .app-header__github {
+    @apply px-2;
+  }
 }
 .app-main {
   @apply flex min-h-0 flex-1 flex-col;

@@ -1,0 +1,38 @@
+import type { CardThemeDef } from '../types'
+
+export const noteYellow: CardThemeDef = {
+  id: 'note-yellow',
+  label: '暖阳便签',
+  group: 'light',
+  desc: '淡黄底 · 轻松备忘 / 金句',
+  style: {
+    h1Style: 'center-line',
+    h2Style: 'accent-underline',
+    headerDecor: 'thin-line',
+    codeBordered: true,
+    bgPattern: 'notebook-lines',
+    coverLayout: 'journal',
+    blockquoteStyle: 'bracket',
+  },
+  tokens: {
+    contentBg: 'linear-gradient(180deg, #fffbeb 0%, #fef9c3 100%)',
+    exportBg: '#fffbeb',
+    ink: '#422006',
+    inkSoft: '#78350f',
+    accent: '#d97706',
+    accentWeak: 'rgba(217,119,6,0.18)',
+    link: '#b45309',
+    codeBg: 'rgba(217,119,6,0.12)',
+    preBg: '#fef3c7',
+    hr: '#fde68a',
+    tableBorder: '#fde68a',
+    tableHeadBg: '#fef9c3',
+    footerDash: '#fcd34d',
+    brandColor: '#d97706',
+    pageColor: '#a8a29e',
+    accentBar: '#d97706',
+    blockquoteBg: 'rgba(217,119,6,0.1)',
+    contentPadX: 20,
+    contentPadY: 18,
+  },
+}

@@ -1,0 +1,38 @@
+import type { CardThemeDef } from '../types'
+
+export const morandiGray: CardThemeDef = {
+  id: 'morandi-gray',
+  label: '莫兰迪灰',
+  group: 'morandi',
+  desc: '低饱和灰粉 · 时尚生活',
+  style: {
+    h1Style: 'center-line',
+    h2Style: 'accent-underline',
+    headerDecor: 'thin-line',
+    codeBordered: true,
+    bgPattern: 'soft-wash',
+    coverLayout: 'magazine',
+    blockquoteStyle: 'rounded',
+  },
+  tokens: {
+    contentBg: '#f4f2f0',
+    exportBg: '#f4f2f0',
+    coverBg: 'linear-gradient(165deg, #f4f2f0 0%, #ebe6e3 100%)',
+    ink: '#4a4543',
+    inkSoft: '#7a726c',
+    accent: '#9a8f8a',
+    accentWeak: 'rgba(154,143,138,0.2)',
+    link: '#8b7d77',
+    codeBg: 'rgba(74,69,67,0.06)',
+    preBg: '#ebe6e3',
+    hr: '#d8d0cb',
+    tableBorder: '#d8d0cb',
+    tableHeadBg: '#ebe6e3',
+    footerDash: '#d8d0cb',
+    brandColor: '#8b7d77',
+    pageColor: '#a39a94',
+    chipBg: '#ebe6e3',
+    chipBorder: '#d8d0cb',
+    chipInk: '#4a4543',
+  },
+}

@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Liu+Jian+Mao+Cao&family=Long+Cang&family=Ma+Shan+Zheng&family=Yuji+Boku&family=Yuji+Mai&family=ZCOOL+KuaiLe&family=Zhi+Mang+Xing&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-web@1.7.0/style.css');
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-web@1.330/style.css');
+@import url('https://cdn.jsdelivr.net/npm/lxgw-zhenkai-web@0.9.0/style.css');
+@import url('https://cdn.jsdelivr.net/npm/lxgw-neo-xihei-web@1.0.0/style.css');
+@import url('https://cdn.jsdelivr.net/npm/lxgw-fangsong-web@1.0.0/style.css');
+@import url('https://cdn.jsdelivr.net/npm/lxgw-marker-gothic-web@0.1.0/style.css');
+
+.hw-font-lxgw-wenkai { font-family: "LXGW WenKai", "KaiTi", "STKaiti", serif; }
+.hw-font-lxgw-wenkai-lite { font-family: "LXGW WenKai Lite", "LXGW WenKai", "KaiTi", serif; }
+.hw-font-lxgw-zhenkai { font-family: "LXGW ZhenKai", "LXGW WenKai", "KaiTi", serif; }
+.hw-font-lxgw-neo { font-family: "LXGW Neo XiHei", "LXGW WenKai", "KaiTi", serif; }
+.hw-font-lxgw-fangsong { font-family: "LXGW FangSong", "FangSong", "STFangsong", serif; }
+.hw-font-lxgw-marker { font-family: "LXGW Marker Gothic", "LXGW WenKai", "KaiTi", sans-serif; }
+.hw-font-ma-shan-zheng { font-family: "Ma Shan Zheng", "KaiTi", cursive; }
+.hw-font-long-cang { font-family: "Long Cang", "KaiTi", cursive; }
+.hw-font-zhi-mang-xing { font-family: "Zhi Mang Xing", "KaiTi", cursive; }
+.hw-font-liu-jian-mao-cao { font-family: "Liu Jian Mao Cao", "KaiTi", cursive; }
+.hw-font-zcool-kuaile { font-family: "ZCOOL KuaiLe", "KaiTi", cursive; }
+.hw-font-yuji-boku { font-family: "Yuji Boku", "LXGW WenKai", "KaiTi", serif; }
+.hw-font-yuji-mai { font-family: "Yuji Mai", "LXGW WenKai", "KaiTi", serif; }

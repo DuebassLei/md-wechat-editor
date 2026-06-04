@@ -17,3 +17,7 @@ export {
   getThemeSwatch,
   type ThemeId,
 } from '@/types/theme'
+
+export { buildPlatformMarkdown } from '@/engine/export/platformMarkdown'
+export { copyPlainText } from '@/utils/platformCopy'
+export type { PlatformTarget, PlatformExportResult, ConversionReport } from '@/engine/export/types'

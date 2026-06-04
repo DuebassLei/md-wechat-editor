@@ -1,21 +1,65 @@
-MIT License
+墨韵简排（md-wechat-editor）源代码许可协议
+Moyun Markdown WeChat Editor — Source Code License v1.0
 
-Copyright (c) 2026 墨韵简排 contributors
+Copyright (c) 2026 DuebassLei. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+================================================================================
+一、许可范围（非商业）
+================================================================================
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+在遵守本协议的前提下，你可以免费：
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. 访问、使用、复制本软件源代码；
+2. 为个人学习、研究、评测或非商业分享而修改源代码；
+3. 以**相同本协议**向他人分发原版或修改版（须保留版权声明与本协议全文）；
+4. 在 GitHub 等平台公开你的 Fork 或衍生仓库（不得改为更宽松的商用许可）。
+
+「非商业」指不以获取商业利益为主要目的，且不构成对第三方有偿产品/服务的一部分。
+
+================================================================================
+二、禁止行为（未经第五节书面商用授权）
+================================================================================
+
+未经版权人书面同意，不得：
+
+1. 将本软件（含修改版、衍生版）用于任何**商业目的**；
+2. 将本软件集成到闭源或商业产品、SaaS、企业内部有偿交付、托管服务等；
+3. 基于本软件提供有偿排版服务、白标、OEM 或再许可；
+4. 移除或篡改版权声明、本协议及 LICENSE 文件；
+5. 仅将本协议理解为「可随意商用」的 MIT/Apache 类许可。
+
+================================================================================
+三、商标与品牌
+================================================================================
+
+本协议不授予「墨韵简排」及相关标识的商标权。商用授权可另行约定品牌使用范围。
+
+================================================================================
+四、免责声明
+================================================================================
+
+本软件按「现状」提供，不提供任何明示或默示担保。版权人对使用本软件造成的
+任何损失不承担责任，法律另有强制规定除外。
+
+================================================================================
+五、闭源商用授权
+================================================================================
+
+如需**闭源商用**、**商业集成**或**超出非商业范围**的使用，须另行取得版权人
+书面授权。请联系：
+
+  邮箱：1130122701@qq.com
+  微信：（见仓库 README「商用授权」一节）
+
+未获授权的商业使用构成侵权，版权人保留追究法律责任的权利。
+
+================================================================================
+六、English Summary (Not a substitute for Sections I–V above)
+================================================================================
+
+You may use, modify, and redistribute this software for NONCOMMERCIAL purposes
+only, provided you keep this license and copyright notice. COMMERCIAL use,
+including use in proprietary products or paid services, requires a separate
+written license from the copyright holder. Contact details are in the README.
+
+================================================================================

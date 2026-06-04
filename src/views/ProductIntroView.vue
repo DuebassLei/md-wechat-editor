@@ -71,7 +71,7 @@ const highlights = [
           <div class="intro-hero__copy">
             <p class="intro-hero__eyebrow">Markdown 微信排版工作室</p>
             <h1 id="intro-hero-title" class="intro-hero__title">
-              写好 Markdown，<br class="sm:hidden" />简排进公众号
+              写好 Markdown，<br class="sm:hidden">简排进公众号
             </h1>
             <p class="intro-hero__lead">
               纯前端排版工具：在浏览器里写完、预览、复制内联 HTML，粘贴到微信公众平台即可发布。

@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "skills": {
+    "canvas-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/canvas-design/SKILL.md",
+      "computedHash": "4e8bbc31d3b159efdd32d31a63ba8cd5a44d84911e924c1f2c709c50cbcdd0ec"
+    },
+    "document-illustrator": {
+      "source": "op7418/Document-illustrator-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "9f45731c2559436569f9ba76b354ecb2c5b84fff6ff9976352c39ed55f3361fc"
+    },
+    "kkstyle-class-notes-noline-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-class-notes-noline-screenshot/SKILL.md",
+      "computedHash": "1f53c5ca57027182139e47448bf7352c02273d6f7734734af07cf898b803256d"
+    },
+    "kkstyle-class-notes-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-class-notes-screenshot/SKILL.md",
+      "computedHash": "114d38903dd0038fc670e26fe3bfb517ee1901c49c59ec95453596a4b4757e1e"
+    },
+    "kkstyle-diagram-board-noline-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-diagram-board-noline-screenshot/SKILL.md",
+      "computedHash": "b535a5402d453674214c1a4a651ff10e30d6b1ba1a507a1604573c12a1549bd7"
+    },
+    "kkstyle-diagram-board-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-diagram-board-screenshot/SKILL.md",
+      "computedHash": "dcb8f743122c8f1a3d2b02ae43b591be5f3311153549b9c03d564a67e0e64dc9"
+    },
+    "kkstyle-editorial-noline-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-editorial-noline-screenshot/SKILL.md",
+      "computedHash": "ae3c39c9e37324fdbbb6a805e3e7e4c40e8fff23e7ff42b7f7297f3235ff69e0"
+    },
+    "kkstyle-editorial-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-editorial-screenshot/SKILL.md",
+      "computedHash": "91e6f281e3efc66b7652cd13349e667cf0707ca839c1883b1b83cba33b94f303"
+    },
+    "kkstyle-kksticker-noline-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-kksticker-noline-screenshot/SKILL.md",
+      "computedHash": "edfef90afe9995f1acb1ddc65a0f2ee950556e8af021e44d76e6a43bffd79216"
+    },
+    "kkstyle-kksticker-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-kksticker-screenshot/SKILL.md",
+      "computedHash": "803950a7ebd0fa8dd715ffd3478fdd2fd986a2b3f475fa5ad403eabe4a8b0a16"
+    },
+    "kkstyle-minimal-tech-noline-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-minimal-tech-noline-screenshot/SKILL.md",
+      "computedHash": "58574cdb55929cd47b87726a6153abafc6a951032da40af9e91ba50423e7b2c2"
+    },
+    "kkstyle-minimal-tech-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-minimal-tech-screenshot/SKILL.md",
+      "computedHash": "2e70e111dd2a4dc66d768d6afc4714cbcacfb8a15d8c00147e6beea97c657514"
+    },
+    "kkstyle-poster-comic-noline-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-poster-comic-noline-screenshot/SKILL.md",
+      "computedHash": "efea96653698c2f1c7e0c195c9f695c69618bb69d7c59b22a23b157844d0e790"
+    },
+    "kkstyle-poster-comic-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-poster-comic-screenshot/SKILL.md",
+      "computedHash": "2594c36f09ec60ca050bd62a046eedaa3f69467deca7155ab57f58fff11100d5"
+    },
+    "kkstyle-retro-pixel-noline-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-retro-pixel-noline-screenshot/SKILL.md",
+      "computedHash": "9abdad581bfb7d4b793d1c66c8710c24b65ae4c95cf010a344a0cfb2b11e5d49"
+    },
+    "kkstyle-retro-pixel-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-retro-pixel-screenshot/SKILL.md",
+      "computedHash": "4cf4837a5930e653dd71f376e1dcbcafa1b1b44da3a93c7180f95093e09dda5d"
+    },
+    "kkstyle-scrapbook-noline-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-scrapbook-noline-screenshot/SKILL.md",
+      "computedHash": "bade34d6cd9bdeeb98f2b6b523389dd9ceadc9f3877d535ba24e7005c55ecc17"
+    },
+    "kkstyle-scrapbook-screenshot": {
+      "source": "zhiwendesign/kkskills",
+      "sourceType": "github",
+      "skillPath": "kkstyle-scrapbook-screenshot/SKILL.md",
+      "computedHash": "30786b908015cffcc10d075bd41468fafbb495a8ac7c3029e5eeb5cd8149be25"
+    },
+    "pptx": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pptx/SKILL.md",
+      "computedHash": "2275e4d8dba1790d52f6619b3e2fed04edc948beef545a2ad18e4a1be644426d"
+    }
+  }
+}

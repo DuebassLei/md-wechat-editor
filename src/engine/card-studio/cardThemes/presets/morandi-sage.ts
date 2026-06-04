@@ -1,0 +1,38 @@
+import type { CardThemeDef } from '../types'
+
+export const morandiSage: CardThemeDef = {
+  id: 'morandi-sage',
+  label: '莫兰迪绿',
+  group: 'morandi',
+  desc: '灰豆绿 · 治愈系笔记',
+  style: {
+    h1Style: 'center-line',
+    h2Style: 'border-left',
+    headerDecor: 'thin-line',
+    codeBordered: true,
+    bgPattern: 'dot-grid',
+    coverLayout: 'classic',
+    blockquoteStyle: 'bar',
+  },
+  tokens: {
+    contentBg: '#f3f5f2',
+    exportBg: '#f3f5f2',
+    coverBg: 'linear-gradient(165deg, #f3f5f2 0%, #e8ebe4 100%)',
+    ink: '#3d4a40',
+    inkSoft: '#6b7568',
+    accent: '#8fa68e',
+    accentWeak: 'rgba(143,166,142,0.22)',
+    link: '#7a9179',
+    codeBg: 'rgba(122,145,121,0.1)',
+    preBg: '#e8ebe4',
+    hr: '#d4dcd2',
+    tableBorder: '#d4dcd2',
+    tableHeadBg: '#e8ebe4',
+    footerDash: '#d4dcd2',
+    brandColor: '#7a9179',
+    pageColor: '#8a9688',
+    chipBg: '#e8ebe4',
+    chipBorder: '#d4dcd2',
+    chipInk: '#3d4a40',
+  },
+}

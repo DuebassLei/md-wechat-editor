@@ -1,0 +1,42 @@
+import type { CardThemeDef } from '../types'
+
+/** 复古报纸 · 暖纸质感 */
+export const warmPaper: CardThemeDef = {
+  id: 'warm-paper',
+  label: '复古纸感',
+  group: 'light',
+  desc: '羊皮纸色 · 衬线标题 · 人文阅读',
+  style: {
+    h1Style: 'accent-bar',
+    h2Style: 'border-left',
+    headerDecor: 'gradient-fade',
+    codeBordered: true,
+    bgPattern: 'paper-grain',
+    coverLayout: 'newspaper',
+    blockquoteStyle: 'bracket',
+  },
+  tokens: {
+    contentBg: '#f6f1e6',
+    exportBg: '#f6f1e6',
+    coverBg: '#f6f1e6',
+    ink: '#1f1a14',
+    inkSoft: '#3a332b',
+    accent: '#b5482a',
+    accentWeak: 'rgba(181,72,42,0.12)',
+    link: '#b5482a',
+    codeBg: 'rgba(0,0,0,0.05)',
+    preBg: 'rgba(0,0,0,0.04)',
+    hr: '#c9bca4',
+    tableBorder: '#c9bca4',
+    tableHeadBg: 'rgba(0,0,0,0.05)',
+    footerDash: '#c9bca4',
+    brandColor: '#b5482a',
+    pageColor: '#6b5d4f',
+    accentBar: '#b5482a',
+    headingFont: 'Georgia, "Times New Roman", Times, serif',
+    bodyFont: 'Georgia, "Times New Roman", Times, serif',
+    blockquoteBg: 'rgba(0,0,0,0.04)',
+    contentPadX: 18,
+    contentPadY: 16,
+  },
+}

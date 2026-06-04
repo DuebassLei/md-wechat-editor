@@ -1,0 +1,38 @@
+import type { CardThemeDef } from '../types'
+
+export const magazineSerif: CardThemeDef = {
+  id: 'magazine-serif',
+  label: '杂志衬线',
+  group: 'magazine',
+  desc: '衬线大标题 · 深度长文',
+  style: {
+    h1Style: 'center-line',
+    h2Style: 'border-left',
+    headerDecor: 'gradient-fade',
+    codeBordered: true,
+    bgPattern: 'soft-wash',
+    coverLayout: 'magazine',
+    blockquoteStyle: 'bracket',
+  },
+  tokens: {
+    contentBg: '#fcfcfb',
+    exportBg: '#fcfcfb',
+    coverBg: 'linear-gradient(180deg, #fcfcfb 0%, #f5f4f0 100%)',
+    ink: '#1a1a1a',
+    inkSoft: '#5c5c5c',
+    accent: '#8b4513',
+    accentWeak: 'rgba(139,69,19,0.12)',
+    link: '#8b4513',
+    codeBg: '#f5f4f0',
+    preBg: '#f5f4f0',
+    hr: '#d4d0c8',
+    tableBorder: '#d4d0c8',
+    tableHeadBg: '#f5f4f0',
+    footerDash: '#d4d0c8',
+    brandColor: '#8b4513',
+    pageColor: '#8a8580',
+    headingFont: '"Playfair Display",Georgia,"Times New Roman",serif',
+    bodyFont: 'Georgia,"Times New Roman",Times,serif',
+    blockquoteBg: 'rgba(139,69,19,0.06)',
+  },
+}

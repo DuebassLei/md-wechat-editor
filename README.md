@@ -1,6 +1,6 @@
 # 墨韵简排
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Noncommercial](https://img.shields.io/badge/License-Noncommercial-orange.svg)](LICENSE)
 [![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?logo=vue.js&logoColor=white)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -39,9 +39,37 @@
 - **常用 Markdown** — 标题、列表、表格、任务列表、代码块等写作语法完整支持  
 - **`:::module` 排版围栏** — 53 种排版组件（封面、步骤、对比、时间轴、CTA、FAQ 等），点击「插入组件」即可写入光标  
 - **多套排版主题** — 39 套主题实时切换，右侧手机框预览，所见即所得  
-- **一键复制公众号 HTML** — 经 juice 内联样式，直接粘贴公众平台正文编辑器  
+- **一键复制公众号 HTML** — 经 juice 内联样式，直接粘贴公众平台正文编辑器
+- **小红书图导出** — 编辑器内一键生成大字报首图 + 自动分页内容图（1080px 宽 PNG），支持 ZIP 打包或逐张下载，元数据来自 `:::hero` / YAML  
+- **微信贴图导出** — 图片消息 3:4（1080×1440）首图 + 自动分页；可选「微信风 / 小红书风」皮肤；高清 PNG 或上传优化 JPEG（≤1MB，对齐 `uploadimg`）  
 - **语法手册内置** — 应用内可查全量模块说明，不必翻外部文档  
 - **界面配色** — 9 套强调色 + 浅色/深色/跟随系统外观，下拉即换，长时间编辑更舒适  
+
+---
+
+## 知识卡片工作室
+
+路径 **`/cards`**（顶栏「知识卡片」）。
+
+- **Markdown 写卡片** — 标题、列表、引用、代码、表格、任务列表等标准语法
+- **14 套内容主题** — 清爽知识、莫兰迪、杂志极简、金句黑金等（对标 [MD2Card 主题市场](https://md2card.com/zh/theme-store)）
+- **封面大字报首图** — YAML / `:::hero` 元数据生成封面，可开关
+- **顶栏装饰** — MD2Card 式 accent 顶栏（随主题变化）
+- **智能分页** — 默认自动分页；`---` 或 `:::page` 手动断页；可切换单卡模式
+- **导出** — 3:4 / 1:1 高清 PNG，支持 ZIP 打包
+- **本地持久化** — 浏览器 localStorage 自动保存
+
+---
+
+## 手写创意稿工作室
+
+路径 **`/handwriting`**（顶栏「手写创意稿」）。
+
+- **11 种纸张** — 横线纸、暖色横线、护眼绿、手账粉、方格纸、米黄方格、作文格、红线笔记、复古信笺、空白纸、牛皮纸，含多种样式变体
+- **13 款手写字体** — 霞鹜文楷 / Lite / 臻楷 / Neo / 仿宋 / 马克笔，马善政、龙苍、志芒星、刘建毛草、站酷快乐体、佑字朴、佑字麦
+- **错别字模拟** — 文本内 `{错字=>正字}`，预览显示错字效果
+- **排版调节** — 字号、字间距、行距、词间距滑块实时预览，设置随 localStorage 保存
+- **本地持久化** — 浏览器 localStorage 自动保存，支持一键清空
 
 ---
 
@@ -154,6 +182,8 @@ npm run dev
 | `npm run build` | 生产构建 |
 | `npm run preview` | 预览构建产物 |
 | `npm run test:engine` | 排版引擎冒烟测试 |
+| `npm run test:card-studio` | 知识卡片工作室引擎冒烟测试 |
+| `npm run test:wechat-tietu` | 微信贴图导出冒烟测试 |
 | `npm run bench:picker` | 单模块预览渲染 P95 基准（开发） |
 | `npm run gen:module-thumbs` | 生成「插入组件」静态缩略图 PNG |
 | `npm run lint` | ESLint |
@@ -182,6 +212,8 @@ $env:GITHUB_ACTIONS='true'; $env:GITHUB_REPOSITORY='user/md-wechat-editor'; npm 
 | `VITE_WECHAT_MP_URL` | 弹窗内「在浏览器中打开」链接（可选） |
 | `VITE_WECHAT_MP_QR_URL` | 默认公众号二维码图片 URL |
 | `VITE_WECHAT_MP_PROMO_ENABLED` | 设为 `false` 关闭顶栏推广位 |
+| `VITE_XHS_BRAND` | 小红书图导出默认 `@品牌`（未在 hero/YAML 指定时），默认 `墨韵简排` |
+| `VITE_WECHAT_TIETU_BRAND` | 微信贴图导出页脚 `@品牌`（未指定时默认同 `VITE_XHS_BRAND`） |
 
 顶栏「扫码关注」点击弹出二维码；将图片放到 `public/wechat-mp-qr.png` 或设置 `VITE_WECHAT_MP_QR_URL`。
 
@@ -189,4 +221,19 @@ $env:GITHUB_ACTIONS='true'; $env:GITHUB_REPOSITORY='user/md-wechat-editor'; npm 
 
 ## 许可证
 
-[MIT License](LICENSE)
+本项目采用 **[源代码非商业许可](LICENSE)**（非 MIT / Apache）：
+
+| 允许 | 未经书面同意禁止 |
+|------|------------------|
+| 个人学习、研究、评测 | 任何商业目的使用 |
+| 非商业场景下修改、使用 | 集成到闭源或商业产品 / SaaS |
+| Fork 后按**相同协议**开源分发 | 有偿排版服务、白标、OEM、再许可 |
+
+**如需闭源商用授权**，请联系作者：
+
+- **邮箱**：[1130122701@qq.com](mailto:1130122701@qq.com)
+- **微信**：公众号「海边的小鱼干」联系「商用授权」
+
+亦可查阅 [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md)，或通过 [GitHub Issue](https://github.com/DuebassLei/md-wechat-editor/issues/new) 标注 `commercial-license` 联系。
+
+> 说明：GitHub 公开源码不等于可随意商用；商用须另行取得授权。

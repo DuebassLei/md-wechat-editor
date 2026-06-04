@@ -1,0 +1,38 @@
+import type { CardThemeDef } from '../types'
+
+export const forestGreen: CardThemeDef = {
+  id: 'forest-green',
+  label: '清新薄荷',
+  group: 'light',
+  desc: '自然绿 · 生活方式 / 成长笔记',
+  style: {
+    h1Style: 'center-line',
+    h2Style: 'border-left',
+    headerDecor: 'gradient-fade',
+    codeBordered: true,
+    bgPattern: 'bloom',
+    coverLayout: 'classic',
+    blockquoteStyle: 'rounded',
+  },
+  tokens: {
+    contentBg: 'linear-gradient(180deg, #ecfdf5 0%, #f0fdf4 40%, #ffffff 100%)',
+    exportBg: '#f0fdf4',
+    ink: '#14532d',
+    inkSoft: '#166534',
+    accent: '#10b981',
+    accentWeak: 'rgba(16,185,129,0.15)',
+    link: '#059669',
+    codeBg: 'rgba(16,185,129,0.1)',
+    preBg: '#dcfce7',
+    hr: '#bbf7d0',
+    tableBorder: '#bbf7d0',
+    tableHeadBg: '#ecfdf5',
+    footerDash: '#86efac',
+    brandColor: '#10b981',
+    pageColor: '#64748b',
+    accentBar: '#10b981',
+    blockquoteBg: 'rgba(16,185,129,0.08)',
+    contentPadX: 20,
+    contentPadY: 18,
+  },
+}

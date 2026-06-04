@@ -1,0 +1,38 @@
+import type { CardThemeDef } from '../types'
+
+export const morandiRose: CardThemeDef = {
+  id: 'morandi-rose',
+  label: '莫兰迪玫',
+  group: 'morandi',
+  desc: '灰玫瑰 · 美妆穿搭',
+  style: {
+    h1Style: 'accent-bar',
+    h2Style: 'accent-underline',
+    headerDecor: 'gradient-fade',
+    codeBordered: true,
+    bgPattern: 'bloom',
+    coverLayout: 'split-block',
+    blockquoteStyle: 'rounded',
+  },
+  tokens: {
+    contentBg: '#faf5f5',
+    exportBg: '#faf5f5',
+    coverBg: 'linear-gradient(160deg, #faf5f5 0%, #f5e8e8 55%, #efe0e0 100%)',
+    ink: '#5c4a4a',
+    inkSoft: '#8a7070',
+    accent: '#c9a9a6',
+    accentWeak: 'rgba(201,169,166,0.25)',
+    link: '#b08e8b',
+    codeBg: 'rgba(176,142,139,0.12)',
+    preBg: '#f5eded',
+    hr: '#e8d4d4',
+    tableBorder: '#e8d4d4',
+    tableHeadBg: '#f5eded',
+    footerDash: '#e8d4d4',
+    brandColor: '#b08e8b',
+    pageColor: '#a89494',
+    chipBg: '#f5eded',
+    chipBorder: '#e8d4d4',
+    chipInk: '#5c4a4a',
+  },
+}
