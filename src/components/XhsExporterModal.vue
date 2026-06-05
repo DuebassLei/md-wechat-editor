@@ -42,10 +42,23 @@ const accentMode = ref<XhsAccentMode>(
 )
 const cards = ref<XhsCard[]>([])
 const building = ref(false)
+const slicing = ref(false)
 const busy = ref(false)
 const status = ref('')
 
 let cardEls: (HTMLElement | null)[] = []
+let genId = 0
+let debounceTimer: ReturnType<typeof setTimeout> | undefined
+let abortController: AbortController | null = null
+const exportSlices = ref<string[] | null>(null)
+
+type SliceCtx = {
+  contentHtml: string
+  brand: string
+  aspect: XhsAspect
+  previewContentWidth: number
+}
+let sliceCtx: SliceCtx | null = null
 
 const canDownload = computed(
   () => !busy.value && !building.value && cards.value.length > 0,
@@ -62,9 +75,43 @@ function setRef(el: Element | null, idx: number) {
   cardEls[idx] = el as HTMLElement | null
 }
 
-async function generate() {
-  building.value = true
+function isAborted(e: unknown): boolean {
+  return e instanceof DOMException && e.name === 'AbortError'
+}
+
+function scheduleGenerate() {
+  clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    void generate()
+  }, 300)
+}
+
+async function ensureExportSlices(): Promise<string[]> {
+  if (exportSlices.value) return exportSlices.value
+  if (!sliceCtx) return []
+  status.value = '准备高清图…'
+  const urls = await sliceContentToDataUrls({
+    ...sliceCtx,
+    purpose: 'export',
+  })
+  exportSlices.value = urls
   status.value = ''
+  return urls
+}
+
+async function generate() {
+  const id = ++genId
+  abortController?.abort()
+  const ac = new AbortController()
+  abortController = ac
+
+  building.value = true
+  slicing.value = false
+  exportSlices.value = null
+  sliceCtx = null
+  status.value = ''
+  cardEls = []
+
   try {
     const { meta, contentMd } = extractXhs(props.markdown)
     const colors = resolveAccentColors(accentMode.value, props.themeId)
@@ -75,36 +122,63 @@ async function generate() {
       html: buildCover(meta, aspect.value, colors),
     }
     const readingHtml = prepareReadingHtml(contentMd, { skin: 'xhs', colors })
-    const slices = readingHtml.trim()
-      ? await sliceContentToDataUrls({
-          contentHtml: readingHtml,
-          brand: meta.brand,
-          aspect: aspect.value,
-          previewContentWidth: props.previewContentWidth,
-        })
-      : []
 
-    cardEls = []
-    cards.value = [
-      cover,
-      ...slices.map((src, i) => ({
-        id: `p${i}`,
-        label: `内容 ${i + 1}`,
-        kind: 'image' as const,
-        src,
-      })),
-    ]
+    cards.value = [cover]
     await nextTick()
-  } catch (e) {
-    status.value = '生成失败：' + errText(e)
-  } finally {
+    if (id !== genId) return
     building.value = false
+
+    if (readingHtml.trim()) {
+      sliceCtx = {
+        contentHtml: readingHtml,
+        brand: meta.brand,
+        aspect: aspect.value,
+        previewContentWidth: props.previewContentWidth,
+      }
+      slicing.value = true
+      try {
+        const previewSlices: string[] = []
+        await sliceContentToDataUrls({
+          ...sliceCtx,
+          purpose: 'preview',
+          signal: ac.signal,
+          onPage: (src, i) => {
+            if (id !== genId) return
+            previewSlices[i] = src
+            cards.value = [
+              cover,
+              ...previewSlices
+                .filter((s): s is string => Boolean(s))
+                .map((s, j) => ({
+                  id: `p${j}`,
+                  label: `内容 ${j + 1}`,
+                  kind: 'image' as const,
+                  src: s,
+                })),
+            ]
+          },
+        })
+      } finally {
+        if (id === genId) slicing.value = false
+      }
+    }
+  } catch (e) {
+    if (isAborted(e) || id !== genId) return
+    status.value = '生成失败：' + errText(e)
+    cards.value = []
+    building.value = false
+    slicing.value = false
   }
 }
 
 async function cardDataUrl(idx: number): Promise<string> {
   const card = cards.value[idx]
-  if (card.kind === 'image' && card.src) return card.src
+  if (card.kind === 'image') {
+    const urls = await ensureExportSlices()
+    const src = urls[idx - 1]
+    if (!src) throw new Error('内容图未就绪')
+    return src
+  }
   const node = cardEls[idx]?.firstElementChild as HTMLElement | undefined
   if (!node) throw new Error('卡片节点丢失')
   const { w, h } = ASPECTS[aspect.value]
@@ -181,14 +255,14 @@ function setAspect(a: XhsAspect) {
   if (aspect.value === a) return
   aspect.value = a
   sessionStorage.setItem('mdwe:xhs-aspect', a)
-  if (props.visible) void generate()
+  if (props.visible) scheduleGenerate()
 }
 
 function setAccentMode(m: XhsAccentMode) {
   if (accentMode.value === m) return
   accentMode.value = m
   sessionStorage.setItem('mdwe:xhs-accent', m)
-  if (props.visible) void generate()
+  if (props.visible) scheduleGenerate()
 }
 
 function close() {
@@ -204,7 +278,7 @@ watch(
 watch(
   () => [props.markdown, props.themeId, props.previewContentWidth],
   () => {
-    if (props.visible) void generate()
+    if (props.visible) scheduleGenerate()
   },
 )
 </script>
@@ -306,7 +380,7 @@ watch(
           </header>
 
           <div class="min-h-0 flex-1 overflow-auto bg-paper-dim/40 p-4">
-            <p v-if="building" class="state-empty">生成预览中…</p>
+            <p v-if="building && !cards.length" class="state-empty">生成预览中…</p>
             <div
               v-else-if="cards.length"
               class="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2"
@@ -341,7 +415,8 @@ watch(
                 </div>
               </article>
             </div>
-            <p v-else class="state-empty">暂无卡片，请检查文稿后重试</p>
+            <p v-if="slicing" class="mt-4 text-center text-xs text-ink-muted">内容分页中…</p>
+            <p v-else-if="!building && !cards.length" class="state-empty">暂无卡片，请检查文稿后重试</p>
           </div>
 
           <footer class="shrink-0 border-t border-paper-line px-4 py-3">
@@ -352,7 +427,7 @@ watch(
                 role="status"
                 aria-live="polite"
               >
-                {{ status || (building ? '生成中…' : cards.length ? `共 ${cards.length} 张` : '') }}
+                {{ status || (building && !cards.length ? '生成中…' : cards.length ? `共 ${cards.length} 张` : '') }}
               </p>
               <div class="flex shrink-0 flex-wrap justify-end gap-2">
                 <button

@@ -1,7 +1,10 @@
 import {
   sliceContentToDataUrls as sliceShared,
   type SliceContentOptions,
+  type SlicePurpose,
 } from '@/engine/card-export/sliceContent'
+
+export type { SlicePurpose }
 import { XHS_SLICE_THEME } from './tokens'
 import type { XhsAspect } from './types'
 
@@ -12,6 +15,9 @@ export interface XhsSliceContentOptions {
   brand: string
   aspect: XhsAspect
   previewContentWidth: number
+  purpose?: SliceContentOptions['purpose']
+  onPage?: SliceContentOptions['onPage']
+  signal?: AbortSignal
 }
 
 export async function sliceContentToDataUrls(opts: XhsSliceContentOptions): Promise<string[]> {

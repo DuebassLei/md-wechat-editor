@@ -63,36 +63,39 @@ function previewClass(id: CardFrameId): string {
 <template>
   <div class="frame-picker">
     <span v-if="label" class="frame-picker__label">{{ label }}</span>
-    <div class="frame-picker__scroll">
-      <section
-        v-for="g in CARD_FRAME_GROUPS"
-        :key="g.label"
-        class="frame-picker__group"
-      >
-        <h3 class="frame-picker__group-title">{{ g.label }}</h3>
-        <div class="frame-picker__grid" role="listbox" :aria-label="`${g.label}卡片样式`">
-          <button
-            v-for="id in g.ids"
-            :key="id"
-            type="button"
-            class="frame-picker__chip"
-            role="option"
-            :aria-selected="model === id"
-            :title="frameDef(id).desc"
-            @click="select(id)"
+    <div
+      class="frame-picker__track"
+      role="listbox"
+      :aria-label="label ? `${label}选项` : '卡片样式'"
+    >
+      <template v-for="(g, gi) in CARD_FRAME_GROUPS" :key="g.label">
+        <span
+          v-if="gi > 0"
+          class="frame-picker__sep"
+          :title="g.label"
+          aria-hidden="true"
+        />
+        <button
+          v-for="id in g.ids"
+          :key="id"
+          type="button"
+          class="frame-picker__chip"
+          role="option"
+          :aria-selected="model === id"
+          :title="`${frameDef(id).label} · ${frameDef(id).desc}`"
+          @click="select(id)"
+        >
+          <span
+            class="frame-picker__thumb"
+            :class="previewClass(id)"
+            :style="usesAccent(id) ? { '--frame-accent': accentColor() } : undefined"
+            aria-hidden="true"
           >
-            <span
-              class="frame-picker__thumb"
-              :class="previewClass(id)"
-              :style="usesAccent(id) ? { '--frame-accent': accentColor() } : undefined"
-              aria-hidden="true"
-            >
-              <span class="frame-picker__thumb-inner" />
-            </span>
-            <span class="frame-picker__name">{{ frameDef(id).label }}</span>
-          </button>
-        </div>
-      </section>
+            <span class="frame-picker__thumb-inner" />
+          </span>
+          <span class="frame-picker__name">{{ frameDef(id).label }}</span>
+        </button>
+      </template>
     </div>
   </div>
 </template>
@@ -100,50 +103,55 @@ function previewClass(id: CardFrameId): string {
 <style scoped>
 .frame-picker {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
   min-width: 0;
 }
 
 .frame-picker__label {
+  flex-shrink: 0;
   font-size: 11px;
   font-weight: 500;
   color: var(--color-ink-muted, #64748b);
 }
 
-.frame-picker__scroll {
-  max-height: 240px;
-  overflow-y: auto;
-  padding-right: 4px;
+.frame-picker__track {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.frame-picker__group-title {
-  margin: 0 0 6px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--color-ink-muted, #94a3b8);
-}
-
-.frame-picker__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+  flex: 1;
+  min-width: 0;
+  align-items: stretch;
   gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 1px 4px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.frame-picker__sep {
+  flex-shrink: 0;
+  align-self: center;
+  width: 1px;
+  height: 44px;
+  margin: 0 1px;
+  background: var(--color-paper-line, #e8dfd0);
 }
 
 .frame-picker__chip {
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 7px 4px 5px;
-  border-radius: 12px;
+  gap: 3px;
+  width: 52px;
+  padding: 6px 3px 4px;
+  border-radius: 10px;
   border: 1px solid var(--color-paper-line, #e8dfd0);
   background: var(--color-paper-bright, #fffdf8);
   cursor: pointer;
+  scroll-snap-align: start;
   transition:
     border-color 0.15s ease,
     background 0.15s ease,
@@ -171,8 +179,8 @@ function previewClass(id: CardFrameId): string {
   --xhs-canvas: #f7f2e8;
   --xhs-card: #fff;
   position: relative;
-  width: 40px;
-  height: 52px;
+  width: 36px;
+  height: 46px;
   border-radius: 6px;
   overflow: hidden;
   background: var(--xhs-canvas);

@@ -4,6 +4,8 @@ import { htmlToImageOptions } from './imageExport'
 import { createCardShell, getCardFrameSpec, type CardFrameId } from './cardFrames'
 import type { CardAspect, CardExportTheme } from './types'
 
+export type SlicePurpose = 'preview' | 'export'
+
 export interface SliceContentOptions {
   contentHtml: string
   brand: string
@@ -14,6 +16,11 @@ export interface SliceContentOptions {
   frameAccent?: string
   /** 限制最大页数；1 = 单卡模式 */
   maxPages?: number
+  /** preview = 低分辨率快速预览；export = 1080px 导出（默认） */
+  purpose?: SlicePurpose
+  /** 每页截图完成时回调，用于渐进式预览 */
+  onPage?: (dataUrl: string, pageIndex: number, total: number) => void
+  signal?: AbortSignal
 }
 
 export interface SliceContentResult {
@@ -68,13 +75,21 @@ export async function sliceContentToDataUrls(opts: SliceContentOptions): Promise
     frameId = 'none',
     frameAccent = '#07c160',
     maxPages,
+    purpose = 'export',
+    onPage,
+    signal,
   } = opts
   const base = ASPECTS[aspect]
   const nativeW = base.w * 3
   const refW = previewContentWidth > 80 ? previewContentWidth : 375
   const w = Math.round(refW)
   const h = Math.round((w * base.h) / base.w)
-  const ratio = nativeW / w
+  const exportRatio = nativeW / w
+  const pixelRatio = purpose === 'preview' ? 1 : exportRatio
+  const pngOptions = {
+    ...htmlToImageOptions,
+    cacheBust: purpose === 'export',
+  }
   const bg = theme.contentBg
   const pngBg = theme.exportBg ?? bg
   const padX = 20
@@ -164,21 +179,22 @@ export async function sliceContentToDataUrls(opts: SliceContentOptions): Promise
   const slices: string[] = []
   try {
     for (let i = 0; i < exportCount; i++) {
+      if (signal?.aborted) throw new DOMException('Aborted', 'AbortError')
       const { startIdx, endIdx, top } = validPages[i]
       blocks.forEach((b, idx) => {
         b.style.visibility = idx >= startIdx && idx < endIdx ? 'visible' : 'hidden'
       })
       wrap.style.top = `${topInset - top}px`
       pageEl.textContent = `${i + 1} / ${exportCount}`
-      slices.push(
-        await toPng(frame, {
-          ...htmlToImageOptions,
-          pixelRatio: ratio,
-          width: w,
-          height: h,
-          backgroundColor: exportBg,
-        }),
-      )
+      const dataUrl = await toPng(frame, {
+        ...pngOptions,
+        pixelRatio,
+        width: w,
+        height: h,
+        backgroundColor: exportBg,
+      })
+      slices.push(dataUrl)
+      onPage?.(dataUrl, i, exportCount)
     }
   } finally {
     document.body.removeChild(hider)

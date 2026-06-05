@@ -1,6 +1,6 @@
 export { extractCardMeta } from './extractMeta'
 export { sliceContentToDataUrls } from './sliceContent'
-export type { SliceContentOptions, SliceContentResult } from './sliceContent'
+export type { SliceContentOptions, SliceContentResult, SlicePurpose } from './sliceContent'
 export {
   compressPngDataUrlForUpload,
   formatByteSize,

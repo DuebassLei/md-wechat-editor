@@ -82,6 +82,9 @@ export async function sliceWechatTietuContent(opts: {
   previewContentWidth: number
   frameId?: CardFrameId
   themeId?: ThemeId | string
+  purpose?: 'preview' | 'export'
+  onPage?: (dataUrl: string, pageIndex: number, total: number) => void
+  signal?: AbortSignal
 }): Promise<string[]> {
   const frameId = opts.frameId ?? 'none'
   const themeId = opts.themeId ?? 'normal'
@@ -93,6 +96,9 @@ export async function sliceWechatTietuContent(opts: {
     theme: sliceThemeForSkin(opts.skin),
     frameId,
     frameAccent: resolveFrameAccent(opts.skin, themeId),
+    purpose: opts.purpose,
+    onPage: opts.onPage,
+    signal: opts.signal,
   })
   return dataUrls
 }

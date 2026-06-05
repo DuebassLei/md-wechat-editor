@@ -56,10 +56,25 @@ const cardFrame = ref<CardFrameId>(
 const frameAccent = computed(() => resolveFrameAccent(skin.value, props.themeId))
 const cards = ref<ExportCard[]>([])
 const building = ref(false)
+const slicing = ref(false)
 const busy = ref(false)
 const status = ref('')
 
 let cardEls: (HTMLElement | null)[] = []
+let genId = 0
+let debounceTimer: ReturnType<typeof setTimeout> | undefined
+let abortController: AbortController | null = null
+const exportSlices = ref<string[] | null>(null)
+
+type SliceCtx = {
+  contentHtml: string
+  brand: string
+  skin: WechatTietuSkin
+  previewContentWidth: number
+  frameId: CardFrameId
+  themeId: ThemeId
+}
+let sliceCtx: SliceCtx | null = null
 
 const canDownload = computed(
   () => !busy.value && !building.value && cards.value.length > 0,
@@ -80,8 +95,32 @@ function coverBg(): string {
   return skin.value === 'wechat' ? '#ffffff' : XHS.bg
 }
 
+function isAborted(e: unknown): boolean {
+  return e instanceof DOMException && e.name === 'AbortError'
+}
+
+function scheduleGenerate() {
+  clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    void generate()
+  }, 300)
+}
+
+async function ensureExportSlices(): Promise<string[]> {
+  if (exportSlices.value) return exportSlices.value
+  if (!sliceCtx) return []
+  status.value = '准备高清图…'
+  const urls = await sliceWechatTietuContent({
+    ...sliceCtx,
+    purpose: 'export',
+  })
+  exportSlices.value = urls
+  status.value = ''
+  return urls
+}
+
 async function refreshUploadSizes() {
-  if (quality.value !== 'upload') {
+  if (quality.value !== 'upload' || !cards.value.length) {
     cards.value = cards.value.map((c) => ({ ...c, uploadBytes: undefined }))
     return
   }
@@ -92,16 +131,27 @@ async function refreshUploadSizes() {
       const png = await cardPngDataUrl(i)
       const r = await compressPngDataUrlForUpload(png)
       next[i] = { ...c, uploadBytes: r.bytes }
+      cards.value = [...next]
     } catch {
       next[i] = { ...c, uploadBytes: null }
+      cards.value = [...next]
     }
   }
-  cards.value = next
 }
 
 async function generate() {
+  const id = ++genId
+  abortController?.abort()
+  const ac = new AbortController()
+  abortController = ac
+
   building.value = true
+  slicing.value = false
+  exportSlices.value = null
+  sliceCtx = null
   status.value = ''
+  cardEls = []
+
   try {
     const { meta, contentMd } = extractWechatTietu(props.markdown)
     const cover: ExportCard = {
@@ -114,39 +164,66 @@ async function generate() {
       skin: skin.value,
       colors: skin.value === 'xhs' ? resolveAccentColors('theme', props.themeId) : undefined,
     })
-    const slices = readingHtml.trim()
-      ? await sliceWechatTietuContent({
-          contentHtml: readingHtml,
-          brand: meta.brand,
-          skin: skin.value,
-          previewContentWidth: props.previewContentWidth,
-          frameId: cardFrame.value,
-          themeId: props.themeId,
-        })
-      : []
 
-    cardEls = []
-    cards.value = [
-      cover,
-      ...slices.map((src, i) => ({
-        id: `p${i}`,
-        label: `内容 ${i + 1}`,
-        kind: 'image' as const,
-        src,
-      })),
-    ]
+    cards.value = [cover]
     await nextTick()
-    await refreshUploadSizes()
-  } catch (e) {
-    status.value = '生成失败：' + errText(e)
-  } finally {
+    if (id !== genId) return
     building.value = false
+
+    if (readingHtml.trim()) {
+      sliceCtx = {
+        contentHtml: readingHtml,
+        brand: meta.brand,
+        skin: skin.value,
+        previewContentWidth: props.previewContentWidth,
+        frameId: cardFrame.value,
+        themeId: props.themeId,
+      }
+      slicing.value = true
+      try {
+        const previewSlices: string[] = []
+        await sliceWechatTietuContent({
+          ...sliceCtx,
+          purpose: 'preview',
+          signal: ac.signal,
+          onPage: (src, i) => {
+            if (id !== genId) return
+            previewSlices[i] = src
+            cards.value = [
+              cover,
+              ...previewSlices
+                .filter((s): s is string => Boolean(s))
+                .map((s, j) => ({
+                  id: `p${j}`,
+                  label: `内容 ${j + 1}`,
+                  kind: 'image' as const,
+                  src: s,
+                  uploadBytes: undefined,
+                })),
+            ]
+          },
+        })
+      } finally {
+        if (id === genId) slicing.value = false
+      }
+    }
+  } catch (e) {
+    if (isAborted(e) || id !== genId) return
+    status.value = '生成失败：' + errText(e)
+    cards.value = []
+    building.value = false
+    slicing.value = false
   }
 }
 
 async function cardPngDataUrl(idx: number): Promise<string> {
   const card = cards.value[idx]
-  if (card.kind === 'image' && card.src) return card.src
+  if (card.kind === 'image') {
+    const urls = await ensureExportSlices()
+    const src = urls[idx - 1]
+    if (!src) throw new Error('内容图未就绪')
+    return src
+  }
   const node = cardEls[idx]?.firstElementChild as HTMLElement | undefined
   if (!node) throw new Error('卡片节点丢失')
   const { w, h } = ASPECTS[WECHAT_TIETU_ASPECT]
@@ -172,7 +249,8 @@ function sizeLabel(card: ExportCard): string {
     if (card.kind === 'image' && card.src) return formatByteSize(dataUrlByteSize(card.src))
     return ''
   }
-  if (card.uploadBytes == null) return '超限 ⚠'
+  if (card.uploadBytes === undefined) return ''
+  if (card.uploadBytes === null) return '超限 ⚠'
   const ok = card.uploadBytes <= 1024 * 1024 - 1
   return `${formatByteSize(card.uploadBytes)}${ok ? ' ✓' : ' ⚠'}`
 }
@@ -180,7 +258,9 @@ function sizeLabel(card: ExportCard): string {
 function canDownloadCard(idx: number): boolean {
   if (quality.value === 'hd') return true
   const b = cards.value[idx]?.uploadBytes
-  return b != null && b <= 1024 * 1024 - 1
+  if (b === undefined) return true
+  if (b === null) return false
+  return b <= 1024 * 1024 - 1
 }
 
 function triggerDownload(dataUrl: string, name: string) {
@@ -250,18 +330,22 @@ function setSkin(s: WechatTietuSkin) {
   if (skin.value === s) return
   skin.value = s
   sessionStorage.setItem('mdwe:wechat-tietu-skin', s)
-  if (props.visible) void generate()
+  if (props.visible) scheduleGenerate()
 }
 
 function onFrameChange() {
-  if (props.visible) void generate()
+  if (props.visible) scheduleGenerate()
 }
 
 function setQuality(q: ExportQualityMode) {
   if (quality.value === q) return
   quality.value = q
   sessionStorage.setItem('mdwe:wechat-tietu-quality', q)
-  if (props.visible) void refreshUploadSizes()
+  if (q === 'upload' && props.visible && cards.value.length) {
+    void refreshUploadSizes()
+  } else {
+    cards.value = cards.value.map((c) => ({ ...c, uploadBytes: undefined }))
+  }
 }
 
 function close() {
@@ -277,7 +361,7 @@ watch(
 watch(
   () => [props.markdown, props.themeId, props.previewContentWidth, skin.value, cardFrame.value],
   () => {
-    if (props.visible) void generate()
+    if (props.visible) scheduleGenerate()
   },
 )
 </script>
@@ -379,7 +463,7 @@ watch(
 
             <CardFramePicker
               v-model="cardFrame"
-              class="mt-3"
+              class="mt-2.5"
               label="卡片样式"
               :accent="frameAccent"
               storage-key="mdwe:wechat-tietu-frame"
@@ -388,7 +472,7 @@ watch(
           </header>
 
           <div class="min-h-0 flex-1 overflow-auto bg-paper-dim/40 p-4">
-            <p v-if="building" class="state-empty">生成预览中…</p>
+            <p v-if="building && !cards.length" class="state-empty">生成预览中…</p>
             <div
               v-else-if="cards.length"
               class="grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2"
@@ -429,7 +513,8 @@ watch(
                 </div>
               </article>
             </div>
-            <p v-else class="state-empty">暂无卡片，请检查文稿后重试</p>
+            <p v-if="slicing" class="mt-4 text-center text-xs text-ink-muted">内容分页中…</p>
+            <p v-else-if="!building && !cards.length" class="state-empty">暂无卡片，请检查文稿后重试</p>
           </div>
 
           <footer class="shrink-0 border-t border-paper-line px-4 py-3">
@@ -440,7 +525,7 @@ watch(
                 role="status"
                 aria-live="polite"
               >
-                {{ status || (building ? '生成中…' : cards.length ? `共 ${cards.length} 张` : '') }}
+                {{ status || (building && !cards.length ? '生成中…' : cards.length ? `共 ${cards.length} 张` : '') }}
               </p>
               <div class="flex shrink-0 flex-wrap justify-end gap-2">
                 <button
