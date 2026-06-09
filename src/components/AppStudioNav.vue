@@ -2,19 +2,20 @@
 import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 
-type NavRoute = 'studio' | 'cards' | 'handwriting' | 'about'
+type NavRoute = 'studio' | 'cards' | 'cover' | 'handwriting' | 'about'
 
 interface NavItem {
   to: string
   route: NavRoute
   label: string
   shortLabel: string
-  icon: 'editor' | 'cards' | 'handwriting' | 'about'
+  icon: 'editor' | 'cards' | 'cover' | 'handwriting' | 'about'
 }
 
 const NAV_ITEMS: NavItem[] = [
   { to: '/', route: 'studio', label: '排版编辑', shortLabel: '编辑', icon: 'editor' },
   { to: '/cards', route: 'cards', label: '知识卡片', shortLabel: '卡片', icon: 'cards' },
+  { to: '/cover', route: 'cover', label: '封面制作', shortLabel: '封面', icon: 'cover' },
   { to: '/handwriting', route: 'handwriting', label: '手写创意稿', shortLabel: '手写', icon: 'handwriting' },
   { to: '/about', route: 'about', label: '产品介绍', shortLabel: '介绍', icon: 'about' },
 ]
@@ -49,6 +50,11 @@ function isActive(item: NavItem): boolean {
           <svg v-else-if="item.icon === 'cards'" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6">
             <rect x="3" y="4" width="11" height="13" rx="1.5" />
             <path d="M7 4V3.5A1.5 1.5 0 018.5 2h8A1.5 1.5 0 0118 3.5v11A1.5 1.5 0 0116.5 16H16" stroke-linecap="round" />
+          </svg>
+          <svg v-else-if="item.icon === 'cover'" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="2.5" y="5" width="15" height="10" rx="1.5" />
+            <path d="M5 8.5h6M5 11.5h4" stroke-linecap="round" />
+            <circle cx="14.5" cy="8" r="1.2" fill="currentColor" stroke="none" />
           </svg>
           <svg v-else-if="item.icon === 'handwriting'" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6">
             <path d="M3 17h14" stroke-linecap="round" />
