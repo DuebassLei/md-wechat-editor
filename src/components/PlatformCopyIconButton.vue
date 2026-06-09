@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-export type PlatformCopyIcon = 'wechat' | 'wechat-tietu' | 'juejin' | 'csdn' | 'xhs'
+export type PlatformCopyIcon = 'wechat' | 'wechat-tietu' | 'juejin' | 'zhihu' | 'csdn' | 'xhs'
 
 const props = defineProps<{
   platform: PlatformCopyIcon
@@ -13,7 +13,11 @@ const props = defineProps<{
 defineEmits<{ click: [] }>()
 
 const useImgIcon = computed(
-  () => props.platform === 'wechat' || props.platform === 'juejin' || props.platform === 'csdn',
+  () =>
+    props.platform === 'wechat'
+    || props.platform === 'juejin'
+    || props.platform === 'zhihu'
+    || props.platform === 'csdn',
 )
 
 const iconSrc = computed(() => {

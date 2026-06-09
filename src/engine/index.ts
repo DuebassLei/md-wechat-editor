@@ -8,6 +8,9 @@ export {
   type RenderEntitlements,
 } from '@/utils/wechatArticleHtml'
 
+export { buildJuejinArticleHtml } from '@/utils/juejinArticleHtml'
+export { buildZhihuArticleHtml } from '@/utils/zhihuArticleHtml'
+
 export { OPEN_RENDER_ENTITLEMENTS } from '@/utils/renderEntitlements'
 export { markdownUsesLayoutModules } from '@/utils/detectLayoutModules'
 export {

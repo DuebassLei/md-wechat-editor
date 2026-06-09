@@ -11,8 +11,10 @@ import { usePreviewShell } from '@/composables/usePreviewShell'
 import { STUDIO_SAMPLE_MARKDOWN } from '@/constants/studioSampleMarkdown'
 import { MODULE_SAMPLE_MARKDOWN } from '@/constants/moduleSampleMarkdown'
 import {
+  buildJuejinArticleHtml,
   buildPlatformMarkdown,
   buildWechatArticleHtml,
+  buildZhihuArticleHtml,
   copyPlainText,
   markdownUsesLayoutModules,
   OPEN_RENDER_ENTITLEMENTS,
@@ -39,7 +41,7 @@ const emit = defineEmits<{
 
 const mobileTab = ref<'edit' | 'preview'>('edit')
 const copying = ref(false)
-const copyingPlatform = ref<PlatformTarget | null>(null)
+const copyingPlatform = ref<PlatformTarget | 'zhihu' | null>(null)
 const confirmOpen = ref(false)
 const pendingExport = ref<PlatformExportResult | null>(null)
 const pendingPlatform = ref<PlatformTarget>('juejin')
@@ -172,6 +174,58 @@ async function copyHtml() {
   }
 }
 
+async function copyJuejinHtml() {
+  if (!content.value.trim()) {
+    showToastLater('内容为空')
+    return
+  }
+  copyingPlatform.value = 'juejin'
+  toast.value = ''
+  try {
+    const full = await buildJuejinArticleHtml(
+      content.value,
+      themeRef.value,
+      OPEN_RENDER_ENTITLEMENTS,
+      null,
+      { editorSyncAnchors: false },
+    )
+    const ok = await copyRichText(stripEditorSyncAttributes(full))
+    showToastLater(
+      ok ? '已复制掘金 HTML（含主题样式），可到掘金编辑器粘贴' : '复制失败，请检查浏览器权限',
+    )
+  } catch (e) {
+    showToastLater(e instanceof Error ? e.message : '复制失败')
+  } finally {
+    copyingPlatform.value = null
+  }
+}
+
+async function copyZhihuHtml() {
+  if (!content.value.trim()) {
+    showToastLater('内容为空')
+    return
+  }
+  copyingPlatform.value = 'zhihu'
+  toast.value = ''
+  try {
+    const full = await buildZhihuArticleHtml(
+      content.value,
+      themeRef.value,
+      OPEN_RENDER_ENTITLEMENTS,
+      null,
+      { editorSyncAnchors: false },
+    )
+    const ok = await copyRichText(stripEditorSyncAttributes(full))
+    showToastLater(
+      ok ? '已复制知乎 HTML（含主题样式），可到知乎编辑器粘贴' : '复制失败，请检查浏览器权限',
+    )
+  } catch (e) {
+    showToastLater(e instanceof Error ? e.message : '复制失败')
+  } finally {
+    copyingPlatform.value = null
+  }
+}
+
 function sourceExcerpt(md: string, maxLines = 12): string {
   return md.split('\n').slice(0, maxLines).join('\n')
 }
@@ -279,8 +333,15 @@ function openSyntaxHandbook() {
           platform="juejin"
           :loading="copyingPlatform === 'juejin'"
           :disabled="copying || copyingPlatform !== null"
-          title="复制掘金 Markdown"
-          @click="copyPlatformMarkdown('juejin')"
+          title="复制掘金 HTML（保留主题样式）"
+          @click="copyJuejinHtml"
+        />
+        <PlatformCopyIconButton
+          platform="zhihu"
+          :loading="copyingPlatform === 'zhihu'"
+          :disabled="copying || copyingPlatform !== null"
+          title="复制知乎 HTML（保留主题样式）"
+          @click="copyZhihuHtml"
         />
         <PlatformCopyIconButton
           platform="csdn"

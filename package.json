@@ -11,6 +11,8 @@
     "preview": "vite preview",
     "test:engine": "node --import ./scripts/register-aliases.mjs scripts/smoke-layout-engine.mjs",
     "test:export": "node --import ./scripts/register-aliases.mjs scripts/smoke-platform-export.mjs",
+    "test:juejin-html": "node --import ./scripts/register-aliases.mjs scripts/smoke-juejin-html.mjs",
+    "test:zhihu-html": "node --import ./scripts/register-aliases.mjs scripts/smoke-zhihu-html.mjs",
     "test:handwriting": "node --import ./scripts/register-aliases.mjs scripts/smoke-handwriting-export.mjs",
     "test:card-studio": "node --import ./scripts/register-aliases.mjs scripts/smoke-card-studio.mjs",
     "test:card-studio:browser": "node --import ./scripts/register-aliases.mjs scripts/smoke-card-studio-browser.mjs",
