@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import AppStudioNav from '@/components/AppStudioNav.vue'
 import AppThemePicker from '@/components/AppThemePicker.vue'
-import { GITHUB_REPO_URL, WECHAT_MP_PROMO } from '@/meta/site'
+import { GITHUB_REPO_URL, SITE_LOGO_URL, WECHAT_MP_PROMO } from '@/meta/site'
 import WechatMpQrModal from '@/components/WechatMpQrModal.vue'
 
 const promo = WECHAT_MP_PROMO
@@ -21,14 +21,21 @@ defineProps<{
   <div class="app-canvas" :class="{ 'app-canvas--studio': studio }">
     <header class="app-header" :class="{ 'app-header--has-promo': promo.enabled }">
       <RouterLink to="/" class="app-header__brand">
-        <span class="seal-mark" aria-hidden="true">简</span>
-        <span class="app-header__titles">
-          <span class="app-header__name">墨韵简排</span>
-          <span class="app-header__tagline">Markdown 微信排版工具</span>
-        </span>
+        <img :src="SITE_LOGO_URL" alt="墨韵简排" class="app-header__logo" width="108" height="72" />
       </RouterLink>
 
       <AppStudioNav class="app-header__nav" />
+
+      <button
+        v-if="promo.enabled && promo.miniprogramBannerEnabled"
+        type="button"
+        class="app-header__miniprogram"
+        :aria-label="`${promo.miniprogramBannerText}，点击查看小程序码`"
+        @click="qrOpen = true"
+      >
+        <span class="app-header__miniprogram-badge" aria-hidden="true">NEW</span>
+        <span class="app-header__miniprogram-text">{{ promo.miniprogramBannerText }}</span>
+      </button>
 
       <button
         v-if="promo.enabled"
@@ -100,6 +107,11 @@ defineProps<{
 }
 
 .app-header--has-promo {
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  grid-template-areas: 'brand nav miniprogram promo actions';
+}
+
+.app-header--has-promo:not(:has(.app-header__miniprogram)) {
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   grid-template-areas: 'brand nav promo actions';
 }
@@ -121,15 +133,18 @@ defineProps<{
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       'brand actions'
+      'nav nav'
+      'miniprogram promo';
+  }
+
+  .app-header--has-promo:not(:has(.app-header__miniprogram)) {
+    grid-template-areas:
+      'brand actions'
       'nav promo';
   }
 
   .app-header__nav {
     @apply justify-self-stretch overflow-x-auto pb-0.5;
-  }
-
-  .app-header__titles {
-    @apply hidden sm:flex;
   }
 }
 
@@ -160,7 +175,56 @@ defineProps<{
   }
 }
 
+.app-header__miniprogram {
+  grid-area: miniprogram;
+  @apply shrink-0 items-center gap-2 rounded-[var(--radius-pill)] border px-3 py-1.5 text-left transition-shadow duration-200;
+  border-color: rgb(var(--jade-rgb) / 0.28);
+  background: linear-gradient(
+    135deg,
+    rgb(var(--jade-light-rgb) / 0.55) 0%,
+    rgb(var(--paper-bright-rgb) / 0.98) 100%
+  );
+  box-shadow: 0 1px 0 rgb(var(--paper-bright-rgb) / 0.85) inset;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .app-header__miniprogram {
+    @apply flex;
+  }
+}
+
+@media (max-width: 1023px) {
+  .app-header__miniprogram {
+    @apply hidden;
+  }
+}
+
+.app-header__miniprogram:hover {
+  border-color: rgb(var(--jade-rgb) / 0.42);
+  box-shadow: 0 0 0 2px rgb(var(--jade-rgb) / 0.12);
+}
+
+.app-header__miniprogram:focus-visible {
+  @apply outline-none ring-2 ring-jade/35 ring-offset-2 ring-offset-paper-bright;
+}
+
+.app-header__miniprogram-badge {
+  @apply rounded-[var(--radius-pill)] px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white;
+  background: linear-gradient(135deg, rgb(var(--jade-dark-rgb) / 1) 0%, rgb(var(--jade-rgb) / 1) 100%);
+}
+
+.app-header__miniprogram-text {
+  @apply whitespace-nowrap text-xs font-semibold text-jade-dark;
+}
+
 @media (max-width: 767px) {
+  .app-header__miniprogram {
+    @apply flex flex-1 justify-self-stretch;
+  }
+
   .app-header__promo {
     max-width: none;
     @apply flex-1 justify-self-stretch;
@@ -228,16 +292,10 @@ defineProps<{
 
 .app-header__brand {
   grid-area: brand;
-  @apply flex min-w-0 items-center gap-3 no-underline;
+  @apply flex min-w-0 items-center no-underline;
 }
-.app-header__titles {
-  @apply flex min-w-0 flex-col;
-}
-.app-header__name {
-  @apply text-base font-semibold tracking-tight text-ink;
-}
-.app-header__tagline {
-  @apply text-xs text-ink-muted;
+.app-header__logo {
+  @apply block h-[3.25rem] w-auto shrink-0 object-contain sm:h-16 lg:h-[4.5rem];
 }
 .app-header__actions {
   @apply flex flex-wrap items-center justify-end gap-2;

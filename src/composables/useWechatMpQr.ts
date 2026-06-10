@@ -1,9 +1,13 @@
-import { WECHAT_MP_PROMO } from '@/meta/site'
+import { resolvePublicAsset, WECHAT_MP_PROMO } from '@/meta/site'
 
 /** 公众号二维码图片地址：环境变量优先，否则 public/wechat-mp-qr.png */
 export function resolveWechatMpQrSrc(): string {
   if (WECHAT_MP_PROMO.qrCodeUrl) return WECHAT_MP_PROMO.qrCodeUrl
-  const base = import.meta.env.BASE_URL
-  const prefix = base.endsWith('/') ? base : `${base}/`
-  return `${prefix}wechat-mp-qr.png`
+  return resolvePublicAsset('wechat-mp-qr.png')
+}
+
+/** 小程序码图片地址：环境变量优先，否则 public/miniprogram_logo.jpg */
+export function resolveMiniprogramQrSrc(): string {
+  if (WECHAT_MP_PROMO.miniprogramQrCodeUrl) return WECHAT_MP_PROMO.miniprogramQrCodeUrl
+  return resolvePublicAsset('miniprogram_logo.jpg')
 }

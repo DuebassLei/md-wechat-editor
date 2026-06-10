@@ -10,12 +10,6 @@
     overflow: hidden;
   }
 
-  .seal-mark {
-    @apply relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-sans text-sm font-bold text-white;
-    background: linear-gradient(135deg, var(--color-seal-from) 0%, var(--color-seal-to) 100%);
-    box-shadow: 0 4px 14px rgba(var(--color-shadow-cinnabar), 0.28);
-  }
-
   .card {
     @apply rounded-[var(--radius-card)] border border-paper-line/90 bg-paper-bright shadow-card;
   }

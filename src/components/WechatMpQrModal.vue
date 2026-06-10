@@ -1,18 +1,45 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { WECHAT_MP_PROMO } from '@/meta/site'
-import { resolveWechatMpQrSrc } from '@/composables/useWechatMpQr'
+import { resolveMiniprogramQrSrc, resolveWechatMpQrSrc } from '@/composables/useWechatMpQr'
 
 const open = defineModel<boolean>('open', { required: true })
 
 const promo = WECHAT_MP_PROMO
 const promoLabel = `关注 ${promo.accountName}`
+const miniprogramName = computed(
+  () => promo.miniprogramName?.trim() || promo.accountName,
+)
+const personalWechatId = computed(() => promo.personalWechatId.trim())
 const qrSrc = resolveWechatMpQrSrc()
-const loadError = ref(false)
+const miniprogramQrSrc = resolveMiniprogramQrSrc()
+const mpLoadError = ref(false)
+const miniprogramLoadError = ref(false)
+const copied = ref(false)
+let copiedTimer: ReturnType<typeof setTimeout> | undefined
 
 watch(open, (isOpen) => {
-  if (isOpen) loadError.value = false
+  if (isOpen) {
+    mpLoadError.value = false
+    miniprogramLoadError.value = false
+    copied.value = false
+    if (copiedTimer) clearTimeout(copiedTimer)
+  }
 })
+
+async function copyPersonalWechatId() {
+  if (!personalWechatId.value) return
+  try {
+    await navigator.clipboard.writeText(personalWechatId.value)
+    copied.value = true
+    if (copiedTimer) clearTimeout(copiedTimer)
+    copiedTimer = setTimeout(() => {
+      copied.value = false
+    }, 1800)
+  } catch {
+    copied.value = false
+  }
+}
 
 function close() {
   open.value = false
@@ -44,7 +71,7 @@ function close() {
 
           <header class="wechat-qr-dialog__header">
             <div class="min-w-0 flex-1">
-              <p class="wechat-qr-dialog__eyebrow">微信公众号 · AI 编程</p>
+              <p class="wechat-qr-dialog__eyebrow">微信公众号 · 小程序 · AI 编程</p>
               <p id="wechat-qr-title" class="wechat-qr-dialog__title">{{ promoLabel }}</p>
               <p class="wechat-qr-dialog__tagline">{{ promo.tagline }}</p>
             </div>
@@ -57,24 +84,51 @@ function close() {
 
           <div class="wechat-qr-dialog__body">
             <div class="wechat-qr-dialog__qr-col">
-              <div class="wechat-qr-dialog__frame">
-                <img
-                  v-if="!loadError"
-                  :src="qrSrc"
-                  alt=""
-                  class="wechat-qr-dialog__img"
-                  width="196"
-                  height="196"
-                  @error="loadError = true"
-                >
-                <div v-else class="wechat-qr-dialog__empty">
-                  <p class="text-sm font-medium text-ink">暂未配置二维码</p>
-                  <p class="mt-1 px-2 text-xs leading-relaxed text-ink-muted">
-                    请将图片放到 public/wechat-mp-qr.png，或配置 VITE_WECHAT_MP_QR_URL
-                  </p>
+              <div class="wechat-qr-dialog__qr-grid" aria-label="扫码关注或打开小程序">
+                <div class="wechat-qr-dialog__qr-item">
+                  <p class="wechat-qr-dialog__qr-label">公众号</p>
+                  <div class="wechat-qr-dialog__frame wechat-qr-dialog__frame--sm">
+                    <img
+                      v-if="!mpLoadError"
+                      :src="qrSrc"
+                      :alt="`${promo.accountName} 公众号二维码`"
+                      class="wechat-qr-dialog__img wechat-qr-dialog__img--sm"
+                      width="132"
+                      height="132"
+                      @error="mpLoadError = true"
+                    >
+                    <div v-else class="wechat-qr-dialog__empty wechat-qr-dialog__empty--sm">
+                      <p class="text-xs font-medium text-ink">暂未配置</p>
+                      <p class="mt-1 px-2 text-[10px] leading-relaxed text-ink-muted">
+                        public/wechat-mp-qr.png
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wechat-qr-dialog__qr-item">
+                  <p class="wechat-qr-dialog__qr-label">小程序</p>
+                  <div class="wechat-qr-dialog__frame wechat-qr-dialog__frame--sm">
+                    <img
+                      v-if="!miniprogramLoadError"
+                      :src="miniprogramQrSrc"
+                      :alt="`${miniprogramName} 小程序码`"
+                      class="wechat-qr-dialog__img wechat-qr-dialog__img--sm"
+                      width="132"
+                      height="132"
+                      @error="miniprogramLoadError = true"
+                    >
+                    <div v-else class="wechat-qr-dialog__empty wechat-qr-dialog__empty--sm">
+                      <p class="text-xs font-medium text-ink">暂未配置</p>
+                      <p class="mt-1 px-2 text-[10px] leading-relaxed text-ink-muted">
+                        public/miniprogram_logo.jpg
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <p class="wechat-qr-dialog__scan">微信扫一扫，即刻关注</p>
+
+              <p class="wechat-qr-dialog__scan">微信扫一扫，关注公众号或打开小程序</p>
               <a
                 v-if="promo.href"
                 class="wechat-qr-dialog__link"
@@ -96,18 +150,38 @@ function close() {
                   {{ topic }}
                 </li>
               </ul>
+            </div>
 
-              <div class="wechat-qr-dialog__benefits card">
-                <p class="wechat-qr-dialog__benefits-title">关注后可获得</p>
-                <ul class="wechat-qr-dialog__benefits-list">
-                  <li v-for="item in promo.benefits" :key="item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>{{ item }}</span>
-                  </li>
-                </ul>
+            <div class="wechat-qr-dialog__contact">
+              <p class="wechat-qr-dialog__qr-label">个人微信</p>
+              <div class="wechat-qr-dialog__contact-card card">
+                <p v-if="personalWechatId" class="wechat-qr-dialog__wechat-id">{{ personalWechatId }}</p>
+                <p v-else class="wechat-qr-dialog__wechat-id wechat-qr-dialog__wechat-id--empty">
+                  暂未配置微信号
+                </p>
+                <button
+                  v-if="personalWechatId"
+                  type="button"
+                  class="wechat-qr-dialog__copy-btn"
+                  :aria-label="copied ? '已复制微信号' : '复制微信号'"
+                  @click="copyPersonalWechatId"
+                >
+                  {{ copied ? '已复制' : '复制微信号' }}
+                </button>
               </div>
+              <p class="wechat-qr-dialog__contact-hint">{{ promo.personalWechatHint }}</p>
+            </div>
+
+            <div class="wechat-qr-dialog__benefits card">
+              <p class="wechat-qr-dialog__benefits-title">关注后可获得</p>
+              <ul class="wechat-qr-dialog__benefits-list">
+                <li v-for="item in promo.benefits" :key="item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{{ item }}</span>
+                </li>
+              </ul>
             </div>
           </div>
 
@@ -116,7 +190,7 @@ function close() {
             <span class="wechat-qr-dialog__footer-arrow" aria-hidden="true">→</span>
             <span class="wechat-qr-dialog__footer-step">扫一扫</span>
             <span class="wechat-qr-dialog__footer-arrow" aria-hidden="true">→</span>
-            <span class="wechat-qr-dialog__footer-step">关注 {{ promo.accountName }}</span>
+            <span class="wechat-qr-dialog__footer-step">公众号 / 小程序 / 加我微信</span>
           </footer>
         </div>
       </div>
@@ -175,17 +249,51 @@ function close() {
 }
 
 .wechat-qr-dialog__body {
-  @apply grid gap-5 px-4 pb-4 sm:grid-cols-[11rem_minmax(0,1fr)] sm:items-start sm:gap-6 sm:px-5 sm:pb-5;
+  @apply grid gap-5 px-4 pb-4 sm:gap-x-6 sm:gap-y-4 sm:px-5 sm:pb-5;
+  grid-template-areas:
+    'qr'
+    'content'
+    'contact'
+    'benefits';
+}
+
+@media (min-width: 640px) {
+  .wechat-qr-dialog__body {
+    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    grid-template-areas:
+      'qr content'
+      'contact benefits';
+    align-items: start;
+  }
 }
 
 .wechat-qr-dialog__qr-col {
+  grid-area: qr;
   @apply flex flex-col items-center text-center;
+}
+
+.wechat-qr-dialog__qr-grid {
+  @apply grid w-full max-w-[19rem] grid-cols-2 gap-3;
+}
+
+.wechat-qr-dialog__qr-item {
+  @apply flex min-w-0 flex-col items-center gap-2;
+}
+
+.wechat-qr-dialog__qr-label {
+  @apply text-[11px] font-semibold tracking-wide text-ink-soft;
 }
 
 .wechat-qr-dialog__frame {
   @apply relative rounded-[var(--radius-control)] border border-paper-line bg-paper-bright p-2.5 shadow-card;
   width: 196px;
   height: 196px;
+}
+
+.wechat-qr-dialog__frame--sm {
+  width: 148px;
+  height: 148px;
+  @apply p-2;
 }
 
 .wechat-qr-dialog__frame::before {
@@ -207,8 +315,17 @@ function close() {
   object-fit: contain;
 }
 
+.wechat-qr-dialog__img--sm {
+  width: 132px;
+  height: 132px;
+}
+
 .wechat-qr-dialog__empty {
   @apply flex h-[180px] w-[180px] flex-col items-center justify-center rounded-lg border border-dashed border-paper-deep bg-paper-dim/80;
+}
+
+.wechat-qr-dialog__empty--sm {
+  @apply h-[132px] w-[132px];
 }
 
 .wechat-qr-dialog__scan {
@@ -220,7 +337,42 @@ function close() {
 }
 
 .wechat-qr-dialog__content {
+  grid-area: content;
   @apply min-w-0 space-y-4;
+}
+
+.wechat-qr-dialog__contact {
+  grid-area: contact;
+  @apply flex flex-col items-center text-center;
+}
+
+.wechat-qr-dialog__contact-card {
+  @apply w-full max-w-[12.5rem] px-3 py-3;
+}
+
+.wechat-qr-dialog__wechat-id {
+  @apply break-all font-mono text-sm font-semibold tracking-wide text-ink;
+}
+
+.wechat-qr-dialog__wechat-id--empty {
+  @apply text-xs font-medium text-ink-muted;
+}
+
+.wechat-qr-dialog__copy-btn {
+  @apply mt-2.5 w-full rounded-[var(--radius-pill)] border border-paper-line bg-paper-dim/80 px-3 py-1.5 text-[11px] font-semibold text-cinnabar-dark transition-colors;
+}
+
+.wechat-qr-dialog__copy-btn:hover {
+  border-color: rgb(var(--cinnabar-rgb) / 0.28);
+  background: rgb(var(--cinnabar-light-rgb) / 0.45);
+}
+
+.wechat-qr-dialog__copy-btn:focus-visible {
+  @apply outline-none ring-2 ring-cinnabar/35 ring-offset-2 ring-offset-paper-bright;
+}
+
+.wechat-qr-dialog__contact-hint {
+  @apply mt-2 max-w-[12.5rem] text-[11px] leading-relaxed text-ink-muted;
 }
 
 .wechat-qr-dialog__intro {
@@ -236,7 +388,8 @@ function close() {
 }
 
 .wechat-qr-dialog__benefits {
-  @apply overflow-hidden;
+  grid-area: benefits;
+  @apply overflow-hidden self-stretch;
 }
 
 .wechat-qr-dialog__benefits-title {

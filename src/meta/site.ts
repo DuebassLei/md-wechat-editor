@@ -2,6 +2,16 @@
 export const GITHUB_REPO_URL =
   import.meta.env.VITE_GITHUB_REPO_URL ?? 'https://github.com/DuebassLei/md-wechat-editor'
 
+/** public/ 静态资源 URL（兼容 GitHub Pages base） */
+export function resolvePublicAsset(filename: string): string {
+  const base = import.meta.env.BASE_URL
+  const prefix = base.endsWith('/') ? base : `${base}/`
+  return `${prefix}${filename}`
+}
+
+/** 项目 Logo：public/logo.png */
+export const SITE_LOGO_URL = resolvePublicAsset('logo.png')
+
 /** 顶栏公众号推广（设 VITE_WECHAT_MP_PROMO_ENABLED=false 可关闭） */
 export const WECHAT_MP_PROMO = {
   enabled: import.meta.env.VITE_WECHAT_MP_PROMO_ENABLED !== 'false',
@@ -13,6 +23,25 @@ export const WECHAT_MP_PROMO = {
   href: (import.meta.env.VITE_WECHAT_MP_URL as string | undefined)?.trim() || '',
   /** 默认二维码图；未设置时使用 public/wechat-mp-qr.png */
   qrCodeUrl: (import.meta.env.VITE_WECHAT_MP_QR_URL as string | undefined)?.trim() || '',
+  /** 小程序名称；未设置时使用 accountName */
+  miniprogramName:
+    (import.meta.env.VITE_MINIPROGRAM_NAME as string | undefined)?.trim() || '',
+  /** 默认小程序码；未设置时使用 public/miniprogram_logo.jpg */
+  miniprogramQrCodeUrl:
+    (import.meta.env.VITE_MINIPROGRAM_QR_URL as string | undefined)?.trim() || '',
+  /** 顶栏小程序上线提示（设 VITE_MINIPROGRAM_BANNER_ENABLED=false 可关闭） */
+  miniprogramBannerEnabled:
+    import.meta.env.VITE_MINIPROGRAM_BANNER_ENABLED !== 'false',
+  miniprogramBannerText:
+    (import.meta.env.VITE_MINIPROGRAM_BANNER_TEXT as string | undefined)?.trim() ||
+    '小程序上线啦，扫码体验',
+  /** 个人微信号；可通过 VITE_WECHAT_PERSONAL_ID 配置 */
+  personalWechatId:
+    (import.meta.env.VITE_WECHAT_PERSONAL_ID as string | undefined)?.trim() || '',
+  /** 个人微信引导文案 */
+  personalWechatHint:
+    (import.meta.env.VITE_WECHAT_PERSONAL_HINT as string | undefined)?.trim() ||
+    '欢迎加我进群交流',
   topics: ['Cursor', 'Vibe Coding', 'Agent', '提示词', 'MCP', '效率工具'] as const,
   benefits: [
     'AI 编程工作流拆解与工具实测',

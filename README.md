@@ -11,6 +11,25 @@
 
 纯前端的微信公众号排版工作室：在浏览器里写完、预览、复制内联 HTML，粘贴到 [微信公众平台](https://mp.weixin.qq.com) 即可发布。无需登录，文稿留在本地。
 
+**现已上线微信小程序**，手机端也能排版编辑、实时预览与出稿；见下方扫码试用。
+
+---
+
+## 墨韵简排小程序
+
+除 Web 版外，**墨韵简排**已上线微信小程序。在微信里打开即可写作、切换主题、对照预览，适合通勤路上改稿、发布前最后一遍核对。
+
+| 扫码试用 |
+|:---:|
+| ![墨韵简排小程序码](.github/readme/readme-miniprogram-qr.jpg) |
+| 微信扫一扫，打开「墨韵简排」小程序 |
+
+- **与 Web 版同源能力** — Markdown 写作、`:::module` 排版组件、多套主题与手机预览
+- **轻量出稿** — 复制公众号 HTML，粘贴到公众平台正文编辑器即可
+- **顶栏快捷入口** — 在线版点击「小程序上线啦，扫码体验」或「扫码关注」，可弹出小程序码与公众号二维码
+
+小程序码默认使用 `public/miniprogram_logo.jpg`；部署时可设置 `VITE_MINIPROGRAM_QR_URL` 覆盖。
+
 ---
 
 ## 功能预览
@@ -162,6 +181,7 @@ chips: 标签1|标签2
 
 ## 在线体验与源码
 
+- **墨韵简排小程序** — 见上文 [扫码试用](#墨韵简排小程序)（`.github/readme/readme-miniprogram-qr.jpg`）
 - **GitHub Pages**（推送 `main` 后自动部署）：`https://<user>.github.io/md-wechat-editor/`  
 - **源码仓库**：<https://github.com/DuebassLei/md-wechat-editor>  
 
@@ -212,10 +232,14 @@ $env:GITHUB_ACTIONS='true'; $env:GITHUB_REPOSITORY='user/md-wechat-editor'; npm 
 | `VITE_WECHAT_MP_URL` | 弹窗内「在浏览器中打开」链接（可选） |
 | `VITE_WECHAT_MP_QR_URL` | 默认公众号二维码图片 URL |
 | `VITE_WECHAT_MP_PROMO_ENABLED` | 设为 `false` 关闭顶栏推广位 |
+| `VITE_MINIPROGRAM_NAME` | 弹窗内小程序名称展示，默认与 `VITE_WECHAT_MP_NAME` 一致 |
+| `VITE_MINIPROGRAM_QR_URL` | 小程序码图片 URL，默认 `public/miniprogram_logo.jpg` |
+| `VITE_MINIPROGRAM_BANNER_ENABLED` | 设为 `false` 关闭顶栏「小程序上线」提示 |
+| `VITE_MINIPROGRAM_BANNER_TEXT` | 顶栏小程序提示文案，默认 `小程序上线啦，扫码体验` |
 | `VITE_XHS_BRAND` | 小红书图导出默认 `@品牌`（未在 hero/YAML 指定时），默认 `墨韵简排` |
 | `VITE_WECHAT_TIETU_BRAND` | 微信贴图导出页脚 `@品牌`（未指定时默认同 `VITE_XHS_BRAND`） |
 
-顶栏「扫码关注」点击弹出二维码；将图片放到 `public/wechat-mp-qr.png` 或设置 `VITE_WECHAT_MP_QR_URL`。
+顶栏「扫码关注」点击弹出公众号二维码与小程序码；将图片放到 `public/wechat-mp-qr.png`、`public/miniprogram_logo.jpg`，或分别设置 `VITE_WECHAT_MP_QR_URL`、`VITE_MINIPROGRAM_QR_URL`。
 
 ---
 
