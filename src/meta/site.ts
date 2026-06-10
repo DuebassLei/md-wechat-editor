@@ -37,7 +37,7 @@ export const WECHAT_MP_PROMO = {
     '小程序上线啦，扫码体验',
   /** 个人微信号；可通过 VITE_WECHAT_PERSONAL_ID 配置 */
   personalWechatId:
-    (import.meta.env.VITE_WECHAT_PERSONAL_ID as string | undefined)?.trim() || '',
+    (import.meta.env.VITE_WECHAT_PERSONAL_ID as string | undefined)?.trim() || '15121769372',
   /** 个人微信引导文案 */
   personalWechatHint:
     (import.meta.env.VITE_WECHAT_PERSONAL_HINT as string | undefined)?.trim() ||
