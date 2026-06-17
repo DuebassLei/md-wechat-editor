@@ -9,6 +9,7 @@ import type { ThemeId } from '@/engine'
 import { normalizeThemeId } from '@/types/theme'
 import type { LocalDoc } from '@/composables/useLocalDocs'
 import { extractMarkdownTitle, shouldAutoTitleDoc } from '@/meta/extractMarkdownTitle'
+import { migrateLegacyImageUrls } from '@/engine/image-pipeline/imageTokens'
 
 const {
   docs,
@@ -34,7 +35,7 @@ const themeId = ref<ThemeId>('normal')
 function syncFromActive() {
   const doc = activeDoc()
   if (doc) {
-    content.value = doc.content
+    content.value = migrateLegacyImageUrls(doc.content)
     themeId.value = normalizeThemeId(doc.themeId)
   } else {
     content.value = STUDIO_SAMPLE_MARKDOWN

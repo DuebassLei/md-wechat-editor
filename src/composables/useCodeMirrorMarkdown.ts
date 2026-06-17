@@ -4,6 +4,8 @@ import { EditorState, type Extension } from '@codemirror/state'
 import { EditorView, keymap, lineNumbers, placeholder as cmPlaceholder } from '@codemirror/view'
 import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 import { gfmShortcutBindings } from '@/composables/gfmKeyboardShortcuts'
+import { collapseImageTokens, imageTokenFoldTheme } from '@/composables/collapseImageTokens'
+import { createEditorImageHandlers } from '@/composables/editorImageHandlers'
 
 export interface CodeMirrorInsertHandler {
   insertAtCursor(text: string): void
@@ -60,6 +62,8 @@ export function useCodeMirrorMarkdown(
     fillHeight?: boolean
     readOnly?: boolean
     lineNumbers?: boolean
+    extraExtensions?: Extension[]
+    onImageFiles?: (files: File[], view: EditorView) => void
     onCreate?: (handler: CodeMirrorInsertHandler, view: EditorView) => void
   } = {},
 ) {
@@ -86,6 +90,8 @@ export function useCodeMirrorMarkdown(
       keymap.of([...gfmShortcutBindings(), ...defaultKeymap, ...historyKeymap]),
       EditorView.lineWrapping,
       inkCodeMirrorTheme(options.minHeight ?? '20rem', options.fillHeight),
+      collapseImageTokens,
+      imageTokenFoldTheme,
       EditorView.updateListener.of((update) => {
         if (!update.docChanged) return
         const text = update.state.doc.toString()
@@ -98,6 +104,16 @@ export function useCodeMirrorMarkdown(
         }
       }),
     ]
+
+    if (options.onImageFiles) {
+      extensions.push(
+        EditorView.domEventHandlers(createEditorImageHandlers(options.onImageFiles)),
+      )
+    }
+
+    if (options.extraExtensions?.length) {
+      extensions.push(...options.extraExtensions)
+    }
 
     if (options.lineNumbers !== false) extensions.push(lineNumbers())
     if (options.placeholder) extensions.push(cmPlaceholder(options.placeholder))

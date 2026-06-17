@@ -3,7 +3,8 @@ import {
   DEFAULT_COVER_STATE,
   getAspectDefaults,
 } from '@/engine/cover-editor/constants'
-import type { CoverAspect, CoverEditorState, CoverLayout } from '@/engine/cover-editor/types'
+import { coverTemplateStyleFields } from '@/engine/cover-editor/coverTemplates'
+import type { CoverAspect, CoverEditorState, CoverLayout, CoverTemplate } from '@/engine/cover-editor/types'
 
 const STORAGE_KEY = 'mdwe:cover-editor'
 
@@ -29,8 +30,13 @@ function saveToStorage(state: CoverEditorState): void {
 }
 
 const state = ref<CoverEditorState>(loadFromStorage())
+const activeTemplateId = ref('')
 
 watch(state, (val) => saveToStorage(val), { deep: true })
+
+function clearActiveTemplate() {
+  activeTemplateId.value = ''
+}
 
 export function useCoverEditorContent() {
   const title = computed({
@@ -45,7 +51,10 @@ export function useCoverEditorContent() {
 
   const fontFamily = computed({
     get: () => state.value.fontFamily,
-    set: (v: string) => { state.value.fontFamily = v },
+    set: (v: string) => {
+      clearActiveTemplate()
+      state.value.fontFamily = v
+    },
   })
 
   const titleFontSize = computed({
@@ -60,17 +69,26 @@ export function useCoverEditorContent() {
 
   const titleColor = computed({
     get: () => state.value.titleColor,
-    set: (v: string) => { state.value.titleColor = v },
+    set: (v: string) => {
+      clearActiveTemplate()
+      state.value.titleColor = v
+    },
   })
 
   const keywordsColor = computed({
     get: () => state.value.keywordsColor,
-    set: (v: string) => { state.value.keywordsColor = v },
+    set: (v: string) => {
+      clearActiveTemplate()
+      state.value.keywordsColor = v
+    },
   })
 
   const layout = computed({
     get: () => state.value.layout,
-    set: (v: CoverLayout) => { state.value.layout = v },
+    set: (v: CoverLayout) => {
+      clearActiveTemplate()
+      state.value.layout = v
+    },
   })
 
   const aspect = computed({
@@ -88,7 +106,10 @@ export function useCoverEditorContent() {
 
   const bgPresetId = computed({
     get: () => state.value.bgPresetId,
-    set: (v: string) => { state.value.bgPresetId = v },
+    set: (v: string) => {
+      clearActiveTemplate()
+      state.value.bgPresetId = v
+    },
   })
 
   const customBgImage = computed({
@@ -98,10 +119,14 @@ export function useCoverEditorContent() {
 
   const overlayOpacity = computed({
     get: () => state.value.overlayOpacity,
-    set: (v: number) => { state.value.overlayOpacity = v },
+    set: (v: number) => {
+      clearActiveTemplate()
+      state.value.overlayOpacity = v
+    },
   })
 
   function setCustomBgFromFile(file: File) {
+    clearActiveTemplate()
     const reader = new FileReader()
     reader.onload = (e) => {
       const result = e.target?.result
@@ -118,6 +143,20 @@ export function useCoverEditorContent() {
 
   function resetAll() {
     state.value = { ...DEFAULT_COVER_STATE }
+    activeTemplateId.value = ''
+  }
+
+  function applyTemplate(template: CoverTemplate) {
+    activeTemplateId.value = template.id
+    const aspectPatch = template.aspect
+      ? { aspect: template.aspect, ...getAspectDefaults(template.aspect) }
+      : {}
+    state.value = {
+      ...state.value,
+      ...coverTemplateStyleFields(template),
+      ...aspectPatch,
+      customBgImage: '',
+    }
   }
 
   return {
@@ -133,8 +172,11 @@ export function useCoverEditorContent() {
     bgPresetId,
     customBgImage,
     overlayOpacity,
+    activeTemplateId,
     setCustomBgFromFile,
     clearCustomBg,
     resetAll,
+    applyTemplate,
+    clearActiveTemplate,
   }
 }

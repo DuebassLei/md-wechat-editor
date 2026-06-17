@@ -31,6 +31,12 @@ import PlatformCopyConfirmModal from '@/components/PlatformCopyConfirmModal.vue'
 import PlatformCopyIconButton from '@/components/PlatformCopyIconButton.vue'
 import XhsExporterModal from '@/components/XhsExporterModal.vue'
 import WechatTietuExporterModal from '@/components/WechatTietuExporterModal.vue'
+import { resolveImageTokens } from '@/engine/image-pipeline/imageTokens'
+import {
+  isImageHostConfigured,
+  publishMarkdownWithHostUrls,
+} from '@/engine/image-pipeline/publishResolve'
+import { useImageHostSettings } from '@/composables/useImageHostSettings'
 
 const content = defineModel<string>({ required: true })
 const themeId = defineModel<ThemeId>('themeId', { default: 'normal' })
@@ -39,8 +45,10 @@ const emit = defineEmits<{
   openDocs: []
 }>()
 
+const { settings: imageHostSettings } = useImageHostSettings()
 const mobileTab = ref<'edit' | 'preview'>('edit')
 const copying = ref(false)
+const copyingWithHost = ref(false)
 const copyingPlatform = ref<PlatformTarget | 'zhihu' | null>(null)
 const confirmOpen = ref(false)
 const pendingExport = ref<PlatformExportResult | null>(null)
@@ -155,8 +163,9 @@ async function copyHtml() {
   copying.value = true
   toast.value = ''
   try {
+    const resolved = await resolveImageTokens(content.value)
     const full = await buildWechatArticleHtml(
-      content.value,
+      resolved,
       themeRef.value,
       OPEN_RENDER_ENTITLEMENTS,
       null,
@@ -172,6 +181,52 @@ async function copyHtml() {
       toast.value = ''
     }, 4000)
   }
+}
+
+async function copyHtmlWithHost() {
+  if (!isImageHostConfigured(imageHostSettings.value)) {
+    toast.value = '请先在编辑器图床设置中配置默认图床'
+    setTimeout(() => { toast.value = '' }, 4000)
+    return
+  }
+  copyingWithHost.value = true
+  toast.value = ''
+  try {
+    const { markdown, failed, uploaded } = await publishMarkdownWithHostUrls(
+      content.value,
+      imageHostSettings.value,
+      { useCache: true },
+    )
+    if (failed.length) {
+      toast.value = `有 ${failed.length} 张本地图片上传失败，请检查图床配置`
+      return
+    }
+    if (uploaded > 0 || markdown !== content.value) {
+      content.value = markdown
+    }
+    const resolved = await resolveImageTokens(markdown)
+    const full = await buildWechatArticleHtml(
+      resolved,
+      themeRef.value,
+      OPEN_RENDER_ENTITLEMENTS,
+      null,
+      { editorSyncAnchors: false },
+    )
+    const ok = await copyRichText(stripEditorSyncAttributes(full))
+    toast.value = ok
+      ? `已上传 ${uploaded} 张图并复制到剪贴板`
+      : '复制失败，请检查浏览器权限'
+  } catch (e) {
+    toast.value = e instanceof Error ? e.message : '上传或复制失败'
+  } finally {
+    copyingWithHost.value = false
+    setTimeout(() => { toast.value = '' }, 4000)
+  }
+}
+
+function onImageError(message: string) {
+  toast.value = message
+  setTimeout(() => { toast.value = '' }, 4000)
 }
 
 async function copyJuejinHtml() {
@@ -325,10 +380,19 @@ function openSyntaxHandbook() {
         <PlatformCopyIconButton
           platform="wechat"
           :loading="copying"
-          :disabled="copying || copyingPlatform !== null"
+          :disabled="copying || copyingWithHost || copyingPlatform !== null"
           title="复制公众号 HTML"
           @click="copyHtml"
         />
+        <button
+          type="button"
+          class="btn-ghost btn-sm hidden sm:inline-flex"
+          :disabled="copying || copyingWithHost || copyingPlatform !== null"
+          title="先将本地图上传图床，再复制公众号 HTML"
+          @click="copyHtmlWithHost"
+        >
+          {{ copyingWithHost ? '上传中…' : '图床复制' }}
+        </button>
         <PlatformCopyIconButton
           platform="juejin"
           :loading="copyingPlatform === 'juejin'"
@@ -401,7 +465,7 @@ function openSyntaxHandbook() {
         class="workspace__pane workspace__pane--editor"
         :class="{ 'workspace__pane--hidden-mobile': mobileTab !== 'edit' }"
       >
-        <MarkdownEditor ref="editorRef" v-model="content" fill-height />
+        <MarkdownEditor ref="editorRef" v-model="content" fill-height @image-error="onImageError" />
       </section>
       <section
         class="workspace__pane workspace__pane--preview"

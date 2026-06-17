@@ -4,6 +4,7 @@ import AppShell from '@/components/AppShell.vue'
 import CoverEditorForm from '@/components/cover-editor/CoverEditorForm.vue'
 import CoverEditorToolbar from '@/components/cover-editor/CoverEditorToolbar.vue'
 import CoverPreview from '@/components/cover-editor/CoverPreview.vue'
+import CoverTemplatePicker from '@/components/cover-editor/CoverTemplatePicker.vue'
 import { useCoverEditorContent } from '@/composables/useCoverEditorContent'
 import { downloadCoverBlob, exportCoverToBlob } from '@/engine/cover-editor/exportCover'
 import '@/styles/cover-editor-fonts.css'
@@ -24,6 +25,8 @@ const {
   setCustomBgFromFile,
   clearCustomBg,
   resetAll,
+  applyTemplate,
+  activeTemplateId,
 } = useCoverEditorContent()
 
 const previewRef = ref<InstanceType<typeof CoverPreview> | null>(null)
@@ -108,22 +111,37 @@ async function onExport() {
           @upload="onUpload"
           @clear-upload="onClearUpload"
         />
-        <CoverPreview
-          ref="previewRef"
-          :title="title"
-          :keywords="keywords"
-          :font-family="fontFamily"
-          :title-font-size="titleFontSize"
-          :keywords-font-size="keywordsFontSize"
-          :title-color="titleColor"
-          :keywords-color="keywordsColor"
-          :layout="layout"
-          :aspect="aspect"
-          :bg-preset-id="bgPresetId"
-          :custom-bg-image="customBgImage"
-          :overlay-opacity="overlayOpacity"
-          :zoom="zoom"
-        />
+        <div class="flex min-h-0 min-w-0 flex-col overflow-hidden lg:flex-row">
+          <CoverPreview
+            ref="previewRef"
+            :title="title"
+            :keywords="keywords"
+            :font-family="fontFamily"
+            :title-font-size="titleFontSize"
+            :keywords-font-size="keywordsFontSize"
+            :title-color="titleColor"
+            :keywords-color="keywordsColor"
+            :layout="layout"
+            :aspect="aspect"
+            :bg-preset-id="bgPresetId"
+            :custom-bg-image="customBgImage"
+            :overlay-opacity="overlayOpacity"
+            :zoom="zoom"
+          />
+          <aside class="cover-template-sidebar flex max-h-[42vh] min-h-0 shrink-0 flex-col border-t border-paper-line bg-paper-bright lg:max-h-none lg:w-[min(300px,28vw)] lg:border-t-0 lg:border-l">
+            <div class="card-header shrink-0">
+              <span>快速模板</span>
+              <span class="text-xs font-normal text-ink-muted">一键套用风格</span>
+            </div>
+            <div class="min-h-0 flex-1 overflow-y-auto p-3">
+              <CoverTemplatePicker
+                v-model:active-template-id="activeTemplateId"
+                sidebar
+                @apply="applyTemplate"
+              />
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   </AppShell>

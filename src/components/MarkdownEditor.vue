@@ -10,6 +10,8 @@ import { GFM_TOOLBAR_ACTIONS, type GfmToolbarActionId } from '@/composables/gfmT
 import type { LayoutModuleMeta } from '@/constants/layoutModules'
 import LayoutModulePicker from '@/components/LayoutModulePicker.vue'
 import SyntaxDrawer from '@/components/SyntaxDrawer.vue'
+import ImageHostSettingsDrawer from '@/components/ImageHostSettingsDrawer.vue'
+import { useImageImport } from '@/composables/useImageImport'
 
 const model = defineModel<string>({ required: true })
 
@@ -23,17 +25,31 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   moduleInserted: [module: LayoutModuleMeta]
+  imageError: [message: string]
 }>()
 
 const hostRef = ref<HTMLElement | null>(null)
 const pickerOpen = ref(false)
 const syntaxOpen = ref(false)
+const hostSettingsOpen = ref(false)
 const insertHandler = ref<CodeMirrorInsertHandler | null>(null)
 const editorView = shallowRef<EditorView | null>(null)
+const localInputRef = ref<HTMLInputElement | null>(null)
+const hostInputRef = ref<HTMLInputElement | null>(null)
+const dragOver = ref(false)
+
+const { importing, importLocalFiles, uploadHostFiles } = useImageImport()
+
+const toolbarActions = GFM_TOOLBAR_ACTIONS.filter((a) => a.id !== 'image')
+
+function onImageFiles(files: File[], view: EditorView) {
+  void handleLocalFiles(files, view)
+}
 
 useCodeMirrorMarkdown(model, hostRef, {
   placeholder: props.placeholder,
   fillHeight: props.fillHeight,
+  onImageFiles,
   onCreate(handler, view) {
     insertHandler.value = handler
     editorView.value = view
@@ -64,15 +80,51 @@ function onSyntaxInsert(syntax: string) {
   insertAtCursor(syntax)
 }
 
-function openModulePickerFromSyntax() {
-  pickerOpen.value = true
+function insertImageLink() {
+  applyGfmToolbarAction(editorView.value, 'image')
 }
 
-function openSyntaxDrawer() {
-  syntaxOpen.value = true
+async function handleLocalFiles(files: File[] | FileList, view?: EditorView | null) {
+  try {
+    await importLocalFiles(files, view ?? editorView.value, model.value)
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : '导入失败'
+    emit('imageError', msg)
+  }
 }
 
-defineExpose({ insertAtCursor, openSyntaxDrawer, editorView })
+async function onLocalInput(e: Event) {
+  const input = e.target as HTMLInputElement
+  const files = input.files
+  if (!files?.length) return
+  await handleLocalFiles(files)
+  input.value = ''
+}
+
+async function onHostInput(e: Event) {
+  const input = e.target as HTMLInputElement
+  const files = input.files
+  if (!files?.length) return
+  try {
+    await uploadHostFiles(files, editorView.value)
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : '上传失败'
+    emit('imageError', msg)
+  }
+  input.value = ''
+}
+
+function onDragOver(e: DragEvent) {
+  if (!e.dataTransfer?.types.includes('Files')) return
+  e.preventDefault()
+  dragOver.value = true
+}
+
+function onDragLeave() {
+  dragOver.value = false
+}
+
+defineExpose({ insertAtCursor, openSyntaxDrawer: () => { syntaxOpen.value = true }, editorView })
 </script>
 
 <template>
@@ -80,7 +132,7 @@ defineExpose({ insertAtCursor, openSyntaxDrawer, editorView })
     <div class="editor-toolbar">
       <div class="editor-toolbar__chips">
         <button
-          v-for="action in GFM_TOOLBAR_ACTIONS"
+          v-for="action in toolbarActions"
           :key="action.id"
           type="button"
           class="chip-btn shrink-0"
@@ -89,6 +141,46 @@ defineExpose({ insertAtCursor, openSyntaxDrawer, editorView })
           @click="onGfmAction(action.id)"
         >
           {{ action.label }}
+        </button>
+        <button
+          type="button"
+          class="chip-btn shrink-0"
+          title="从本机选择图片，压缩后插入"
+          aria-label="本地插入图片"
+          :disabled="importing"
+          :aria-busy="importing"
+          @click="localInputRef?.click()"
+        >
+          {{ importing ? '处理中…' : '本地插入' }}
+        </button>
+        <div class="relative shrink-0">
+          <button
+            type="button"
+            class="chip-btn"
+            title="上传到图床并插入链接"
+            aria-label="上传图床"
+            :disabled="importing"
+            @click="hostInputRef?.click()"
+          >
+            上传图床
+          </button>
+          <button
+            type="button"
+            class="chip-btn chip-btn--caret"
+            aria-label="图床设置"
+            @click="hostSettingsOpen = true"
+          >
+            ▾
+          </button>
+        </div>
+        <button
+          type="button"
+          class="chip-btn shrink-0"
+          title="插入 Markdown 图片链接语法"
+          aria-label="插入图片链接"
+          @click="insertImageLink"
+        >
+          链接
         </button>
       </div>
       <div class="editor-toolbar__actions">
@@ -100,13 +192,39 @@ defineExpose({ insertAtCursor, openSyntaxDrawer, editorView })
         </button>
       </div>
     </div>
-    <div ref="hostRef" class="editor-host" />
+    <div
+      ref="hostRef"
+      class="editor-host"
+      :class="{ 'editor-host--drag': dragOver }"
+      @dragover="onDragOver"
+      @dragleave="onDragLeave"
+      @drop="dragOver = false"
+    >
+      <div v-if="dragOver" class="editor-host__drop-hint">松开以上传图片</div>
+    </div>
+    <input
+      ref="localInputRef"
+      type="file"
+      accept="image/*"
+      multiple
+      class="sr-only"
+      @change="onLocalInput"
+    >
+    <input
+      ref="hostInputRef"
+      type="file"
+      accept="image/*"
+      multiple
+      class="sr-only"
+      @change="onHostInput"
+    >
     <SyntaxDrawer
       v-model:open="syntaxOpen"
       @insert="onSyntaxInsert"
-      @open-module-picker="openModulePickerFromSyntax"
+      @open-module-picker="pickerOpen = true"
     />
     <LayoutModulePicker v-model:open="pickerOpen" @insert="onModuleInsert" />
+    <ImageHostSettingsDrawer v-model:open="hostSettingsOpen" />
   </div>
 </template>
 
@@ -128,9 +246,22 @@ defineExpose({ insertAtCursor, openSyntaxDrawer, editorView })
   @apply flex shrink-0 items-center gap-1.5;
 }
 .editor-host {
-  @apply min-h-0 flex-1 overflow-hidden;
+  @apply relative min-h-0 flex-1 overflow-hidden;
+}
+.editor-host--drag {
+  @apply ring-2 ring-inset ring-cinnabar/40;
+}
+.editor-host__drop-hint {
+  @apply pointer-events-none absolute inset-x-0 bottom-4 z-10 mx-auto w-fit rounded-full bg-paper-bright/95 px-4 py-1.5 text-xs text-ink-muted shadow-sm;
 }
 .editor-wrap--fill .editor-host :deep(.cm-editor) {
   height: 100%;
+}
+.chip-btn--caret {
+  @apply !px-1.5 !min-w-0;
+}
+.sr-only {
+  @apply absolute h-px w-px overflow-hidden whitespace-nowrap border-0 p-0;
+  clip: rect(0, 0, 0, 0);
 }
 </style>

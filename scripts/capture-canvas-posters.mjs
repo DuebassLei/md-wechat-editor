@@ -22,6 +22,9 @@ const PRESETS = {
     { html: 'claude-skills-15-checklist.html', out: 'claude-skills-15-checklist.png', w: 1200, h: 900 },
     { html: 'claude-skills-15-cover.html', out: 'claude-skills-15-cover.png', w: 1283, h: 383, subdir: 'covers' },
   ],
+  'remotion-skill': [
+    { html: 'remotion-skill-cover.html', out: 'remotion-skill-cover.png', w: 1283, h: 383, subdir: 'covers' },
+  ],
 }
 
 const pages = PRESETS[slug] ?? [
