@@ -51,6 +51,26 @@ export function patternRules(pattern: CardBgPattern, accent: string, line: strin
       return `
 .card-studio-shell--soft-wash{background-image:radial-gradient(ellipse 90% 60% at 100% 0%,${hexAlpha(accent, 0.08)} 0%,transparent 55%),radial-gradient(ellipse 70% 50% at 0% 100%,${hexAlpha(accent, 0.06)} 0%,transparent 50%);}
 `
+    case 'polka-dots':
+      return `
+.card-studio-shell--polka-dots{background-image:radial-gradient(circle,#fff 1.5px,transparent 1.5px);background-size:14px 14px;}
+`
+    case 'fine-grid':
+      return `
+.card-studio-shell--fine-grid{background-image:linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px);background-size:12px 12px;}
+`
+    case 'mountain-mist':
+      return `
+.card-studio-shell--mountain-mist{background-image:radial-gradient(ellipse 100% 40% at 50% 100%,${hexAlpha('#9ca3af', 0.15)} 0%,transparent 70%);}
+`
+    case 'wave-ground':
+      return `
+.card-studio-shell--wave-ground::after{content:"";position:absolute;bottom:0;left:0;right:0;height:18%;background:linear-gradient(180deg,transparent,${hexAlpha(accent, 0.2)});border-radius:0 0 50% 50%/0 0 100% 100%;pointer-events:none;z-index:0;}
+`
+    case 'dashed-frame':
+      return `
+.card-studio-shell--dashed-frame{border:2px dashed ${hexAlpha(accent, 0.5)};}
+`
     default:
       return ''
   }

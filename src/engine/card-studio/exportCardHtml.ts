@@ -1,6 +1,8 @@
 import { toPng } from 'html-to-image'
 import { ASPECTS, PIXEL_RATIO } from '@/engine/card-export/constants'
+import { withDomExportLock } from '@/engine/card-export/domExportLock'
 import { htmlToImageOptions } from '@/engine/card-export/imageExport'
+import type { SlicePurpose } from '@/engine/card-export/sliceContent'
 import type { CardAspect } from '@/engine/card-export/types'
 
 function waitImages(el: HTMLElement): Promise<void> {
@@ -23,19 +25,41 @@ function waitImages(el: HTMLElement): Promise<void> {
   })
 }
 
+function resolveExportTarget(host: HTMLElement): HTMLElement {
+  const scoped = host.querySelector(
+    ':scope > .card-studio-cover, :scope > .card-xhs-shell',
+  )
+  if (scoped instanceof HTMLElement) return scoped
+  for (const child of host.children) {
+    if (child instanceof HTMLElement && child.tagName !== 'STYLE') return child
+  }
+  return host
+}
+
 /** 将完整卡片 HTML（封面或单页）导出为 PNG data URL */
 export async function exportCardHtmlToDataUrl(
   html: string,
   aspect: CardAspect,
   previewContentWidth: number,
   backgroundColor: string,
+  purpose: SlicePurpose = 'export',
+): Promise<string> {
+  return withDomExportLock(() => exportCardHtmlToDataUrlInner(html, aspect, previewContentWidth, backgroundColor, purpose))
+}
+
+async function exportCardHtmlToDataUrlInner(
+  html: string,
+  aspect: CardAspect,
+  previewContentWidth: number,
+  backgroundColor: string,
+  purpose: SlicePurpose = 'export',
 ): Promise<string> {
   const base = ASPECTS[aspect]
   const nativeW = base.w * PIXEL_RATIO
   const refW = previewContentWidth > 80 ? previewContentWidth : 375
   const w = Math.round(refW)
   const h = Math.round((w * base.h) / base.w)
-  const ratio = nativeW / w
+  const ratio = purpose === 'preview' ? 1 : nativeW / w
 
   const hider = document.createElement('div')
   hider.style.cssText =
@@ -50,8 +74,7 @@ export async function exportCardHtmlToDataUrl(
   await waitImages(host)
 
   try {
-    const node = host.firstElementChild as HTMLElement | null
-    const target = node ?? host
+    const target = resolveExportTarget(host)
     return await toPng(target, {
       ...htmlToImageOptions,
       pixelRatio: ratio,

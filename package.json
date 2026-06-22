@@ -19,7 +19,8 @@
     "test:xhs": "node --import ./scripts/register-aliases.mjs scripts/smoke-xhs-export.mjs",
     "test:wechat-tietu": "node --import ./scripts/register-aliases.mjs scripts/smoke-wechat-tietu-export.mjs",
     "test:sync": "node --import ./scripts/register-aliases.mjs scripts/smoke-editor-sync-anchors.mjs",
-    "test:image-pipeline": "node --import ./scripts/register-aliases.mjs scripts/smoke-image-pipeline.mjs",
+    "capture:cover-studio": "node --import ./scripts/register-aliases.mjs scripts/capture-cover-studio.mjs",
+    "capture:html-images": "node scripts/capture-html-images.mjs",
     "bench:picker": "node --import ./scripts/register-aliases.mjs scripts/bench-layout-module-picker.mjs",
     "gen:module-thumbs": "node --import ./scripts/register-aliases.mjs scripts/gen-module-thumbs.mjs",
     "lint": "eslint src scripts --max-warnings 0"
@@ -36,6 +37,7 @@
     "headroom-ai": "^0.22.4",
     "html-to-image": "^1.11.13",
     "juice": "^11.1.1",
+    "katex": "^0.17.0",
     "marked": "^18.0.4",
     "vue": "^3.5.34",
     "vue-router": "^4.6.4"

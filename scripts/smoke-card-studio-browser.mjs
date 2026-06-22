@@ -30,7 +30,7 @@ async function main() {
             markdown: sample,
             themeId,
             aspect: '3:4',
-            singleCardMode: true,
+            splitMode: 'autoSplit',
             includeCover: true,
             brand: 'Test',
             previewWidth: 360,

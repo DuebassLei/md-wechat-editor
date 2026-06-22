@@ -318,4 +318,16 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-cinnabar/50;
   }
+
+  [data-color-scheme='dark'] .cm-content {
+    background-color: rgb(var(--paper-rgb)) !important;
+  }
+
+  [data-color-scheme='dark'] .cm-gutters {
+    background-color: rgb(var(--paper-dim-rgb) / 0.85) !important;
+  }
+
+  [data-color-scheme='dark'] .cm-activeLine {
+    background-color: rgb(var(--cinnabar-rgb) / 0.08) !important;
+  }
 }

@@ -83,6 +83,14 @@
       text-ink-muted hover:border-cinnabar/30 hover:text-cinnabar-dark;
   }
 
+  .toolbar-divider {
+    @apply mx-0.5 h-4 w-px shrink-0 self-center bg-paper-line;
+  }
+
+  [data-color-scheme='dark'] .toolbar-divider {
+    background: rgb(var(--paper-deep-rgb) / 0.9);
+  }
+
   .doc-row {
     @apply flex cursor-pointer items-center gap-2 rounded-[var(--radius-control)] px-3 py-2 text-sm text-ink-soft
       hover:bg-paper-dim;

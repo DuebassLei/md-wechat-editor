@@ -2,7 +2,7 @@ import { FONT_STACK } from '@/engine/card-export/constants'
 import type { CardExportTheme } from '@/engine/card-export/types'
 import { hexAlpha, patternRules } from './cardThemePatterns'
 import { getCardTheme } from './cardThemes/registry'
-import type { CardBlockquoteStyle, CardThemeId } from './cardThemes/types'
+import type { CardBlockquoteStyle, CardH1Style, CardH2Style, CardThemeId } from './cardThemes/types'
 
 function blockquoteRules(style: CardBlockquoteStyle, t: ReturnType<typeof getCardTheme>['tokens']): string {
   const bqBg = t.blockquoteBg ?? t.accentWeak
@@ -25,6 +25,11 @@ function blockquoteRules(style: CardBlockquoteStyle, t: ReturnType<typeof getCar
 .card-reading blockquote{display:block;margin:14px 0;padding:12px 16px;border:1.5px solid ${t.hr};border-left:4px solid ${t.accent};background:${bqBg};color:${t.inkSoft};border-radius:12px;}
 .card-reading blockquote p{margin:0;padding:4px 0;color:${t.inkSoft};}
 `
+    case 'literary':
+      return `
+.card-reading blockquote{display:block;margin:16px 0;padding:14px 18px;border:none;border-top:1px solid ${t.hr};border-bottom:1px solid ${t.hr};background:transparent;color:${t.inkSoft};font-style:italic;text-align:center;}
+.card-reading blockquote p{margin:0;padding:6px 0;color:${t.inkSoft};line-height:1.8;}
+`
     default:
       return `
 .card-reading blockquote{display:block;margin:14px 0;padding:10px 14px;border-left:4px solid ${t.accent};background:${bqBg};color:${t.inkSoft};border-radius:8px;}
@@ -34,7 +39,7 @@ function blockquoteRules(style: CardBlockquoteStyle, t: ReturnType<typeof getCar
 }
 
 function h1Rules(
-  h1Style: 'default' | 'center-line' | 'accent-bar',
+  h1Style: CardH1Style,
   t: ReturnType<typeof getCardTheme>['tokens'],
   headingFont: string,
 ): string {
@@ -53,19 +58,56 @@ function h1Rules(
 .card-reading h1::before{content:"";position:absolute;left:0;top:.2em;bottom:.2em;width:4px;border-radius:2px;background:${t.accent};}
 `
   }
+  if (h1Style === 'highlight-marker') {
+    return `${base}
+.card-reading h1{font-size:22px;font-weight:900;margin:8px 0 14px;}
+.card-reading h1 .content{display:inline;background:linear-gradient(transparent 55%,${hexAlpha('#ffe566', 0.85)} 55%);padding:0 4px;}
+`
+  }
+  if (h1Style === 'serif-elegant') {
+    return `${base}
+.card-reading h1{font-size:20px;font-weight:700;line-height:1.3;letter-spacing:0.02em;}
+`
+  }
   return `${base}
 .card-reading h1{font-size:22px;font-weight:800;margin:8px 0 14px;}
 `
 }
 
 function h2Rules(
-  h2Style: 'border-left' | 'accent-underline',
+  h2Style: CardH2Style,
   t: ReturnType<typeof getCardTheme>['tokens'],
   headingFont: string,
 ): string {
   if (h2Style === 'accent-underline') {
     return `
 .card-reading h2{font-family:${headingFont};margin:18px 0 10px;font-size:16px;line-height:1.4;font-weight:700;color:${t.ink};padding-bottom:6px;border-bottom:2px solid ${t.accentWeak};border-left:none;padding-left:0;}
+`
+  }
+  if (h2Style === 'pill') {
+    return `
+.card-reading h2{font-family:${headingFont};margin:16px 0 10px;font-size:14px;line-height:1.4;font-weight:700;color:${t.ink};display:inline-block;padding:4px 12px;border-radius:999px;background:${t.accentWeak};border-left:none;padding-left:12px;}
+`
+  }
+  if (h2Style === 'step-tag') {
+    return `
+.card-reading h2{counter-increment:mdwe-step;font-family:${headingFont};margin:14px 0 8px;font-size:15px;line-height:1.4;font-weight:700;color:${t.ink};border-left:none;padding-left:0;display:flex;align-items:center;gap:8px;}
+.card-reading{counter-reset:mdwe-step;}
+.card-reading h2::before{content:"STEP " counter(mdwe-step);flex-shrink:0;padding:3px 8px;background:${t.accent};color:#14532d;font-size:11px;font-weight:900;border:2px solid #1a1a1a;border-radius:2px;}
+`
+  }
+  if (h2Style === 'numbered-box') {
+    return `
+.card-reading h2{counter-increment:mdwe-h2;font-family:${headingFont};margin:14px 0 8px;font-size:15px;line-height:1.4;font-weight:700;color:${t.ink};border-left:none;padding-left:0;display:flex;align-items:center;gap:8px;}
+.card-reading{counter-reset:mdwe-h2;}
+.card-reading h2::before{content:counter(mdwe-h2,decimal-leading-zero);flex-shrink:0;min-width:1.6em;padding:2px 6px;background:${t.accentWeak};color:${t.accent};font-size:12px;font-weight:900;text-align:center;border-radius:4px;}
+`
+  }
+  if (h2Style === 'bracket-square') {
+    return `
+.card-reading h2{font-family:${headingFont};margin:16px 0 10px;font-size:15px;line-height:1.4;font-weight:700;color:${t.ink};border-left:none;padding-left:0;}
+.card-reading h2::before{content:"[";color:${t.accent};margin-right:2px;}
+.card-reading h2::after{content:"]";color:${t.accent};margin-left:2px;}
 `
   }
   return `
@@ -85,8 +127,9 @@ export function buildCardThemeStyleBlock(themeId: CardThemeId): string {
     : ''
   const bqStyle = s.blockquoteStyle ?? 'bar'
   const pattern = s.bgPattern ?? 'none'
+  const isXhs = Boolean(s.shellLayout)
   const linkUnderline = hexAlpha(t.link, 0.4)
-  const readingBg = pattern !== 'none' ? 'transparent' : t.contentBg
+  const readingBg = isXhs || pattern !== 'none' ? 'transparent' : t.contentBg
 
   const olRules = s.olAccentNumbers
     ? `
@@ -122,6 +165,10 @@ ${blockquoteRules(bqStyle, t)}
 .card-reading strong,.card-reading b{font-weight:700;color:${t.ink};}
 .card-reading em,.card-reading i{font-style:italic;color:${t.inkSoft};}
 .card-reading del{text-decoration:line-through;color:${t.inkSoft};}
+.card-reading mark{background:${hexAlpha(t.accent, 0.22)};color:${t.ink};padding:0 .2em;border-radius:3px;}
+.card-reading .katex{font-size:1.05em;}
+.card-reading .katex-display{margin:12px 0;overflow-x:auto;}
+.card-reading p[style],.card-reading font{line-height:inherit;}
 .card-reading hr{border:none;border-top:1px solid ${t.hr};margin:18px 0;}
 .card-reading pre{margin:12px 0;padding:14px 16px;background:${t.preBg};border-radius:10px;overflow-x:auto;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;${codeBorder}}
 .card-reading pre code{display:block;font-size:13px;line-height:1.6;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:${t.ink};background:transparent;border:0;padding:0;white-space:pre-wrap;word-break:break-all;overflow-wrap:anywhere;}
@@ -130,15 +177,15 @@ ${blockquoteRules(bqStyle, t)}
 .card-reading table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;}
 .card-reading table th,.card-reading table td{border:1px solid ${t.tableBorder};padding:8px 10px;text-align:left;}
 .card-reading table th{font-weight:600;background:${t.tableHeadBg};border-bottom:2px solid ${t.tableBorder};}
-.card-reading input[type="checkbox"]{margin-right:6px;accent-color:${t.accent};}
-.card-studio-shell{box-sizing:border-box;background:${t.contentBg};position:relative;overflow:hidden;}
+.card-reading input[type="checkbox"]{margin-right:6px;accent-color:${t.accent};width:14px;height:14px;}
+${isXhs ? '' : `.card-studio-shell{box-sizing:border-box;background:${t.contentBg};position:relative;overflow:hidden;}
 .card-studio-shell > .card-reading,.card-studio-shell > .card-studio-header{position:relative;z-index:1;}
 ${pattern !== 'none' ? patternRules(pattern, t.accent, t.hr) : ''}
 .card-studio-header{flex-shrink:0;height:12px;box-sizing:border-box;}
 .card-studio-header--none{display:none;}
 .card-studio-header--accent-strip{border-bottom:1px solid ${t.hr};background:linear-gradient(90deg,${t.accent} 0 64px,transparent 64px);}
 .card-studio-header--gradient-fade{border-bottom:1px solid ${t.hr};background:linear-gradient(to bottom,rgba(0,0,0,0.03),transparent),linear-gradient(90deg,${t.accent} 0 48px,transparent 48px);}
-.card-studio-header--thin-line{border-bottom:1px solid ${t.hr};background:linear-gradient(to bottom,rgba(0,0,0,0.02),transparent);}
+.card-studio-header--thin-line{border-bottom:1px solid ${t.hr};background:linear-gradient(to bottom,rgba(0,0,0,0.02),transparent);}`}
 `.trim()
 
   return `<style>${css}</style>`
@@ -148,9 +195,10 @@ export function cardThemeToExportTheme(themeId: CardThemeId): CardExportTheme {
   const theme = getCardTheme(themeId)
   const t = theme.tokens
   const decor = theme.style.headerDecor ?? 'accent-strip'
-  const useTopBar = decor === 'none' || decor === 'thin-line'
+  const isXhs = Boolean(theme.style.shellLayout)
+  const useTopBar = !isXhs && (decor === 'none' || decor === 'thin-line')
   return {
-    contentBg: t.contentBg,
+    contentBg: isXhs ? t.exportBg : t.contentBg,
     footerDash: t.footerDash,
     brandColor: t.brandColor,
     pageColor: t.pageColor,

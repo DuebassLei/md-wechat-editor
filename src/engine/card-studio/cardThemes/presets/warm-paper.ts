@@ -11,8 +11,8 @@ export const warmPaper: CardThemeDef = {
     h2Style: 'border-left',
     headerDecor: 'gradient-fade',
     codeBordered: true,
-    bgPattern: 'paper-grain',
-    coverLayout: 'newspaper',
+    bgPattern: 'none',
+    coverLayout: 'classic',
     blockquoteStyle: 'bracket',
   },
   tokens: {

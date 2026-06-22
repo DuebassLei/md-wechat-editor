@@ -12,6 +12,11 @@ export interface CardMeta {
   brand: string
   charCount: number
   readMin: number
+  /** Sky / MD2Card：封面背景图 URL */
+  coverImage?: string
+  /** Sky / MD2Card：overlay 叠图 | separate 图文分离 */
+  coverLayout?: 'overlay' | 'separate'
+  date?: string
 }
 
 export interface CardExportTheme {

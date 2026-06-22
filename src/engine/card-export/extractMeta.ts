@@ -3,14 +3,72 @@ import { parseMd2wechatModuleBody } from '@/lib/r-markdown/md2wechatModuleParser
 import type { CardMeta } from './types'
 
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/
+const YAML_KV_LINE_RE = /^([\w-]+):\s*(.+)$/
+
+const COVER_FM_KEYS = new Set([
+  'title',
+  'heroTitle',
+  'badge',
+  'eyebrow',
+  'subtitle',
+  'heroSubtitle',
+  'summary',
+  'description',
+  'hook',
+  'slogan',
+  'brand',
+  'author',
+  'chips',
+  'heroTags',
+  'tags',
+  'image',
+  'layout',
+  'date',
+])
+
+function stripBom(text: string): string {
+  return text.charCodeAt(0) === 0xfeff ? text.slice(1) : text
+}
 
 function parseYamlBlock(raw: string): Record<string, string> {
   const out: Record<string, string> = {}
   for (const line of raw.split('\n')) {
-    const m = line.match(/^([\w-]+):\s*(.+)$/)
+    const m = line.trim().match(YAML_KV_LINE_RE)
     if (m) out[m[1]] = m[2].trim().replace(/^["']|["']$/g, '')
   }
   return out
+}
+
+function isYamlKvLine(line: string): boolean {
+  return YAML_KV_LINE_RE.test(line.trim())
+}
+
+/** 容错：缺少开头 --- 时，识别文首连续的 key: value 行 */
+function parseLooseFrontmatterLines(lines: string[]): { fm: Record<string, string>; rest: string[] } | null {
+  let i = 0
+  while (i < lines.length && !lines[i].trim()) i++
+  if (i >= lines.length || !isYamlKvLine(lines[i])) return null
+
+  const fm: Record<string, string> = {}
+  while (i < lines.length) {
+    const trimmed = lines[i].trim()
+    if (!trimmed) break
+    if (trimmed === '---') {
+      i++
+      break
+    }
+    const m = trimmed.match(YAML_KV_LINE_RE)
+    if (!m) break
+    fm[m[1]] = m[2].trim().replace(/^["']|["']$/g, '')
+    i++
+  }
+
+  if (!Object.keys(fm).length) return null
+  const hasCoverKey = Object.keys(fm).some((k) => COVER_FM_KEYS.has(k))
+  if (!hasCoverKey) return null
+
+  while (i < lines.length && !lines[i].trim()) i++
+  return { fm, rest: lines.slice(i) }
 }
 
 function stripInline(s: string): string {
@@ -37,7 +95,7 @@ function bodyPreview(md: string, limit = 320): string {
   let total = 0
   for (const raw of stripped.split('\n')) {
     const t = raw.trim()
-    if (!t || /^[#>\-*+:<`|!]/.test(t) || /^---+$/.test(t) || /^\d+\.\s/.test(t)) continue
+    if (!t || isYamlKvLine(t) || /^[#>\-*+:<`|!]/.test(t) || /^---+$/.test(t) || /^\d+\.\s/.test(t)) continue
     const text = stripInline(t)
     if (!text) continue
     out.push(text)
@@ -64,13 +122,17 @@ function emptyMeta(defaultBrand: string): CardMeta {
 function applyYaml(meta: CardMeta, fm: Record<string, string>): void {
   if (fm.title || fm.heroTitle) meta.title = fm.heroTitle || fm.title || meta.title
   if (fm.badge || fm.eyebrow) meta.badge = fm.badge || fm.eyebrow || meta.badge
-  if (fm.subtitle || fm.heroSubtitle || fm.summary) {
-    meta.subtitle = fm.heroSubtitle || fm.subtitle || fm.summary || meta.subtitle
+  if (fm.subtitle || fm.heroSubtitle || fm.summary || fm.description) {
+    meta.subtitle =
+      fm.heroSubtitle || fm.subtitle || fm.summary || fm.description || meta.subtitle
   }
   if (fm.hook || fm.slogan) meta.hook = fm.hook || fm.slogan || meta.hook
   if (fm.brand || fm.author) meta.brand = fm.brand || fm.author || meta.brand
   const chipsRaw = fm.chips || fm.heroTags || fm.tags || ''
   if (chipsRaw) meta.chips = splitChips(chipsRaw)
+  if (fm.image) meta.coverImage = fm.image
+  if (fm.layout === 'overlay' || fm.layout === 'separate') meta.coverLayout = fm.layout
+  if (fm.date) meta.date = fm.date
 }
 
 function applyHeroFields(meta: CardMeta, fields: Record<string, string>, label?: string): void {
@@ -101,7 +163,7 @@ function buildTeaser(meta: CardMeta, contentMd: string): void {
   if (!meta.subtitle) {
     for (const l of contentMd.split('\n')) {
       const t = l.trim()
-      if (!t || /^[#>\-*+:<`|!]/.test(t) || /^---+$/.test(t)) continue
+      if (!t || isYamlKvLine(t) || /^[#>\-*+:<`|!]/.test(t) || /^---+$/.test(t)) continue
       meta.subtitle = stripInline(t)
       break
     }
@@ -121,14 +183,21 @@ export function extractCardMeta(
   defaultBrand: string,
 ): { meta: CardMeta; contentMd: string } {
   const meta = emptyMeta(defaultBrand)
-  let lines = markdown.split('\n')
+  const normalized = stripBom(markdown)
+  let lines = normalized.split('\n')
 
-  const trimmedStart = markdown.trimStart()
+  const trimmedStart = normalized.trimStart()
   const fmMatch = trimmedStart.match(FRONTMATTER_RE)
   if (fmMatch) {
     applyYaml(meta, parseYamlBlock(fmMatch[1]))
     const afterFm = trimmedStart.slice(fmMatch[0].length).replace(/^\s+/, '')
     lines = afterFm.split('\n')
+  } else {
+    const loose = parseLooseFrontmatterLines(lines)
+    if (loose) {
+      applyYaml(meta, loose.fm)
+      lines = loose.rest
+    }
   }
 
   let i = 0
@@ -152,7 +221,7 @@ export function extractCardMeta(
   }
 
   buildTeaser(meta, contentMd)
-  computeStats(markdown, meta)
+  computeStats(contentMd, meta)
 
   if (!meta.brand) meta.brand = defaultBrand
 

@@ -6,6 +6,7 @@ import type { CardThemeGroup, CardThemeId } from '@/engine/card-studio/cardTheme
 const model = defineModel<CardThemeId>({ required: true })
 
 const groups: { key: CardThemeGroup; label: string }[] = [
+  { key: 'xhs', label: '小红书 Canva' },
   { key: 'light', label: '浅色' },
   { key: 'gradient', label: '渐变' },
   { key: 'morandi', label: '莫兰迪' },
@@ -54,6 +55,7 @@ function barClass(theme: (typeof CARD_THEMES)[0]) {
 }
 
 function coverHint(theme: (typeof CARD_THEMES)[0]) {
+  if (theme.group === 'xhs') return 'Canva 精选'
   const layout = theme.style.coverLayout ?? 'classic'
   const labels: Record<string, string> = {
     classic: '经典',
@@ -73,7 +75,7 @@ function coverHint(theme: (typeof CARD_THEMES)[0]) {
   <div class="card-theme-picker flex min-h-0 flex-col">
     <div class="card-theme-picker__head px-4 pt-4 pb-2">
       <h2 class="text-sm font-semibold text-ink">主题商店</h2>
-      <p class="mt-0.5 text-[11px] leading-snug text-ink-faint">14 套 · 纹理图案 + 封面版式 + 引用样式</p>
+      <p class="mt-0.5 text-[11px] leading-snug text-ink-faint">30 套 · 含 16 套 Canva 小红书精选主题</p>
     </div>
     <div class="min-h-0 flex-1 space-y-5 overflow-y-auto px-3 pb-4">
       <section v-for="g in grouped" :key="g.key">

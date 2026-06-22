@@ -1,4 +1,5 @@
 import { shellPatternClass } from './cardThemePatterns'
+import { isXhsShellTheme, wrapXhsCardChrome } from './cardXhsChrome'
 import { getCardTheme } from './cardThemes/registry'
 import type { CardHeaderDecor, CardThemeId } from './cardThemes/types'
 
@@ -15,6 +16,10 @@ export function wrapWithCardChrome(innerHtml: string, themeId: CardThemeId): str
   if (!trimmed) return trimmed
 
   const theme = getCardTheme(themeId)
+  if (isXhsShellTheme(theme)) {
+    return wrapXhsCardChrome(trimmed, theme)
+  }
+
   const decor = theme.style.headerDecor ?? 'accent-strip'
   const shellClass = `card-studio-shell${shellPatternClass(themeId)}`
   if (decor === 'none') {

@@ -3,11 +3,19 @@ import { extractCardMeta } from '@/engine/card-export/extractMeta'
 import { sliceContentToDataUrls } from '@/engine/card-export/sliceContent'
 import { buildCardStudioCover, canBuildCover } from './buildCover'
 import { cardThemeToExportTheme } from './cardThemeStyles'
+import type { CardSplitMode } from './constants'
 import { exportCardHtmlToDataUrl } from './exportCardHtml'
 import { prepareCardHtml } from './prepareCardHtml'
 import { splitByManualBreaks } from './splitPages'
 import { getCardTheme } from './cardThemes/registry'
-import type { BuildCardPagesOptions, CardPage } from './types'
+import type { BuildCardPagesOptions, CardPage, CardSegment } from './types'
+
+function resolveSegments(contentMd: string, splitMode: CardSplitMode): CardSegment[] {
+  if (splitMode === 'hrSplit') return splitByManualBreaks(contentMd)
+  const trimmed = contentMd.trim()
+  if (!trimmed) return [{ index: 0, markdown: '' }]
+  return [{ index: 0, markdown: contentMd }]
+}
 
 export async function buildCardPages(opts: BuildCardPagesOptions): Promise<{
   pages: CardPage[]
@@ -18,14 +26,20 @@ export async function buildCardPages(opts: BuildCardPagesOptions): Promise<{
     markdown,
     themeId,
     aspect,
-    singleCardMode,
+    splitMode,
     includeCover,
     brand: brandIn,
     previewWidth,
+    showPageNumbers = true,
+    showBrand = true,
+    overflowHidden = false,
+    richContent = false,
+    purpose = 'preview',
   } = opts
 
   const { meta, contentMd } = extractCardMeta(markdown, DEFAULT_XHS_BRAND)
-  const brand = brandIn.trim() || meta.brand || DEFAULT_XHS_BRAND
+  const resolvedBrand = brandIn.trim() || meta.brand || DEFAULT_XHS_BRAND
+  const footerBrand = showBrand ? resolvedBrand : ''
   const exportBg = getCardTheme(themeId).tokens.exportBg
 
   const pages: CardPage[] = []
@@ -33,8 +47,13 @@ export async function buildCardPages(opts: BuildCardPagesOptions): Promise<{
   let hadModules = false
 
   if (includeCover && canBuildCover(meta)) {
-    const coverHtml = buildCardStudioCover({ ...meta, brand }, aspect, themeId)
-    const coverUrl = await exportCardHtmlToDataUrl(coverHtml, aspect, previewWidth, exportBg)
+    const coverHtml = buildCardStudioCover(
+      { ...meta, brand: resolvedBrand },
+      aspect,
+      themeId,
+      { showBrand },
+    )
+    const coverUrl = await exportCardHtmlToDataUrl(coverHtml, aspect, previewWidth, exportBg, purpose)
     pages.push({
       id: 'cover',
       kind: 'cover',
@@ -49,19 +68,26 @@ export async function buildCardPages(opts: BuildCardPagesOptions): Promise<{
     globalIndex++
   }
 
-  const segments = splitByManualBreaks(contentMd)
+  const segments = resolveSegments(contentMd, splitMode)
+  const maxPages = splitMode === 'noSplit' ? 1 : undefined
+
   for (const seg of segments) {
     if (!seg.markdown.trim()) continue
-    const prepared = prepareCardHtml(seg.markdown, themeId)
+    const needsRich = richContent || /style=\{\{/.test(seg.markdown)
+    const prepared = prepareCardHtml(seg.markdown, themeId, { richContent: needsRich })
     hadModules = hadModules || prepared.hadModules
     const { dataUrls, overflow } = await sliceContentToDataUrls({
       contentHtml: prepared.html,
-      brand,
+      brand: footerBrand,
       aspect,
       previewContentWidth: previewWidth,
       theme: cardThemeToExportTheme(themeId),
       frameId: 'none',
-      maxPages: singleCardMode ? 1 : undefined,
+      maxPages,
+      showBrand,
+      showPageNumbers,
+      overflowHidden,
+      purpose,
     })
     const totalInSegment = dataUrls.length
     dataUrls.forEach((dataUrl, pageIndex) => {
@@ -75,11 +101,11 @@ export async function buildCardPages(opts: BuildCardPagesOptions): Promise<{
         globalIndex,
         html: prepared.html,
         dataUrl,
-        overflow: singleCardMode && overflow,
+        overflow: splitMode === 'noSplit' && overflow && !overflowHidden,
       })
       globalIndex++
     })
   }
 
-  return { pages, hadModules, brand }
+  return { pages, hadModules, brand: resolvedBrand }
 }
