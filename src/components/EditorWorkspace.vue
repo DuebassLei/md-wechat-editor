@@ -375,8 +375,31 @@ function openSyntaxHandbook() {
       <div class="workspace__actions">
         <button type="button" class="btn-secondary btn-sm lg:hidden" @click="emit('openDocs')">文档</button>
         <ThemePicker v-model="themeRef" />
+        <span class="toolbar-divider hidden sm:block" aria-hidden="true" />
         <button type="button" class="btn-ghost btn-sm" @click="loadSample">语法样板</button>
         <button type="button" class="btn-ghost btn-sm" @click="loadModuleSample">排版样板</button>
+        <span class="toolbar-divider hidden lg:block" aria-hidden="true" />
+        <div class="segmented-control hidden lg:inline-flex" role="tablist" aria-label="预览模式">
+          <button
+            type="button"
+            class="segmented-control__tab"
+            role="tab"
+            :aria-selected="deviceShell"
+            @click="deviceShell = true"
+          >
+            套壳
+          </button>
+          <button
+            type="button"
+            class="segmented-control__tab"
+            role="tab"
+            :aria-selected="!deviceShell"
+            @click="deviceShell = false"
+          >
+            平铺
+          </button>
+        </div>
+        <span class="toolbar-divider hidden sm:block" aria-hidden="true" />
         <PlatformCopyIconButton
           platform="wechat"
           :loading="copying"
@@ -471,7 +494,7 @@ function openSyntaxHandbook() {
         class="workspace__pane workspace__pane--preview"
         :class="{ 'workspace__pane--hidden-mobile': mobileTab !== 'preview' }"
       >
-        <div class="preview-toolbar">
+        <div class="preview-toolbar lg:hidden">
           <span class="preview-toolbar__label">预览模式</span>
           <div class="segmented-control" role="tablist" aria-label="预览模式">
             <button
@@ -516,7 +539,7 @@ function openSyntaxHandbook() {
   isolation: isolate;
 }
 .workspace__actions {
-  @apply flex flex-wrap items-center gap-2;
+  @apply flex flex-wrap items-center gap-1.5 sm:gap-2;
 }
 .workspace__toast {
   @apply shrink-0 px-4 py-1 text-center text-xs text-jade-dark;
@@ -531,7 +554,15 @@ function openSyntaxHandbook() {
   @apply lg:border-l-0;
 }
 .workspace__pane--preview {
-  @apply flex min-h-0 flex-col overflow-hidden bg-paper-dim/40 lg:border-l;
+  @apply flex min-h-0 flex-col overflow-hidden lg:border-l;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 20%, rgb(var(--cinnabar-rgb) / 0.04), transparent 55%),
+    rgb(var(--paper-dim-rgb) / 0.55);
+}
+[data-color-scheme='dark'] .workspace__pane--preview {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 15%, rgb(var(--cinnabar-rgb) / 0.08), transparent 60%),
+    rgb(var(--paper-rgb));
 }
 .preview-toolbar {
   @apply flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-paper-line/80 bg-paper-bright/70 px-3 py-2 backdrop-blur-sm;
@@ -540,6 +571,9 @@ function openSyntaxHandbook() {
   @apply text-xs font-medium text-ink-muted;
 }
 .workspace__pane--preview :deep(.preview-root:not(.preview-root--device)) {
+  @apply min-h-0 flex-1;
+}
+.workspace__pane--preview :deep(.preview-root--device) {
   @apply min-h-0 flex-1;
 }
 @media (max-width: 1023px) {

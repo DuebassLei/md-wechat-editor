@@ -4,7 +4,7 @@ import {
   getAspectDefaults,
 } from '@/engine/cover-editor/constants'
 import { coverTemplateStyleFields } from '@/engine/cover-editor/coverTemplates'
-import type { CoverAspect, CoverEditorState, CoverLayout, CoverTemplate } from '@/engine/cover-editor/types'
+import type { CoverAspect, CoverEditorState, CoverLayout, CoverLayoutPreset, CoverTemplate } from '@/engine/cover-editor/types'
 
 const STORAGE_KEY = 'mdwe:cover-editor'
 
@@ -36,6 +36,9 @@ watch(state, (val) => saveToStorage(val), { deep: true })
 
 function clearActiveTemplate() {
   activeTemplateId.value = ''
+  if (state.value.layoutPreset !== 'default') {
+    state.value.layoutPreset = 'default'
+  }
 }
 
 export function useCoverEditorContent() {
@@ -91,9 +94,19 @@ export function useCoverEditorContent() {
     },
   })
 
+  const layoutPreset = computed({
+    get: () => state.value.layoutPreset,
+    set: (v: CoverLayoutPreset) => {
+      clearActiveTemplate()
+      state.value.layoutPreset = v
+    },
+  })
+
   const aspect = computed({
     get: () => state.value.aspect,
     set: (v: CoverAspect) => {
+      if (v === state.value.aspect) return
+      clearActiveTemplate()
       const defaults = getAspectDefaults(v)
       state.value = {
         ...state.value,
@@ -151,10 +164,17 @@ export function useCoverEditorContent() {
     const aspectPatch = template.aspect
       ? { aspect: template.aspect, ...getAspectDefaults(template.aspect) }
       : {}
+    const textPatch = template.defaultTitle || template.defaultKeywords
+      ? {
+          title: template.defaultTitle ?? state.value.title,
+          keywords: template.defaultKeywords ?? state.value.keywords,
+        }
+      : {}
     state.value = {
       ...state.value,
       ...coverTemplateStyleFields(template),
       ...aspectPatch,
+      ...textPatch,
       customBgImage: '',
     }
   }
@@ -168,6 +188,7 @@ export function useCoverEditorContent() {
     titleColor,
     keywordsColor,
     layout,
+    layoutPreset,
     aspect,
     bgPresetId,
     customBgImage,

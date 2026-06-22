@@ -2,6 +2,18 @@ export type CoverAspect = 'landscape' | 'portrait' | 'wechat'
 
 export type CoverLayout = 'center' | 'left'
 
+/** 小红书结构化版式（对齐 Canva 精选模板） */
+export type CoverLayoutPreset =
+  | 'default'
+  | 'xhs-spring-outing'
+  | 'xhs-notebook-dry'
+  | 'xhs-browser-cta'
+  | 'xhs-palm-editorial'
+  | 'xhs-detail-workplace'
+  | 'xhs-detail-media'
+  | 'xhs-detail-memphis'
+  | 'xhs-detail-scrapbook'
+
 export interface CoverEditorState {
   title: string
   keywords: string
@@ -11,6 +23,7 @@ export interface CoverEditorState {
   titleColor: string
   keywordsColor: string
   layout: CoverLayout
+  layoutPreset: CoverLayoutPreset
   aspect: CoverAspect
   bgPresetId: string
   customBgImage: string
@@ -52,4 +65,10 @@ export interface CoverTemplate {
   overlayOpacity: number
   /** 套用时可一并切换画幅（如小红书竖版 9:16） */
   aspect?: CoverAspect
+  /** 结构化版式 ID */
+  layoutPreset?: CoverLayoutPreset
+  titleFontSize?: number
+  keywordsFontSize?: number
+  defaultTitle?: string
+  defaultKeywords?: string
 }

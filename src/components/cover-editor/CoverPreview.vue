@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import CoverXhsLayout from '@/components/cover-editor/CoverXhsLayout.vue'
 import {
   COVER_PREVIEW_MAX_WIDTH,
   formatKeywords,
   getBgPreset,
   splitTitleLines,
 } from '@/engine/cover-editor/constants'
-import type { CoverAspect, CoverLayout } from '@/engine/cover-editor/types'
+import { isXhsLayoutPreset } from '@/engine/cover-editor/xhsLayoutPresets'
+import type { CoverAspect, CoverLayout, CoverLayoutPreset } from '@/engine/cover-editor/types'
 
 const props = defineProps<{
   title: string
@@ -17,6 +19,7 @@ const props = defineProps<{
   titleColor: string
   keywordsColor: string
   layout: CoverLayout
+  layoutPreset: CoverLayoutPreset
   aspect: CoverAspect
   bgPresetId: string
   customBgImage: string
@@ -35,7 +38,10 @@ const aspectRatio = computed(() => {
 
 const previewWidth = computed(() => COVER_PREVIEW_MAX_WIDTH[props.aspect])
 
+const useXhsLayout = computed(() => isXhsLayoutPreset(props.layoutPreset))
+
 const bgStyle = computed(() => {
+  if (useXhsLayout.value) return {}
   if (props.customBgImage) {
     return {
       backgroundImage: `url('${props.customBgImage}')`,
@@ -90,14 +96,27 @@ const keywordsStyle = computed(() => ({
         <div
           ref="coverCanvasEl"
           class="cover-canvas"
+          :class="{ 'cover-canvas--xhs': useXhsLayout }"
           :style="{ width: `${previewWidth}px`, aspectRatio }"
         >
-          <div class="cover-canvas__bg" :style="bgStyle" />
+          <div v-if="!useXhsLayout" class="cover-canvas__bg" :style="bgStyle" />
           <div
+            v-if="!useXhsLayout"
             class="cover-canvas__overlay"
             :style="{ backgroundColor: `rgba(0,0,0,${overlayOpacity})` }"
           />
-          <div class="cover-canvas__content" :style="contentStyle">
+
+          <CoverXhsLayout
+            v-if="useXhsLayout"
+            :preset="layoutPreset"
+            :title-lines="titleLines"
+            :keywords-text="keywordsText"
+            :title-style="titleStyle"
+            :keywords-style="keywordsStyle"
+            :custom-bg-image="customBgImage"
+          />
+
+          <div v-else class="cover-canvas__content" :style="contentStyle">
             <h2 class="cover-canvas__title" :style="titleStyle">
               <span v-for="(line, i) in titleLines" :key="i" class="cover-canvas__title-line">
                 {{ line || ' ' }}
@@ -130,6 +149,10 @@ const keywordsStyle = computed(() => ({
   box-shadow:
     0 8px 32px rgb(var(--color-shadow-ink) / 0.12),
     0 0 0 1px rgb(var(--color-shadow-ink) / 0.06);
+}
+
+.cover-canvas--xhs {
+  border-radius: 12px;
 }
 
 .cover-canvas__bg,

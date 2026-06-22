@@ -18,6 +18,7 @@ const {
   titleColor,
   keywordsColor,
   layout,
+  layoutPreset,
   aspect,
   bgPresetId,
   customBgImage,
@@ -122,6 +123,7 @@ async function onExport() {
             :title-color="titleColor"
             :keywords-color="keywordsColor"
             :layout="layout"
+            :layout-preset="layoutPreset"
             :aspect="aspect"
             :bg-preset-id="bgPresetId"
             :custom-bg-image="customBgImage"
@@ -136,6 +138,7 @@ async function onExport() {
             <div class="min-h-0 flex-1 overflow-y-auto p-3">
               <CoverTemplatePicker
                 v-model:active-template-id="activeTemplateId"
+                :aspect="aspect"
                 sidebar
                 @apply="applyTemplate"
               />

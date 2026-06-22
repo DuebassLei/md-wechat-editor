@@ -1,28 +1,91 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { COVER_TEMPLATES, COVER_TEMPLATE_GROUPS } from '@/engine/cover-editor/coverTemplates'
-import { getBgPreset } from '@/engine/cover-editor/constants'
-import type { CoverTemplate } from '@/engine/cover-editor/types'
+import CoverXhsLayout from '@/components/cover-editor/CoverXhsLayout.vue'
+import {
+  COVER_TEMPLATES,
+  COVER_TEMPLATE_GROUPS,
+  filterCoverTemplatesByAspect,
+  getCoverTemplateSubgroup,
+  XHS_SUBGROUP_ORDER,
+} from '@/engine/cover-editor/coverTemplates'
+import { COVER_ASPECT_LABELS, getBgPreset } from '@/engine/cover-editor/constants'
+import type { CoverAspect, CoverTemplate } from '@/engine/cover-editor/types'
+
+interface TemplateSubgroup {
+  label: string
+  templates: CoverTemplate[]
+}
+
+interface TemplateGroup {
+  key: string
+  label: string
+  templates: CoverTemplate[]
+  subgroups: TemplateSubgroup[] | null
+}
 
 const model = defineModel<string>('activeTemplateId', { default: '' })
 
-const { sidebar = false } = defineProps<{
+const { sidebar = false, aspect = 'landscape' } = defineProps<{
   /** 侧栏模式：单列布局，不重复显示标题 */
   sidebar?: boolean
+  /** 当前封面比例，仅展示匹配比例的模板 */
+  aspect?: CoverAspect
 }>()
 
 const emit = defineEmits<{
   apply: [template: CoverTemplate]
 }>()
 
-const grouped = computed(() =>
+const aspectFiltered = computed(() => filterCoverTemplatesByAspect(COVER_TEMPLATES, aspect))
+
+const grouped = computed((): TemplateGroup[] =>
   COVER_TEMPLATE_GROUPS
-    .map((g) => ({
-      ...g,
-      templates: COVER_TEMPLATES.filter((t) => t.group === g.key),
-    }))
-    .filter((g) => g.templates.length > 0),
+    .map((g) => {
+      const templates = aspectFiltered.value.filter((t) => t.group === g.key)
+      const subgroupLabels = templates
+        .map((t) => getCoverTemplateSubgroup(t.id))
+        .filter((label): label is string => Boolean(label))
+      const hasSubgroups = subgroupLabels.length > 0
+
+      if (!hasSubgroups) {
+        return { ...g, templates, subgroups: null }
+      }
+
+      const map = new Map<string, CoverTemplate[]>()
+      for (const t of templates) {
+        const label = getCoverTemplateSubgroup(t.id) ?? '其他'
+        if (!map.has(label)) map.set(label, [])
+        map.get(label)!.push(t)
+      }
+
+      const order = Array.from(map.keys()).sort((a, b) => {
+        const ia = XHS_SUBGROUP_ORDER.indexOf(a as typeof XHS_SUBGROUP_ORDER[number])
+        const ib = XHS_SUBGROUP_ORDER.indexOf(b as typeof XHS_SUBGROUP_ORDER[number])
+        if (ia === -1 && ib === -1) return a.localeCompare(b)
+        if (ia === -1) return 1
+        if (ib === -1) return -1
+        return ia - ib
+      })
+
+      return {
+        ...g,
+        templates: [],
+        subgroups: order.map((label) => ({
+          label,
+          templates: map.get(label) ?? [],
+        })),
+      }
+    })
+    .filter((g) => g.templates.length > 0 || (g.subgroups?.length ?? 0) > 0),
 )
+
+const previewAspectRatio = computed(() => {
+  if (aspect === 'portrait') return '9 / 16'
+  if (aspect === 'wechat') return '900 / 383'
+  return '16 / 9'
+})
+
+const emptyHint = computed(() => `当前比例「${COVER_ASPECT_LABELS[aspect]}」暂无模板`)
 
 function select(template: CoverTemplate) {
   model.value = template.id
@@ -42,6 +105,35 @@ function previewStyle(template: CoverTemplate) {
 function layoutClass(template: CoverTemplate) {
   return template.layout === 'left' ? 'cover-template-picker__mock--left' : ''
 }
+
+function isXhsPresetTemplate(template: CoverTemplate) {
+  return template.layoutPreset != null && template.layoutPreset !== 'default'
+}
+
+function previewTitleLines(template: CoverTemplate) {
+  if (template.defaultTitle) return template.defaultTitle.split('\n')
+  return ['标题']
+}
+
+function previewKeywordsText(template: CoverTemplate) {
+  return template.defaultKeywords ?? ''
+}
+
+function miniTitleStyle(template: CoverTemplate) {
+  return {
+    fontSize: '7px',
+    color: template.titleColor,
+    fontFamily: template.fontFamily,
+  }
+}
+
+function miniKeywordsStyle(template: CoverTemplate) {
+  return {
+    fontSize: '5px',
+    color: template.keywordsColor,
+    fontFamily: template.fontFamily,
+  }
+}
 </script>
 
 <template>
@@ -51,12 +143,71 @@ function layoutClass(template: CoverTemplate) {
       <p class="mt-0.5 text-[11px] text-ink-faint">一键套用字体、配色与背景，再改标题即可导出</p>
     </div>
 
-    <div class="space-y-4">
+    <p v-if="grouped.length === 0" class="text-center text-[11px] text-ink-faint py-6">
+      {{ emptyHint }}
+    </p>
+
+    <div v-else class="space-y-4">
       <section v-for="g in grouped" :key="g.key">
         <h4 class="mb-2 text-[10px] font-bold uppercase tracking-wider text-ink-faint">
           {{ g.label }}
         </h4>
+
+        <template v-if="g.subgroups">
+          <div v-for="sub in g.subgroups" :key="`${g.key}-${sub.label}`" class="mb-3 last:mb-0">
+            <p class="mb-1.5 text-[10px] font-semibold text-ink-muted">{{ sub.label }}</p>
+            <div
+              class="grid gap-2"
+              :class="sidebar ? 'grid-cols-1' : 'grid-cols-2'"
+              role="listbox"
+              :aria-label="`${g.label} ${sub.label}模板`"
+            >
+              <button
+                v-for="tpl in sub.templates"
+                :key="tpl.id"
+                type="button"
+                class="cover-template-picker__card"
+                role="option"
+                :aria-selected="model === tpl.id"
+                :title="tpl.desc"
+                @click="select(tpl)"
+              >
+                <div
+                  class="cover-template-picker__preview"
+                  :class="[
+                    layoutClass(tpl),
+                    isXhsPresetTemplate(tpl) ? 'cover-template-picker__preview--xhs' : '',
+                  ]"
+                  :style="isXhsPresetTemplate(tpl)
+                    ? { aspectRatio: previewAspectRatio }
+                    : { ...previewStyle(tpl), aspectRatio: previewAspectRatio }"
+                >
+                  <CoverXhsLayout
+                    v-if="isXhsPresetTemplate(tpl)"
+                    :preset="tpl.layoutPreset!"
+                    :title-lines="previewTitleLines(tpl)"
+                    :keywords-text="previewKeywordsText(tpl)"
+                    :title-style="miniTitleStyle(tpl)"
+                    :keywords-style="miniKeywordsStyle(tpl)"
+                    mini
+                  />
+                  <template v-else>
+                    <div class="cover-template-picker__overlay" aria-hidden="true" />
+                    <div class="cover-template-picker__mock">
+                      <span class="cover-template-picker__title" />
+                      <span class="cover-template-picker__keywords" />
+                    </div>
+                  </template>
+                </div>
+                <span class="cover-template-picker__label">{{ tpl.label }}</span>
+                <span class="cover-template-picker__desc">{{ tpl.desc }}</span>
+              </button>
+            </div>
+          </div>
+        </template>
+
         <div
+          v-else
           class="grid gap-2"
           :class="sidebar ? 'grid-cols-1' : 'grid-cols-2'"
           role="listbox"
@@ -73,9 +224,9 @@ function layoutClass(template: CoverTemplate) {
             @click="select(tpl)"
           >
             <div
-              class="cover-template-picker__preview aspect-[16/10]"
+              class="cover-template-picker__preview"
               :class="layoutClass(tpl)"
-              :style="previewStyle(tpl)"
+              :style="{ ...previewStyle(tpl), aspectRatio: previewAspectRatio }"
             >
               <div class="cover-template-picker__overlay" aria-hidden="true" />
               <div class="cover-template-picker__mock">
@@ -127,6 +278,10 @@ function layoutClass(template: CoverTemplate) {
   overflow: hidden;
   border-radius: 6px;
   border: 1px solid rgb(var(--color-shadow-ink) / 0.06);
+}
+
+.cover-template-picker__preview--xhs {
+  background: transparent;
 }
 
 .cover-template-picker__overlay {

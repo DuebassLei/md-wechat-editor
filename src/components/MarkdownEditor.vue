@@ -236,7 +236,10 @@ defineExpose({ insertAtCursor, openSyntaxDrawer: () => { syntaxOpen.value = true
   @apply h-full;
 }
 .editor-toolbar {
-  @apply flex shrink-0 flex-wrap items-center gap-2 border-b border-paper-line px-2 py-2 sm:px-3;
+  @apply flex shrink-0 flex-wrap items-center gap-2 border-b border-paper-line bg-paper-dim/40 px-2 py-1.5 sm:px-3;
+}
+[data-color-scheme='dark'] .editor-toolbar {
+  background: rgb(var(--paper-rgb) / 0.65);
 }
 .editor-toolbar__chips {
   @apply flex min-w-0 flex-1 items-center gap-1 overflow-x-auto;
