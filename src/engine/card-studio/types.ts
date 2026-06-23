@@ -1,4 +1,5 @@
 import type { CardAspect } from '@/engine/card-export/types'
+import type { SlicePurpose } from '@/engine/card-export/sliceContent'
 import type { CardSplitMode } from './constants'
 import type { CardThemeId } from './cardThemes/types'
 
