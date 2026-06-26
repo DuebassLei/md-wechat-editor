@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>圆润物语 · 主题预览</title>
+  <style>
+    body { margin: 0; background: #e8eaf3; font-family: "PingFang SC", sans-serif; }
+    .phone {
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #fff;
+      box-shadow: 0 16px 48px rgb(71 85 123 / 0.1);
+    }
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      padding: 10px 14px;
+      background: rgb(255 255 255 / 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #eceef5;
+      font-size: 12px; color: #8b93a8;
+    }
+    .bar a { color: #5b6cfe; text-decoration: none; font-weight: 500; }
+
+    #nice {
+      --sr-bg: #f9fafc;
+      --sr-surface: #ffffff;
+      --sr-text: #3d4660;
+      --sr-muted: #6b7590;
+      --sr-accent: #5b6cfe;
+      --sr-accent-deep: #434fdb;
+      --sr-accent-soft: #eef1ff;
+      --sr-accent-line: #d5dcff;
+      --sr-radius: 12px;
+
+      padding: 20px 0 52px;
+      background-color: var(--sr-bg);
+      background-image:
+        radial-gradient(ellipse 120% 80% at 100% -20%, rgb(91 108 254 / 0.07), transparent 50%),
+        radial-gradient(ellipse 80% 60% at -10% 100%, rgb(139 154 255 / 0.05), transparent 45%);
+      font-family: "PingFang SC", -apple-system, "Helvetica Neue", sans-serif;
+      color: var(--sr-text);
+      line-height: 1.78;
+      letter-spacing: 0.01em;
+    }
+
+    #nice p {
+      margin: 0.85em 16px;
+      font-size: 16px;
+      color: var(--sr-muted);
+    }
+
+    /* 一级：左色条 + 克制字重，长标题友好 */
+    #nice h1 {
+      margin: 0 16px 1.1em;
+      padding: 2px 0 2px 14px;
+      border-left: 3px solid var(--sr-accent);
+      border-radius: 0 2px 2px 0;
+    }
+    #nice h1 .content {
+      display: block;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: #2a3142;
+      letter-spacing: -0.02em;
+    }
+    #nice h1 .prefix, #nice h1 .suffix { display: none; }
+
+    /* 二级：轻量胶囊 + 细描边 */
+    #nice h2 {
+      margin: 1.75em 16px 0.7em;
+    }
+    #nice h2 .content {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--sr-accent-deep);
+      padding: 0.28em 0.85em;
+      background: var(--sr-surface);
+      border: 1px solid var(--sr-accent-line);
+      border-radius: 999px;
+      box-shadow: 0 1px 2px rgb(91 108 254 / 0.04);
+    }
+    #nice h2 .content::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--sr-accent);
+      flex-shrink: 0;
+    }
+    #nice h2 .prefix, #nice h2 .suffix { display: none; }
+
+    /* 三级：与正文略区分，不加粗边框 */
+    #nice h3 {
+      margin: 1.35em 16px 0.45em;
+    }
+    #nice h3 .content {
+      font-size: 16px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+    #nice h3 .prefix, #nice h3 .suffix { display: none; }
+
+    #nice blockquote {
+      margin: 1.25em 16px;
+      padding: 0.95em 1.05em;
+      border-radius: var(--sr-radius);
+      border: 1px solid var(--sr-accent-line);
+      background: var(--sr-surface);
+      box-shadow: 0 2px 12px rgb(91 108 254 / 0.05);
+      color: var(--sr-muted);
+    }
+    #nice blockquote p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    #nice strong {
+      color: var(--sr-accent-deep);
+      font-weight: 600;
+      background: var(--sr-accent-soft);
+      padding: 0 5px;
+      border-radius: 4px;
+    }
+    #nice em {
+      color: #5a6a8a;
+      font-style: italic;
+    }
+    #nice a {
+      color: var(--sr-accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgb(91 108 254 / 0.35);
+      padding-bottom: 1px;
+    }
+
+    #nice ul, #nice ol {
+      margin: 0.75em 16px 0.75em 28px;
+      color: var(--sr-muted);
+    }
+    #nice li {
+      margin: 0.4em 0;
+      padding-left: 2px;
+    }
+    #nice ul li::marker { color: var(--sr-accent-line); }
+
+    #nice hr {
+      border: none;
+      height: 1px;
+      margin: 2em 24px;
+      background: linear-gradient(90deg, transparent, var(--sr-accent-line), transparent);
+    }
+
+    #nice p code, #nice li code {
+      padding: 2px 7px;
+      background: var(--sr-accent-soft);
+      color: var(--sr-accent-deep);
+      font-family: "SF Mono", "JetBrains Mono", monospace;
+      font-size: 0.86em;
+      border-radius: 6px;
+      border: 1px solid var(--sr-accent-line);
+    }
+    #nice pre {
+      margin: 1.1em 16px;
+      padding: 0.95em 1em;
+      background: #2b3044;
+      color: #e2e8f0;
+      border-radius: var(--sr-radius);
+      font-family: "SF Mono", "JetBrains Mono", monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      overflow-x: auto;
+      border: 1px solid #3d4460;
+    }
+    #nice pre code {
+      background: none;
+      border: none;
+      color: #a5b4fc;
+      padding: 0;
+    }
+
+    #nice table {
+      width: calc(100% - 32px);
+      margin: 1.1em 16px;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px;
+      border-radius: var(--sr-radius);
+      overflow: hidden;
+      border: 1px solid var(--sr-accent-line);
+      background: var(--sr-surface);
+    }
+    #nice th {
+      background: var(--sr-accent-soft);
+      color: var(--sr-accent-deep);
+      font-weight: 600;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    #nice td {
+      padding: 10px 12px;
+      color: var(--sr-muted);
+      border-top: 1px solid #f0f2f8;
+    }
+    #nice tr:nth-child(even) td {
+      background: rgb(249 250 252 / 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bar"><a href="index.html">← 全部草案</a> · 圆润物语 v2</div>
+    <section id="nice">
+      <h1><span class="prefix"></span><span class="content">产品更新：更顺滑的阅读体验</span><span class="suffix"></span></h1>
+
+      <p>圆润风格讲究<strong>轻量装饰、清晰层级</strong>：色条标题、细描边胶囊、圆角卡片，在移动端保持克制而不寡淡。</p>
+
+      <blockquote><p>圆角的意义，是让信息看起来可接近，而不是更难读。</p></blockquote>
+
+      <h2><span class="prefix"></span><span class="content">设计要点</span><span class="suffix"></span></h2>
+
+      <h3><span class="prefix"></span><span class="content">标题体系</span><span class="suffix"></span></h3>
+      <p>h1 固定 20px + 左色条；h2 17px 细描边胶囊；h3 16px 字重区分。三级以内不再放大字号。</p>
+
+      <h3><span class="prefix"></span><span class="content">色彩与阴影</span><span class="suffix"></span></h3>
+      <p>强调色只用于锚点，正文用灰蓝保持舒适对比。阴影 opacity 控制在 0.05 左右。详见 <a href="#">组件规范</a>。</p>
+
+      <ul>
+        <li>适合 SaaS / 工具类产品文</li>
+        <li>一主色 + 中性灰正文</li>
+        <li>代码块深色，与浅色正文区对比</li>
+      </ul>
+
+      <hr>
+
+      <pre><code>--accent: #5b6cfe;
+--radius: 12px;
+--shadow: 0 2px 12px rgba(91,108,254,.05);</code></pre>
+
+      <table>
+        <tr><th>元素</th><th>规格</th></tr>
+        <tr><td>一级标题</td><td>20px · 左色条</td></tr>
+        <tr><td>二级标题</td><td>17px · 描边胶囊</td></tr>
+        <tr><td>引文</td><td>12px 圆角卡片</td></tr>
+      </table>
+
+      <p>这一版更偏「现代产品文档」气质：干净、柔和、适合长时间阅读。觉得 OK 可以迁入编辑器。</p>
+    </section>
+  </div>
+</body>
+</html>

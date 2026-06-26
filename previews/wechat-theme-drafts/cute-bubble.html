@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>软萌泡泡 · 主题预览</title>
+  <style>
+    body { margin: 0; background: #fff0f3; font-family: "PingFang SC", sans-serif; }
+    .phone {
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #FFFBFC;
+      box-shadow: 0 8px 32px rgb(255 143 171 / 0.2);
+    }
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      padding: 10px 14px;
+      background: rgb(255 251 252 / 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #FFC8DD;
+      font-size: 12px; color: #9D8189;
+    }
+    .bar a { color: #FF8FAB; text-decoration: none; font-weight: 600; }
+
+    #nice {
+      padding: 20px 0 48px;
+      background-color: #FFFBFC;
+      background-image:
+        radial-gradient(circle at 15% 20%, rgb(255 200 221 / 0.35) 0, transparent 35%),
+        radial-gradient(circle at 85% 75%, rgb(255 214 165 / 0.25) 0, transparent 30%);
+      font-family: "PingFang SC", "Hiragino Sans GB", sans-serif;
+      color: #5C4A52;
+      line-height: 1.85;
+    }
+    #nice p {
+      margin: 1em 16px;
+      font-size: 16px;
+      color: #6B5A62;
+    }
+    #nice h1 {
+      margin: 0.5em 16px 1.2em;
+      text-align: center;
+    }
+    #nice h1 .prefix::before { content: "🌸 "; }
+    #nice h1 .suffix::after { content: " ✨"; }
+    #nice h1 .content {
+      display: inline;
+      font-size: 24px;
+      font-weight: 800;
+      color: #FF6B9D;
+      background: linear-gradient(transparent 65%, rgb(255 200 221 / 0.6) 65%);
+    }
+    #nice h1 .prefix, #nice h1 .suffix { display: inline; font-size: 20px; }
+
+    #nice h2 {
+      margin: 2em 16px 0.8em;
+      text-align: center;
+    }
+    #nice h2 .content {
+      display: inline-block;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      padding: 0.4em 1.3em;
+      background: linear-gradient(135deg, #FF8FAB 0%, #FFB3C6 100%);
+      border-radius: 999px;
+      box-shadow: 0 4px 0 #FF6B9D, 0 6px 16px rgb(255 107 157 / 0.25);
+    }
+    #nice h2 .prefix, #nice h2 .suffix { display: none; }
+
+    #nice h3 .prefix::before { content: "♡ "; color: #FF8FAB; }
+    #nice h3 .content {
+      font-size: 17px;
+      font-weight: 700;
+      color: #C9184A;
+    }
+    #nice h3 .suffix { display: none; }
+
+    #nice blockquote {
+      margin: 1.4em 16px;
+      padding: 1em 1.1em;
+      border-radius: 20px 20px 20px 4px;
+      border: 2px solid #FFC8DD;
+      background: #fff;
+      color: #9D8189;
+      box-shadow: 4px 4px 0 rgb(255 200 221 / 0.5);
+    }
+    #nice blockquote p { margin: 0; font-size: 15px; }
+
+    #nice strong {
+      color: #FF6B9D;
+      font-weight: 700;
+      background: rgb(255 200 221 / 0.4);
+      padding: 0 5px;
+      border-radius: 6px;
+    }
+    #nice em { color: #FFB347; font-style: normal; }
+    #nice a { color: #FF6B9D; text-decoration: wavy underline #FFC8DD; }
+
+    #nice ul, #nice ol { margin: 1em 16px 1em 28px; }
+    #nice li { margin: 0.55em 0; }
+    #nice li::marker { content: "🍡 "; }
+
+    #nice hr {
+      border: none;
+      text-align: center;
+      margin: 2em 16px;
+      height: auto;
+      background: none;
+    }
+    #nice hr::before {
+      content: "· · · ✿ · · ·";
+      color: #FFC8DD;
+      font-size: 14px;
+      letter-spacing: 0.3em;
+    }
+
+    #nice p code, #nice li code {
+      padding: 2px 8px;
+      background: #FFF0F3;
+      color: #FF6B9D;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.88em;
+      border-radius: 8px;
+      border: 1px dashed #FFC8DD;
+    }
+    #nice pre {
+      margin: 1.2em 16px;
+      padding: 1em;
+      background: #FFF0F3;
+      border: 2px solid #FFC8DD;
+      border-radius: 16px;
+      font-size: 13px;
+      overflow-x: auto;
+    }
+
+    #nice table {
+      width: calc(100% - 32px);
+      margin: 1.2em 16px;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #FFC8DD;
+      font-size: 14px;
+    }
+    #nice th {
+      background: #FFC8DD;
+      color: #9D174D;
+      padding: 10px 8px;
+    }
+    #nice td {
+      padding: 10px 8px;
+      background: #fff;
+      border-top: 1px solid #FFE0EB;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bar"><a href="index.html">← 全部草案</a> · 软萌泡泡</div>
+    <section id="nice">
+      <h1><span class="prefix"></span><span class="content">猫猫今天也很乖</span><span class="suffix"></span></h1>
+
+      <p>可爱风格要<strong>控制甜度</strong>：马卡龙色 + 气泡圆角 + 少量 emoji，三者缺一都会像低幼或廉价。</p>
+
+      <blockquote><p>萌系排版的目标，是让读者嘴角上扬，而不是眼花缭乱。</p></blockquote>
+
+      <h2><span class="prefix"></span><span class="content">今日萌点</span><span class="suffix"></span></h2>
+
+      <h3><span class="prefix"></span><span class="content">早餐时光</span><span class="suffix"></span></h3>
+      <p>吐司烤到微焦，配一杯<em>热牛奶</em>。猫猫趴在脚边等掉落的小碎屑。</p>
+
+      <h3><span class="prefix"></span><span class="content">拍照技巧</span><span class="suffix"></span></h3>
+      <p>俯拍 45° 最显脸圆。更多灵感见 <a href="#">萌宠专栏</a>。</p>
+
+      <ul>
+        <li>emoji 仅用于 h1/h3 角标</li>
+        <li>阴影用「贴纸感」偏移</li>
+        <li>列表 marker 可自定义</li>
+      </ul>
+
+      <hr>
+
+      <pre><code>🐱 status: happy
+🍡 mood: 100%</code></pre>
+
+      <table>
+        <tr><th>萌点</th><th>指数</th></tr>
+        <tr><td>肉垫</td><td>⭐⭐⭐⭐⭐</td></tr>
+        <tr><td>踩奶</td><td>⭐⭐⭐⭐☆</td></tr>
+      </table>
+
+      <p>适合宠物、少女、亲子类账号——确认后可做成与现有「可爱系列」差异化的泡泡款。</p>
+    </section>
+  </div>
+</body>
+</html>

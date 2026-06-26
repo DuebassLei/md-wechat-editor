@@ -1,0 +1,5 @@
+# 功能实现计划存放目录
+
+由 `/dev-orchestrator` 或 `/dev-fix` 的 `dev-explore-agent` 写入。
+
+命名：`YYYY-MM-DD-<slug>.md`

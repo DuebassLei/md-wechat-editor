@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>薰衣草手帐 · 主题预览</title>
+  <style>
+    body { margin: 0; background: #ede9fe; font-family: "PingFang SC", sans-serif; }
+    .phone {
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #fff;
+      box-shadow: 0 8px 32px rgb(167 139 250 / 0.2);
+    }
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      padding: 10px 14px;
+      background: rgb(255 255 255 / 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #ddd6fe;
+      font-size: 12px; color: #6b7280;
+    }
+    .bar a { color: #7C3AED; text-decoration: none; }
+
+    #nice {
+      padding: 20px 0 48px;
+      background-color: #FDFCFF;
+      background-image:
+        linear-gradient(#EDE9FE 1px, transparent 1px),
+        linear-gradient(90deg, #EDE9FE 1px, transparent 1px);
+      background-size: 20px 20px;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: #374151;
+      line-height: 1.8;
+    }
+    #nice p { margin: 1em 16px; font-size: 16px; color: #4B5563; }
+    #nice h1 { margin: 0.5em 16px 1.2em; text-align: center; }
+    #nice h1 .content {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: 800;
+      color: #5B21B6;
+      padding: 0.35em 1.2em;
+      background: linear-gradient(135deg, #C4B5FD 0%, #C4B5FD 48%, transparent 48%, transparent 52%, #F0ABFC 52%, #F0ABFC 100%);
+      border-radius: 4px;
+      box-shadow: 2px 3px 0 #DDD6FE;
+      transform: rotate(-0.8deg);
+    }
+    #nice h1 .prefix, #nice h1 .suffix { display: none; }
+
+    #nice h2 { margin: 2em 16px 0.8em; text-align: center; }
+    #nice h2 .content {
+      display: inline-block;
+      font-size: 19px;
+      font-weight: 700;
+      color: #6D28D9;
+      padding: 0.25em 1.4em;
+      background: rgb(237 233 254 / 0.55);
+      border-radius: 999px;
+      border: 2px dashed #A78BFA;
+    }
+    #nice h2 .prefix, #nice h2 .suffix { display: none; }
+
+    #nice h3 .content { font-size: 17px; font-weight: 700; color: #9333EA; }
+    #nice h3 .prefix { color: #C4B5FD; margin-right: 4px; }
+    #nice h3 .prefix::before { content: "✦ "; }
+    #nice h3 .suffix { display: none; }
+
+    #nice blockquote {
+      margin: 1.4em 16px;
+      padding: 1em 1.1em;
+      border-radius: 12px;
+      border: 2px solid #DDD6FE;
+      background: #fff;
+      box-shadow: 3px 3px 0 #C4B5FD;
+      color: #6B7280;
+    }
+    #nice blockquote p { margin: 0; font-size: 15px; }
+
+    #nice strong {
+      color: #7C3AED;
+      font-weight: 700;
+      background: rgb(240 171 252 / 0.25);
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+    #nice em { color: #A855F7; font-style: normal; font-weight: 600; }
+    #nice a { color: #7C3AED; text-decoration: underline wavy #C4B5FD; }
+
+    #nice ul, #nice ol { margin: 1em 16px 1em 28px; }
+    #nice li { margin: 0.5em 0; }
+
+    #nice hr {
+      border: none;
+      height: 12px;
+      margin: 2em 16px;
+      background: repeating-linear-gradient(
+        90deg,
+        #C4B5FD 0, #C4B5FD 8px,
+        transparent 8px, transparent 12px,
+        #F0ABFC 12px, #F0ABFC 20px,
+        transparent 20px, transparent 24px
+      );
+      opacity: 0.7;
+    }
+
+    #nice p code, #nice li code {
+      padding: 2px 8px;
+      background: #F5F3FF;
+      color: #6D28D9;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.88em;
+      border-radius: 6px;
+      border: 1px solid #DDD6FE;
+    }
+    #nice pre {
+      margin: 1.2em 16px;
+      padding: 1em;
+      background: #fff;
+      border: 2px solid #DDD6FE;
+      border-radius: 12px;
+      box-shadow: 3px 3px 0 #C4B5FD;
+      font-size: 13px;
+      overflow-x: auto;
+    }
+
+    #nice table {
+      width: calc(100% - 32px);
+      margin: 1.2em 16px;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #DDD6FE;
+    }
+    #nice th { background: #F5F3FF; color: #6D28D9; padding: 10px 8px; }
+    #nice td { padding: 10px 8px; border-top: 1px solid #EDE9FE; background: #fff; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bar"><a href="index.html">← 全部草案</a> · 薰衣草手帐</div>
+    <section id="nice">
+      <h1><span class="prefix"></span><span class="content">睡前阅读清单</span><span class="suffix"></span></h1>
+
+      <p>薰衣草款保留手账结构，用<strong>紫 + 粉紫胶带</strong>营造梦境感，适合读书、情绪、晚安类内容。</p>
+
+      <blockquote><p>紫色在手账里代表「慢下来」，不宜用过饱和的荧光紫。</p></blockquote>
+
+      <h2><span class="prefix"></span><span class="content">本周三本</span><span class="suffix"></span></h2>
+
+      <h3><span class="prefix"></span><span class="content">周一</span><span class="suffix"></span></h3>
+      <p>散文集第三章，<em>20 页即可</em>。在页边贴一张薰衣草色便利贴。</p>
+
+      <h3><span class="prefix"></span><span class="content">周三</span><span class="suffix"></span></h3>
+      <p>重读一篇旧文，记录一句共鸣。样式参考 <a href="#">手账主题</a>。</p>
+
+      <ul>
+        <li>网格线用淡紫，不抢正文</li>
+        <li>h3 星形前缀点缀</li>
+        <li>强调色粉紫 25% 透明底</li>
+      </ul>
+
+      <hr>
+
+      <pre><code>📖 page: 42
+💭 mood: calm
+🌙 sleep: soon</code></pre>
+
+      <table>
+        <tr><th>书名</th><th>进度</th></tr>
+        <tr><td>夜航西飞</td><td>68%</td></tr>
+        <tr><td>草枕</td><td>12%</td></tr>
+      </table>
+
+      <p>与薄荷、蜜桃并列，组成「手账四色」系列，读者可按账号气质选款。</p>
+    </section>
+  </div>
+</body>
+</html>

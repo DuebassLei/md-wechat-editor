@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>石墨简报 · 主题预览</title>
+  <style>
+    body { margin: 0; background: #ececec; font-family: "PingFang SC", sans-serif; }
+    .phone {
+      max-width: 375px; margin: 0 auto; min-height: 100vh;
+      background: #fff;
+      box-shadow: 0 8px 40px rgb(0 0 0 / 0.08);
+    }
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      padding: 10px 14px;
+      background: rgb(255 255 255 / 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e5e5e5;
+      font-size: 12px; color: #737373;
+    }
+    .bar a { color: #171717; text-decoration: none; font-weight: 600; }
+
+    #nice {
+      padding: 24px 0 48px;
+      background: #fff;
+      font-family: "PingFang SC", -apple-system, "Helvetica Neue", sans-serif;
+      color: #262626; line-height: 1.8;
+    }
+    #nice p { margin: 1em 16px; font-size: 16px; color: #525252; text-align: justify; }
+    #nice h1 {
+      margin: 0 16px 1.2em;
+      padding-bottom: 0.75em;
+      border-bottom: 2px solid #171717;
+    }
+    #nice h1 .content {
+      display: block; font-size: 22px; font-weight: 700;
+      color: #171717; line-height: 1.45; letter-spacing: -0.01em;
+    }
+    #nice h1 .prefix, #nice h1 .suffix { display: none; }
+
+    #nice h2 { margin: 2em 16px 0.75em; }
+    #nice h2 .content {
+      display: inline-block; font-size: 18px; font-weight: 700;
+      color: #171717; padding-left: 10px;
+      border-left: 3px solid #171717;
+    }
+    #nice h2 .prefix, #nice h2 .suffix { display: none; }
+
+    #nice h3 .content {
+      font-size: 16px; font-weight: 600; color: #404040;
+    }
+    #nice h3 .prefix, #nice h3 .suffix { display: none; }
+
+    #nice blockquote {
+      margin: 1.5em 16px; padding: 1em 1.1em;
+      border-left: 3px solid #a3a3a3;
+      background: #fafafa; color: #525252;
+    }
+    #nice blockquote p { margin: 0; font-size: 15px; }
+
+    #nice strong { color: #171717; font-weight: 700; }
+    #nice em { color: #737373; font-style: italic; }
+    #nice a { color: #171717; text-decoration: underline; text-underline-offset: 3px; }
+
+    #nice ul, #nice ol { margin: 1em 16px 1em 28px; color: #525252; }
+    #nice li { margin: 0.45em 0; }
+
+    #nice hr {
+      border: none; height: 1px; margin: 2.2em 24px;
+      background: #e5e5e5;
+    }
+
+    #nice p code, #nice li code {
+      padding: 2px 6px; background: #f5f5f5; color: #262626;
+      font-family: "JetBrains Mono", monospace; font-size: 0.88em;
+      border-radius: 3px; border: 1px solid #e5e5e5;
+    }
+    #nice pre {
+      margin: 1.3em 16px; padding: 1em;
+      background: #fafafa; border: 1px solid #e5e5e5;
+      font-size: 13px; overflow-x: auto; line-height: 1.65;
+    }
+
+    #nice table {
+      width: calc(100% - 32px); margin: 1.2em 16px;
+      border-collapse: collapse; font-size: 14px;
+    }
+    #nice th {
+      background: #171717; color: #fff;
+      padding: 10px 8px; text-align: left; font-weight: 600;
+    }
+    #nice td {
+      padding: 10px 8px; border-bottom: 1px solid #e5e5e5; color: #525252;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bar"><a href="index.html">← 全部草案</a> · 石墨简报</div>
+    <section id="nice">
+      <h1><span class="prefix"></span><span class="content">2026 Q1 业务简报：核心指标回顾</span><span class="suffix"></span></h1>
+
+      <p>石墨简报走<strong>黑白极简</strong>——无装饰色、无圆角噱头，靠层级与留白建立专业感，适合企业内刊、行业快讯、数据解读。</p>
+
+      <blockquote><p>正式排版的第一原则：让读者先看到结构，再看到风格。</p></blockquote>
+
+      <h2><span class="prefix"></span><span class="content">本期要点</span><span class="suffix"></span></h2>
+
+      <h3><span class="prefix"></span><span class="content">营收与增长</span><span class="suffix"></span></h3>
+      <p>关键数字用<strong>加粗</strong>即可，不必叠色。同比、环比放在同一段落末尾，减少视觉跳跃。</p>
+
+      <h3><span class="prefix"></span><span class="content">风险与展望</span><span class="suffix"></span></h3>
+      <p>结论段宜短句收束。完整方法论见 <a href="#">简报规范</a>。</p>
+
+      <ul>
+        <li>h1 底边线定锚，h2 左色条分节</li>
+        <li>正文 #525252，对比清晰不刺眼</li>
+        <li>表格表头纯黑，信息层级最稳</li>
+      </ul>
+
+      <hr>
+
+      <pre><code>指标        Q1      QoQ
+营收        +12%    +3%
+活跃用户    1.2M    +8%</code></pre>
+
+      <table>
+        <tr><th>模块</th><th>优先级</th></tr>
+        <tr><td>数据摘要</td><td>高</td></tr>
+        <tr><td>管理层评述</td><td>中</td></tr>
+      </table>
+
+      <p>正式系列「商务向」：和圆润物语的彩色现代风、朱砂印谱的传统风形成互补。</p>
+    </section>
+  </div>
+</body>
+</html>

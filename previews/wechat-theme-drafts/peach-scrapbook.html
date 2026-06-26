@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>蜜桃手帐 · 主题预览</title>
+  <style>
+    body { margin: 0; background: #fff1e6; font-family: "PingFang SC", sans-serif; }
+    .phone {
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #fff;
+      box-shadow: 0 8px 32px rgb(251 146 60 / 0.18);
+    }
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      padding: 10px 14px;
+      background: rgb(255 255 255 / 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #fed7aa;
+      font-size: 12px; color: #78716c;
+    }
+    .bar a { color: #EA580C; text-decoration: none; }
+
+    #nice {
+      padding: 20px 0 48px;
+      background-color: #FFFBF7;
+      background-image:
+        linear-gradient(#FFE8D6 1px, transparent 1px),
+        linear-gradient(90deg, #FFE8D6 1px, transparent 1px);
+      background-size: 20px 20px;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: #44403c;
+      line-height: 1.8;
+    }
+    #nice p { margin: 1em 16px; font-size: 16px; color: #57534e; }
+    #nice h1 { margin: 0.5em 16px 1.2em; text-align: center; }
+    #nice h1 .content {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: 800;
+      color: #9A3412;
+      padding: 0.35em 1.2em;
+      background: linear-gradient(135deg, #FDE68A 0%, #FDE68A 48%, transparent 48%, transparent 52%, #FDBA74 52%, #FDBA74 100%);
+      border-radius: 4px;
+      box-shadow: 2px 3px 0 #FED7AA;
+      transform: rotate(0.6deg);
+    }
+    #nice h1 .prefix, #nice h1 .suffix { display: none; }
+
+    #nice h2 { margin: 2em 16px 0.8em; text-align: center; }
+    #nice h2 .content {
+      display: inline-block;
+      font-size: 19px;
+      font-weight: 700;
+      color: #C2410C;
+      padding: 0.25em 1.4em;
+      background: rgb(254 215 170 / 0.45);
+      border-radius: 999px;
+      border: 2px dashed #FB923C;
+    }
+    #nice h2 .prefix, #nice h2 .suffix { display: none; }
+
+    #nice h3 .content { font-size: 17px; font-weight: 700; color: #B45309; }
+    #nice h3 .prefix { color: #FDBA74; margin-right: 4px; }
+    #nice h3 .prefix::before { content: "🍑 "; }
+    #nice h3 .suffix { display: none; }
+
+    #nice blockquote {
+      margin: 1.4em 16px;
+      padding: 1em 1.1em;
+      border-radius: 12px;
+      border: 2px solid #FED7AA;
+      background: #fff;
+      box-shadow: 3px 3px 0 #FDBA74;
+      color: #78716c;
+    }
+    #nice blockquote p { margin: 0; font-size: 15px; }
+
+    #nice strong {
+      color: #C2410C;
+      font-weight: 700;
+      background: rgb(253 230 138 / 0.35);
+      padding: 0 4px;
+      border-radius: 4px;
+    }
+    #nice em { color: #EA580C; font-style: normal; font-weight: 600; }
+    #nice a { color: #EA580C; text-decoration: underline wavy #FDBA74; }
+
+    #nice ul, #nice ol { margin: 1em 16px 1em 28px; }
+    #nice li { margin: 0.5em 0; }
+
+    #nice hr {
+      border: none;
+      height: 12px;
+      margin: 2em 16px;
+      background: repeating-linear-gradient(
+        90deg,
+        #FDE68A 0, #FDE68A 8px,
+        transparent 8px, transparent 12px,
+        #FDBA74 12px, #FDBA74 20px,
+        transparent 20px, transparent 24px
+      );
+      opacity: 0.75;
+    }
+
+    #nice p code, #nice li code {
+      padding: 2px 8px;
+      background: #FFF7ED;
+      color: #C2410C;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.88em;
+      border-radius: 6px;
+      border: 1px solid #FED7AA;
+    }
+    #nice pre {
+      margin: 1.2em 16px;
+      padding: 1em;
+      background: #fff;
+      border: 2px solid #FED7AA;
+      border-radius: 12px;
+      box-shadow: 3px 3px 0 #FDBA74;
+      font-size: 13px;
+      overflow-x: auto;
+    }
+
+    #nice table {
+      width: calc(100% - 32px);
+      margin: 1.2em 16px;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #FED7AA;
+    }
+    #nice th { background: #FFF7ED; color: #C2410C; padding: 10px 8px; }
+    #nice td { padding: 10px 8px; border-top: 1px solid #FFEDD5; background: #fff; }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bar"><a href="index.html">← 全部草案</a> · 蜜桃手帐</div>
+    <section id="nice">
+      <h1><span class="prefix"></span><span class="content">秋日厨房小记</span><span class="suffix"></span></h1>
+
+      <p>蜜桃手帐延续<strong>网格纸 + 胶带标题 + 贴纸阴影</strong>，换成暖橙与奶黄，更适合烘焙、居家、秋冬专题。</p>
+
+      <blockquote><p>温暖的手账风，是让读者觉得「这篇文章可以慢慢看」。</p></blockquote>
+
+      <h2><span class="prefix"></span><span class="content">今日食谱</span><span class="suffix"></span></h2>
+
+      <h3><span class="prefix"></span><span class="content">上午</span><span class="suffix"></span></h3>
+      <p>烤红薯配肉桂粉，<em>200°C 40 分钟</em>。窗户开一条缝，让甜香飘出去。</p>
+
+      <h3><span class="prefix"></span><span class="content">下午</span><span class="suffix"></span></h3>
+      <p>整理橱柜，把季节限定包装纸夹进手账。参考 <a href="#">排版示例</a>。</p>
+
+      <ul>
+        <li>暖色双拼胶带标题</li>
+        <li>虚线胶囊二级标题</li>
+        <li>引文 3px 偏移阴影</li>
+      </ul>
+
+      <hr>
+
+      <pre><code>- [ ] 买桂花
+- [ ] 写一页日记
+- [ ] 晒成品图</code></pre>
+
+      <table>
+        <tr><th>小物</th><th>幸福感</th></tr>
+        <tr><td>新马克杯</td><td>⭐⭐⭐⭐⭐</td></tr>
+        <tr><td>阴天</td><td>⭐⭐⭐☆☆</td></tr>
+      </table>
+
+      <p>与薄荷手帐同结构、不同配色，适合作为手账系列的「暖色款」。</p>
+    </section>
+  </div>
+</body>
+</html>

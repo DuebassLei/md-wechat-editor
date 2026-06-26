@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>极客蓝图 · 主题预览</title>
+  <style>
+    body { margin: 0; background: #0c1929; font-family: "PingFang SC", sans-serif; }
+    .phone {
+      max-width: 375px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #fff;
+      box-shadow: 0 0 48px rgb(14 165 233 / 0.15);
+    }
+    .bar {
+      position: sticky; top: 0; z-index: 10;
+      padding: 10px 14px;
+      background: #0F172A;
+      color: #94A3B8;
+      font-size: 12px;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .bar a { color: #22D3EE; text-decoration: none; }
+
+    #nice {
+      padding: 20px 0 48px;
+      background-color: #FFFFFF;
+      background-image:
+        linear-gradient(rgb(14 165 233 / 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(14 165 233 / 0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: "PingFang SC", "Helvetica Neue", sans-serif;
+      color: #1E293B;
+      line-height: 1.75;
+    }
+    #nice p {
+      margin: 1em 16px;
+      font-size: 16px;
+      color: #334155;
+    }
+    #nice h1 {
+      margin: 0 16px 1.2em;
+      padding: 0.8em 1em;
+      background: #0F172A;
+      border-left: 4px solid #22D3EE;
+    }
+    #nice h1 .content {
+      display: block;
+      font-size: 24px;
+      font-weight: 800;
+      color: #F8FAFC;
+      font-family: "JetBrains Mono", "PingFang SC", monospace;
+      letter-spacing: -0.02em;
+    }
+    #nice h1 .prefix::before {
+      content: "// ";
+      color: #22D3EE;
+      font-family: "JetBrains Mono", monospace;
+    }
+    #nice h1 .prefix, #nice h1 .suffix { display: inline; }
+    #nice h1 .suffix { display: none; }
+
+    #nice h2 {
+      margin: 2em 16px 0.7em;
+      padding: 0.5em 0.8em;
+      background: rgb(14 165 233 / 0.08);
+      border: 1px solid rgb(14 165 233 / 0.2);
+    }
+    #nice h2 .content {
+      font-size: 19px;
+      font-weight: 700;
+      color: #0369A1;
+      font-family: "JetBrains Mono", "PingFang SC", monospace;
+    }
+    #nice h2 .prefix::before { content: "## "; color: #0EA5E9; font-family: "JetBrains Mono", monospace; }
+    #nice h2 .prefix { display: inline; }
+    #nice h2 .suffix { display: none; }
+
+    #nice h3 .content {
+      font-size: 17px;
+      font-weight: 600;
+      color: #0EA5E9;
+    }
+    #nice h3 .prefix::before { content: "▸ "; color: #22D3EE; }
+    #nice h3 .prefix { display: inline; }
+    #nice h3 .suffix { display: none; }
+
+    #nice blockquote {
+      margin: 1.4em 16px;
+      padding: 0.9em 1em;
+      border-left: 4px solid #0EA5E9;
+      background: #F8FAFC;
+      color: #475569;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 14px;
+    }
+    #nice blockquote p { margin: 0; }
+
+    #nice strong {
+      color: #0369A1;
+      font-weight: 700;
+      background: rgb(34 211 238 / 0.12);
+      padding: 0 4px;
+    }
+    #nice em { color: #0EA5E9; font-style: normal; font-weight: 600; }
+    #nice a { color: #0284C7; text-decoration: none; border-bottom: 1px dashed #22D3EE; }
+
+    #nice ul, #nice ol { margin: 1em 16px 1em 28px; color: #334155; }
+    #nice li { margin: 0.45em 0; }
+
+    #nice hr {
+      border: none;
+      height: 2px;
+      margin: 2em 16px;
+      background: repeating-linear-gradient(
+        90deg,
+        #0EA5E9 0, #0EA5E9 8px,
+        transparent 8px, transparent 16px
+      );
+      opacity: 0.4;
+    }
+
+    #nice p code, #nice li code {
+      padding: 2px 6px;
+      background: #F1F5F9;
+      color: #0369A1;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.9em;
+      border-radius: 3px;
+      border: 1px solid #E2E8F0;
+    }
+    #nice pre {
+      margin: 1.3em 16px;
+      padding: 1em;
+      background: #0F172A;
+      color: #E2E8F0;
+      border-radius: 6px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+      border: 1px solid #1E293B;
+    }
+    #nice pre code { color: #22D3EE; background: none; border: none; }
+
+    #nice table {
+      width: calc(100% - 32px);
+      margin: 1.2em 16px;
+      border-collapse: collapse;
+      font-size: 14px;
+      font-family: "JetBrains Mono", monospace;
+    }
+    #nice th {
+      background: #0F172A;
+      color: #22D3EE;
+      padding: 8px;
+      border: 1px solid #334155;
+      text-align: left;
+    }
+    #nice td {
+      padding: 8px;
+      border: 1px solid #E2E8F0;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <div class="bar"><a href="index.html">← index</a> · tech-grid</div>
+    <section id="nice">
+      <h1><span class="prefix"></span><span class="content">LLM 应用落地 checklist</span><span class="suffix"></span></h1>
+
+      <p>科技风格强调<strong>信息密度与结构感</strong>：浅网格底、等宽字体点缀、代码块深色容器，让读者感到「可靠、可验证」。</p>
+
+      <blockquote><p>Tech theme ≠ dark mode. 白底 + 网格同样可以很极客。</p></blockquote>
+
+      <h2><span class="prefix"></span><span class="content">架构要点</span><span class="suffix"></span></h2>
+
+      <h3><span class="prefix"></span><span class="content">Prompt 分层</span><span class="suffix"></span></h3>
+      <p>系统提示、工具调用、用户输入三层分离。h2 用<code>##</code>前缀强化「文档感」，但正文仍保持 sans-serif 可读性。</p>
+
+      <h3><span class="prefix"></span><span class="content">评测指标</span><span class="suffix"></span></h3>
+      <p>延迟、成本、准确率三角约束。详见 <a href="#">工程笔记</a>。</p>
+
+      <ul>
+        <li>适合 AI / DevTools / 测评文</li>
+        <li>代码块必须深色高对比</li>
+        <li>网格背景 opacity ≤ 0.05</li>
+      </ul>
+
+      <hr>
+
+      <pre><code>const stack = {
+  model: "gpt-4.1",
+  rag: true,
+  eval: ["latency", "cost"]
+};</code></pre>
+
+      <table>
+        <tr><th>metric</th><th>target</th></tr>
+        <tr><td>p95 latency</td><td>&lt; 2s</td></tr>
+        <tr><td>token cost</td><td>&lt; $0.01</td></tr>
+      </table>
+
+      <p>与现有「赛博终端」相比，这套更偏<strong>理性白底技术文</strong>，适合主流科技公众号。</p>
+    </section>
+  </div>
+</body>
+</html>
