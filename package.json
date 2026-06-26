@@ -16,8 +16,6 @@
     "test:handwriting": "node --import ./scripts/register-aliases.mjs scripts/smoke-handwriting-export.mjs",
     "test:card-studio": "node --import ./scripts/register-aliases.mjs scripts/smoke-card-studio.mjs",
     "test:card-studio:browser": "node --import ./scripts/register-aliases.mjs scripts/smoke-card-studio-browser.mjs",
-    "test:xhs": "node --import ./scripts/register-aliases.mjs scripts/smoke-xhs-export.mjs",
-    "test:wechat-tietu": "node --import ./scripts/register-aliases.mjs scripts/smoke-wechat-tietu-export.mjs",
     "test:sync": "node --import ./scripts/register-aliases.mjs scripts/smoke-editor-sync-anchors.mjs",
     "capture:cover-studio": "node --import ./scripts/register-aliases.mjs scripts/capture-cover-studio.mjs",
     "capture:html-images": "node scripts/capture-html-images.mjs",
