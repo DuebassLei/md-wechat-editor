@@ -29,8 +29,6 @@ import { copyRichText, preloadJuice } from '@/utils/wechatCopy'
 import { normalizeThemeId } from '@/types/theme'
 import PlatformCopyConfirmModal from '@/components/PlatformCopyConfirmModal.vue'
 import PlatformCopyIconButton from '@/components/PlatformCopyIconButton.vue'
-import XhsExporterModal from '@/components/XhsExporterModal.vue'
-import WechatTietuExporterModal from '@/components/WechatTietuExporterModal.vue'
 import { resolveImageTokens } from '@/engine/image-pipeline/imageTokens'
 import {
   isImageHostConfigured,
@@ -56,8 +54,6 @@ const pendingPlatform = ref<PlatformTarget>('juejin')
 const toast = ref('')
 const editorRef = ref<InstanceType<typeof MarkdownEditor> | null>(null)
 const previewFrameRef = ref<InstanceType<typeof WechatPreviewFrame> | null>(null)
-const xhsVisible = ref(false)
-const wechatTietuVisible = ref(false)
 const sideBySide = ref(false)
 const legacyDismissed = ref(
   typeof sessionStorage !== 'undefined' &&
@@ -113,13 +109,6 @@ const { html, loading, error } = usePreviewHtml(content, themeRef)
 const { deviceShell } = usePreviewShell()
 const richLayout = computed(() => usesRichLayout(content.value))
 
-const previewContentWidth = computed(() => {
-  const root = previewFrameRef.value?.rootEl
-  if (!root) return 375
-  const body = root.querySelector<HTMLElement>('.preview-body')
-  const w = body?.clientWidth ?? 0
-  return w > 80 ? w : 375
-})
 
 const editorView = computed(() => editorRef.value?.editorView ?? null)
 
@@ -437,32 +426,8 @@ function openSyntaxHandbook() {
           title="复制 CSDN Markdown"
           @click="copyPlatformMarkdown('csdn')"
         />
-        <PlatformCopyIconButton
-          platform="xhs"
-          title="导出小红书图（首图 + 自动分页内容图）"
-          @click="xhsVisible = true"
-        />
-        <PlatformCopyIconButton
-          platform="wechat-tietu"
-          title="导出微信贴图（3:4 首图 + 自动分页，支持上传优化）"
-          @click="wechatTietuVisible = true"
-        />
       </div>
     </div>
-    <XhsExporterModal
-      :visible="xhsVisible"
-      :markdown="content"
-      :theme-id="themeRef"
-      :preview-content-width="previewContentWidth"
-      @close="xhsVisible = false"
-    />
-    <WechatTietuExporterModal
-      :visible="wechatTietuVisible"
-      :markdown="content"
-      :theme-id="themeRef"
-      :preview-content-width="previewContentWidth"
-      @close="wechatTietuVisible = false"
-    />
     <PlatformCopyConfirmModal
       v-if="pendingExport"
       v-model:open="confirmOpen"
