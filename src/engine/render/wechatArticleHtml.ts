@@ -154,10 +154,10 @@ export async function buildWechatArticleHtml(
     result = buildRichLayoutWechatHtml(juiced)
   } else if (entitledTheme === 'aiIndigo') {
     const themeCss = getThemeCss('aiIndigo', '#nice')
-    result = await buildWechatHtml(markdownHtml, themeCss)
+    result = await buildWechatHtml(markdownHtml, themeCss, entitledTheme)
   } else {
     const themeCss = getThemeCss(entitledTheme, '#nice')
-    result = await buildWechatHtml(markdownHtml, themeCss)
+    result = await buildWechatHtml(markdownHtml, themeCss, entitledTheme)
   }
 
   if (renderOptions?.editorSyncAnchors) {

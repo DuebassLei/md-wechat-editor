@@ -44,7 +44,7 @@ export async function juiceGfmThemeBlocks(html: string, themeId: ThemeId): Promi
 
   while ((match = re.exec(html)) !== null) {
     result += html.slice(lastIndex, match.index)
-    result += await buildWechatHtml(match[1], themeCss)
+    result += await buildWechatHtml(match[1], themeCss, themeId)
     lastIndex = match.index + match[0].length
   }
 

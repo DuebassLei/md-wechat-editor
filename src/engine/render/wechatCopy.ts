@@ -1,5 +1,7 @@
 import { WECHAT_BASE_CSS } from './wechatBaseCss';
 import { postProcessForWechat } from './postProcessHtml';
+import { applyDraftWechatDecor } from '@/engine/themes/markdownThemes/drafts/applyDraftWechatDecor';
+import { DRAFT_WECHAT_DECOR } from '@/engine/themes/markdownThemes/drafts/wechatDecor';
 
 /**
  * 将主题 CSS 内联到 Markdown 生成的 HTML 中，产出微信公众号兼容的富文本。
@@ -39,9 +41,18 @@ export function preloadJuice(): void {
  * 构建公众号可粘贴的 HTML 富文本
  * @param markdownHtml marked 渲染后的标准 HTML 片段（不含 #nice 容器）
  * @param themeCss 主题 CSS 字符串（使用 #nice 选择器）
+ * @param themeId 可选；草案主题会注入微信兼容 DOM 装饰
  */
-export async function buildWechatHtml(markdownHtml: string, themeCss: string): Promise<string> {
-  const processedHtml = postProcessForWechat(markdownHtml);
+export async function buildWechatHtml(
+  markdownHtml: string,
+  themeCss: string,
+  themeId?: string,
+): Promise<string> {
+  let processedHtml = postProcessForWechat(markdownHtml);
+  const decor = themeId ? DRAFT_WECHAT_DECOR[themeId] : undefined;
+  if (decor) {
+    processedHtml = applyDraftWechatDecor(processedHtml, decor);
+  }
   const mergedCss = WECHAT_BASE_CSS + '\n' + themeCss;
 
   let result: string;

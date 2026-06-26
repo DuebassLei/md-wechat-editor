@@ -19,7 +19,6 @@ export {
   getThemeName,
   getThemeSwatch,
   groupThemeOptions,
-  themeGroupSummary,
   type ThemeId,
   type ThemeGroup,
 } from '@/types/theme'
