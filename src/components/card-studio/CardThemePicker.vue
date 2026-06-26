@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { CARD_THEMES } from '@/engine/card-studio/cardThemes/registry'
 import type { CardThemeGroup, CardThemeId } from '@/engine/card-studio/cardThemes/types'
 
 const model = defineModel<CardThemeId>({ required: true })
 
+const search = ref('')
+
 const groups: { key: CardThemeGroup; label: string }[] = [
   { key: 'xhs', label: '小红书 Canva' },
+  { key: 'culture', label: '公众号 · 文化' },
+  { key: 'scrapbook', label: '公众号 · 手账' },
+  { key: 'modern', label: '公众号 · 现代' },
+  { key: 'formal', label: '公众号 · 正式' },
+  { key: 'cute', label: '公众号 · 可爱' },
   { key: 'light', label: '浅色' },
   { key: 'gradient', label: '渐变' },
   { key: 'morandi', label: '莫兰迪' },
@@ -14,11 +21,40 @@ const groups: { key: CardThemeGroup; label: string }[] = [
   { key: 'dark', label: '深色' },
 ]
 
+const themeCount = computed(() => CARD_THEMES.length)
+const wechatDraftCount = computed(() => CARD_THEMES.filter((t) => t.group === 'culture' || t.group === 'scrapbook' || t.group === 'modern' || t.group === 'formal' || t.group === 'cute').length)
+const xhsCount = computed(() => CARD_THEMES.filter((t) => t.group === 'xhs').length)
+
+const filteredThemes = computed(() => {
+  const q = search.value.trim().toLowerCase()
+  if (!q) return CARD_THEMES
+  return CARD_THEMES.filter((t) => {
+    const groupLabel = groups.find((g) => g.key === t.group)?.label ?? ''
+    return (
+      t.label.toLowerCase().includes(q)
+      || t.id.toLowerCase().includes(q)
+      || t.desc.toLowerCase().includes(q)
+      || t.group.toLowerCase().includes(q)
+      || groupLabel.toLowerCase().includes(q)
+    )
+  })
+})
+
+const filteredCount = computed(() => filteredThemes.value.length)
+
+const metaText = computed(() => {
+  const q = search.value.trim()
+  if (!q) {
+    return `${themeCount.value} 套 · 含 ${wechatDraftCount.value} 套公众号同源 · ${xhsCount.value} 套 Canva 小红书`
+  }
+  return `匹配 ${filteredCount.value} / ${themeCount.value} 套 · ${grouped.value.length} 个分类`
+})
+
 const grouped = computed(() =>
   groups
     .map((g) => ({
       ...g,
-      themes: CARD_THEMES.filter((t) => t.group === g.key),
+      themes: filteredThemes.value.filter((t) => t.group === g.key),
     }))
     .filter((g) => g.themes.length > 0),
 )
@@ -56,6 +92,9 @@ function barClass(theme: (typeof CARD_THEMES)[0]) {
 
 function coverHint(theme: (typeof CARD_THEMES)[0]) {
   if (theme.group === 'xhs') return 'Canva 精选'
+  if (['culture', 'scrapbook', 'modern', 'formal', 'cute'].includes(theme.group)) {
+    return '公众号同源'
+  }
   const layout = theme.style.coverLayout ?? 'classic'
   const labels: Record<string, string> = {
     classic: '经典',
@@ -75,7 +114,14 @@ function coverHint(theme: (typeof CARD_THEMES)[0]) {
   <div class="card-theme-picker flex min-h-0 flex-col">
     <div class="card-theme-picker__head px-4 pt-4 pb-2">
       <h2 class="text-sm font-semibold text-ink">主题商店</h2>
-      <p class="mt-0.5 text-[11px] leading-snug text-ink-faint">30 套 · 含 16 套 Canva 小红书精选主题</p>
+      <p class="mt-0.5 text-[11px] leading-snug text-ink-faint">{{ metaText }}</p>
+      <input
+        v-model="search"
+        class="input mt-2 w-full"
+        type="search"
+        placeholder="搜索主题名、分组…"
+        aria-label="搜索卡片主题"
+      >
     </div>
     <div class="min-h-0 flex-1 space-y-5 overflow-y-auto px-3 pb-4">
       <section v-for="g in grouped" :key="g.key">
@@ -112,6 +158,9 @@ function coverHint(theme: (typeof CARD_THEMES)[0]) {
           </button>
         </div>
       </section>
+      <p v-if="grouped.length === 0" class="py-8 text-center text-sm text-ink-faint">
+        没有匹配的主题
+      </p>
     </div>
   </div>
 </template>
@@ -179,6 +228,13 @@ function coverHint(theme: (typeof CARD_THEMES)[0]) {
 }
 
 /* 缩略图纹理预览 */
+.card-theme-picker__preview--fine-grid {
+  background-image: linear-gradient(rgb(0 0 0 / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(0 0 0 / 0.04) 1px, transparent 1px);
+  background-size: 8px 8px;
+  background-color: var(--pv-bg);
+}
+
 .card-theme-picker__preview--dot-grid {
   background-image: radial-gradient(circle, color-mix(in srgb, var(--pv-accent) 25%, transparent) 0.6px, transparent 0.6px);
   background-size: 8px 8px;

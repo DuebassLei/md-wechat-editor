@@ -9,20 +9,24 @@ import { CARD_STUDIO_SAMPLE } from '../src/engine/card-studio/sampleMarkdown.ts'
 import { CARD_STUDIO_TEMPLATES, getCardStudioTemplate } from '../src/engine/card-studio/cardStudioTemplates.ts'
 import { renderCardMarkdown } from '../src/engine/card-studio/renderCardMarkdown.ts'
 import { XHS_CANVA_THEMES } from '../src/engine/card-studio/cardThemes/presets/xhs-canva.ts'
+import { WECHAT_DRAFT_CARD_THEMES } from '../src/engine/card-studio/cardThemes/presets/wechat-drafts.ts'
 
 const checks = []
 
-checks.push(['theme count', CARD_THEMES.length === 30])
-checks.push(['theme ids unique', new Set(CARD_THEME_IDS).size === 30])
+checks.push(['theme count', CARD_THEMES.length === 45])
+checks.push(['theme ids unique', new Set(CARD_THEME_IDS).size === 45])
 checks.push(['get minimal-light', getCardTheme('minimal-light').label === '清爽知识'])
 checks.push([
   'groups valid',
   CARD_THEMES.every((t) =>
-    ['light', 'dark', 'gradient', 'morandi', 'magazine', 'xhs'].includes(t.group),
+    ['light', 'dark', 'gradient', 'morandi', 'magazine', 'xhs', 'culture', 'scrapbook', 'modern', 'formal', 'cute'].includes(t.group),
   ),
 ])
-checks.push(['xhs canva count', CARD_THEMES.filter((t) => t.group === 'xhs').length === 16])
-checks.push(['xhs presets match', XHS_CANVA_THEMES.length === 16])
+checks.push(['xhs canva count', CARD_THEMES.filter((t) => t.group === 'xhs').length === 12])
+checks.push(['xhs presets match', XHS_CANVA_THEMES.length === 12])
+checks.push(['wechat draft count', WECHAT_DRAFT_CARD_THEMES.length === 19])
+checks.push(['get cute milk tea', getCardTheme('cuteMilkTea').label === '奶茶波波'])
+checks.push(['get deep letter dark', getCardTheme('deepLetter').tokens.exportBg === '#0F172A'])
 checks.push(['morandi count', CARD_THEMES.filter((t) => t.group === 'morandi').length === 3])
 checks.push(['magazine count', CARD_THEMES.filter((t) => t.group === 'magazine').length === 3])
 checks.push(['all have style flags', CARD_THEMES.every((t) => t.style && t.tokens.exportBg)])

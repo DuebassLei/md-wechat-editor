@@ -2,10 +2,15 @@ import { FONT_STACK } from '@/engine/card-export/constants'
 import type { CardExportTheme } from '@/engine/card-export/types'
 import { hexAlpha, patternRules } from './cardThemePatterns'
 import { getCardTheme } from './cardThemes/registry'
-import type { CardBlockquoteStyle, CardH1Style, CardH2Style, CardThemeId } from './cardThemes/types'
+import type { CardBlockquoteStyle, CardH1Style, CardH2Style, CardThemeId, CardThemeStyleFlags } from './cardThemes/types'
 
-function blockquoteRules(style: CardBlockquoteStyle, t: ReturnType<typeof getCardTheme>['tokens']): string {
+function blockquoteRules(
+  style: CardBlockquoteStyle,
+  t: ReturnType<typeof getCardTheme>['tokens'],
+  bqShadowOffset?: number,
+): string {
   const bqBg = t.blockquoteBg ?? t.accentWeak
+  const shadow = bqShadowOffset ? `box-shadow:${bqShadowOffset}px ${bqShadowOffset}px 0 ${t.hr};` : ''
   switch (style) {
     case 'bracket':
       return `
@@ -22,7 +27,7 @@ function blockquoteRules(style: CardBlockquoteStyle, t: ReturnType<typeof getCar
 `
     case 'rounded':
       return `
-.card-reading blockquote{display:block;margin:14px 0;padding:12px 16px;border:1.5px solid ${t.hr};border-left:4px solid ${t.accent};background:${bqBg};color:${t.inkSoft};border-radius:12px;}
+.card-reading blockquote{display:block;margin:14px 0;padding:12px 16px;border:1.5px solid ${t.hr};border-left:4px solid ${t.accent};background:${bqBg};color:${t.inkSoft};border-radius:12px;${shadow}}
 .card-reading blockquote p{margin:0;padding:4px 0;color:${t.inkSoft};}
 `
     case 'literary':
@@ -42,6 +47,7 @@ function h1Rules(
   h1Style: CardH1Style,
   t: ReturnType<typeof getCardTheme>['tokens'],
   headingFont: string,
+  s?: CardThemeStyleFlags,
 ): string {
   const base = `
 .card-reading h1{font-family:${headingFont};margin:4px 0 18px;font-size:24px;line-height:1.35;font-weight:700;color:${t.ink};letter-spacing:.2px;}
@@ -59,6 +65,17 @@ function h1Rules(
 `
   }
   if (h1Style === 'highlight-marker') {
+    const rotate = s?.h1Rotate ? `transform:rotate(${s.h1Rotate}deg);` : ''
+    if (s && (s.h1Rotate || s.bqShadowOffset)) {
+      const color1 = hexAlpha(t.accent, 0.35)
+      const color2 = t.hr
+      const shadow = `box-shadow:${s.bqShadowOffset ?? 2}px ${(s.bqShadowOffset ?? 2) + 1}px 0 ${hexAlpha(t.hr, 0.6)};`
+      return `${base}
+.card-reading h1{font-size:22px;font-weight:900;margin:8px 0 14px;}
+.card-reading h1 .content{display:inline-block;padding:0.35em 1.2em;background:linear-gradient(135deg,${color1} 0%,${color1} 48%,transparent 48%,transparent 52%,${color2} 52%,${color2} 100%);border-radius:4px;${shadow}${rotate}}
+`
+    }
+    // 默认荧光笔效果
     return `${base}
 .card-reading h1{font-size:22px;font-weight:900;margin:8px 0 14px;}
 .card-reading h1 .content{display:inline;background:linear-gradient(transparent 55%,${hexAlpha('#ffe566', 0.85)} 55%);padding:0 4px;}
@@ -85,8 +102,15 @@ function h2Rules(
 `
   }
   if (h2Style === 'pill') {
+    const softerAccent = hexAlpha(t.accent, 0.25)
     return `
-.card-reading h2{font-family:${headingFont};margin:16px 0 10px;font-size:14px;line-height:1.4;font-weight:700;color:${t.ink};display:inline-block;padding:4px 12px;border-radius:999px;background:${t.accentWeak};border-left:none;padding-left:12px;}
+.card-reading h2{font-family:${headingFont};margin:16px 0 10px;font-size:14px;line-height:1.4;font-weight:700;color:${t.ink};display:inline-block;padding:4px 12px;border-radius:999px;background:${softerAccent};border-left:none;padding-left:12px;}
+`
+  }
+  if (h2Style === 'pill-solid') {
+    const darkerAccent = hexAlpha(t.accent, 0.6)
+    return `
+.card-reading h2{font-family:${headingFont};margin:16px 0 10px;font-size:14px;line-height:1.4;font-weight:700;color:#fff;display:inline-block;padding:5px 14px;border-radius:999px;background:linear-gradient(135deg,${t.accent} 0%,${hexAlpha(t.accent, 0.55)} 100%);border-left:none;padding-left:14px;box-shadow:0 4px 0 ${darkerAccent},0 5px 14px ${hexAlpha(darkerAccent, 0.25)};}
 `
   }
   if (h2Style === 'step-tag') {
@@ -115,6 +139,89 @@ function h2Rules(
 `
 }
 
+function h3Rules(s: CardThemeStyleFlags, t: ReturnType<typeof getCardTheme>['tokens'], headingFont: string): string {
+  const showDecor = s.showHeadingDecor
+  const h3Style = s.h3Style ?? 'none'
+  let prefixCss = ''
+  if (showDecor && h3Style === 'emoji') {
+    prefixCss = `
+.card-reading h3 .prefix{display:inline;margin-right:4px;}
+.card-reading h3 .suffix{display:none;}
+`
+  } else if (showDecor && h3Style === 'symbol') {
+    prefixCss = `
+.card-reading h3 .prefix{display:inline;margin-right:4px;color:${t.accent};}
+.card-reading h3 .suffix{display:none;}
+`
+  }
+  return `
+.card-reading h3{font-family:${headingFont};margin:16px 0 8px;font-size:17px;font-weight:700;color:${t.ink};line-height:1.45;}
+${prefixCss}`
+}
+
+function hrRules(hrStyle: string, t: ReturnType<typeof getCardTheme>['tokens']): string {
+  switch (hrStyle) {
+    case 'stripes': {
+      const color1 = hexAlpha(t.accent, 0.35)
+      const color2 = t.hr
+      return `
+.card-reading hr{border:none;height:12px;margin:18px 0;background:repeating-linear-gradient(90deg,${color1} 0,${color1} 8px,transparent 8px,transparent 12px,${color2} 12px,${color2} 20px,transparent 20px,transparent 24px);opacity:0.7;}
+`
+    }
+    case 'text':
+      return `
+.card-reading hr{border:none;text-align:center;height:auto;margin:18px 0;background:none;}
+.card-reading hr::before{content:"· · · ✿ · · ·";color:${t.hr};font-size:14px;letter-spacing:0.3em;}
+`
+    case 'dots':
+      return `
+.card-reading hr{border:none;text-align:center;height:auto;margin:18px 0;background:none;}
+.card-reading hr::before{content:"· · · ✦ · · ·";color:${t.hr};font-size:14px;letter-spacing:0.25em;}
+`
+    default:
+      return `
+.card-reading hr{border:none;border-top:1px solid ${t.hr};margin:18px 0;}
+`
+  }
+}
+
+function strongRules(strongStyle: string, t: ReturnType<typeof getCardTheme>['tokens']): string {
+  if (strongStyle === 'highlight') {
+    return `
+.card-reading strong,.card-reading b{font-weight:700;color:${t.ink};background:${hexAlpha(t.accent, 0.25)};padding:0 4px;border-radius:4px;}
+`
+  }
+  return `
+.card-reading strong,.card-reading b{font-weight:700;color:${t.ink};}
+`
+}
+
+function linkRules(linkUnderline: string, t: ReturnType<typeof getCardTheme>['tokens']): string {
+  const linkUnderlineColor = hexAlpha(t.link, 0.4)
+  if (linkUnderline === 'wavy') {
+    return `
+.card-reading a{color:${t.link};text-decoration:underline wavy ${t.accent};text-underline-offset:2px;font-weight:600;border-bottom:none;}
+`
+  }
+  return `
+.card-reading a{color:${t.link};text-decoration:none;border-bottom:1px solid ${linkUnderlineColor};font-weight:600;}
+`
+}
+
+function ulRules(liMarker: string | undefined, t: ReturnType<typeof getCardTheme>['tokens']): string {
+  if (liMarker) {
+    return `
+.card-reading ul{margin:8px 0 12px;padding-left:1.2em;list-style:none;}
+.card-reading ul li::marker{content:"${liMarker}";}
+.card-reading ul ul{list-style-type:circle;}
+`
+  }
+  return `
+.card-reading ul{margin:8px 0 12px;padding-left:1.2em;list-style:disc;}
+.card-reading ul ul{list-style-type:circle;}
+`
+}
+
 export function buildCardThemeStyleBlock(themeId: CardThemeId): string {
   const theme = getCardTheme(themeId)
   const { tokens: t, style: s } = theme
@@ -128,8 +235,23 @@ export function buildCardThemeStyleBlock(themeId: CardThemeId): string {
   const bqStyle = s.blockquoteStyle ?? 'bar'
   const pattern = s.bgPattern ?? 'none'
   const isXhs = Boolean(s.shellLayout)
-  const linkUnderline = hexAlpha(t.link, 0.4)
+  const linkUnderlineColor = hexAlpha(t.link, 0.4)
   const readingBg = isXhs || pattern !== 'none' ? 'transparent' : t.contentBg
+  const showHeadingDecor = s.showHeadingDecor ?? false
+
+  // 新增 style flags 默认值
+  const hrStyleFlag = s.hrStyle ?? 'line'
+  const strongStyleFlag = s.strongStyle ?? 'default'
+  const linkUnderlineFlag = s.linkUnderline ?? 'solid'
+  const bqShadowOffset = s.bqShadowOffset
+  const tableRadius = s.tableRadius ?? 0
+  const preStyle = s.preStyle ?? 'default'
+
+  // 条件：h3 的 prefix/suffix 不再被隐藏
+  const headingDecorHide = showHeadingDecor
+    ? ''
+    : `.card-reading h1 .prefix,.card-reading h2 .prefix,.card-reading h3 .prefix,.card-reading h4 .prefix,.card-reading h5 .prefix,.card-reading h6 .prefix,
+.card-reading h1 .suffix,.card-reading h2 .suffix,.card-reading h3 .suffix,.card-reading h4 .suffix,.card-reading h5 .suffix,.card-reading h6 .suffix{display:none;}`
 
   const olRules = s.olAccentNumbers
     ? `
@@ -142,41 +264,65 @@ export function buildCardThemeStyleBlock(themeId: CardThemeId): string {
 .card-reading ol li::marker{color:${t.inkSoft};}
 `
 
+  // 表格圆角
+  const tableCss = tableRadius > 0
+    ? `
+.card-reading table{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;font-size:15px;border-radius:${tableRadius}px;overflow:hidden;border:1.5px solid ${t.hr};}
+.card-reading table th,.card-reading table td{border:none;padding:8px 10px;text-align:left;}
+.card-reading table th{font-weight:600;background:${t.tableHeadBg};}
+.card-reading table td{border-top:1px solid ${t.hr};background:#fff;}
+.card-reading table tr:first-child th:first-child{border-top-left-radius:${tableRadius}px;}
+.card-reading table tr:first-child th:last-child{border-top-right-radius:${tableRadius}px;}
+.card-reading table tr:last-child td:first-child{border-bottom-left-radius:${tableRadius}px;}
+.card-reading table tr:last-child td:last-child{border-bottom-right-radius:${tableRadius}px;}
+`
+    : `
+.card-reading table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;}
+.card-reading table th,.card-reading table td{border:1px solid ${t.tableBorder};padding:8px 10px;text-align:left;}
+.card-reading table th{font-weight:600;background:${t.tableHeadBg};border-bottom:2px solid ${t.tableBorder};}
+`
+
+  // 代码块样式
+  const preCss = preStyle === 'card'
+    ? `
+.card-reading pre{margin:12px 0;padding:14px 16px;background:#fff;border:1.5px solid ${t.hr};border-radius:12px;overflow-x:auto;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;box-shadow:3px 3px 0 ${t.hr};${codeBorder}}
+.card-reading pre code{display:block;font-size:13px;line-height:1.6;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:${t.ink};background:transparent;border:0;padding:0;white-space:pre-wrap;word-break:break-all;overflow-wrap:anywhere;}
+`
+    : `
+.card-reading pre{margin:12px 0;padding:14px 16px;background:${t.preBg};border-radius:10px;overflow-x:auto;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;${codeBorder}}
+.card-reading pre code{display:block;font-size:13px;line-height:1.6;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:${t.ink};background:transparent;border:0;padding:0;white-space:pre-wrap;word-break:break-all;overflow-wrap:anywhere;}
+`
+
   const css = `
 .card-reading{box-sizing:border-box;font-family:${bodyFont};font-size:15px;line-height:1.75;color:${t.ink};word-break:break-word;background:${readingBg};letter-spacing:.02em;}
 .card-reading p{margin:10px 0;color:${t.ink};}
 .card-reading p+p{margin-top:10px;}
-${h1Rules(h1Style, t, headingFont)}
+${h1Rules(h1Style, t, headingFont, s)}
 .card-reading h3,.card-reading h4,.card-reading h5,.card-reading h6{font-family:${headingFont};margin:16px 0 8px;font-weight:700;color:${t.ink};line-height:1.45;}
-.card-reading h3{font-size:17px;}
 .card-reading h4{font-size:16px;}
 .card-reading h5,.card-reading h6{font-size:15px;}
 ${h2Rules(h2Style, t, headingFont)}
-.card-reading h1 .prefix,.card-reading h2 .prefix,.card-reading h3 .prefix,.card-reading h4 .prefix,.card-reading h5 .prefix,.card-reading h6 .prefix,
-.card-reading h1 .suffix,.card-reading h2 .suffix,.card-reading h3 .suffix,.card-reading h4 .suffix,.card-reading h5 .suffix,.card-reading h6 .suffix{display:none;}
+${headingDecorHide}
+${h3Rules(s, t, headingFont)}
 .card-reading h1 .content,.card-reading h2 .content,.card-reading h3 .content,.card-reading h4 .content{display:inline;}
-.card-reading ul{margin:8px 0 12px;padding-left:1.2em;list-style:disc;}
-.card-reading ul ul{list-style-type:circle;}
+${ulRules(s.liMarker, t)}
 ${olRules}
 .card-reading li{margin:4px 0;}
 .card-reading li section{margin:0;line-height:1.75;color:${t.ink};}
-${blockquoteRules(bqStyle, t)}
-.card-reading a{color:${t.link};text-decoration:none;border-bottom:1px solid ${linkUnderline};font-weight:600;}
-.card-reading strong,.card-reading b{font-weight:700;color:${t.ink};}
+${blockquoteRules(bqStyle, t, bqShadowOffset)}
+${linkRules(linkUnderlineFlag, t)}
+${strongRules(strongStyleFlag, t)}
 .card-reading em,.card-reading i{font-style:italic;color:${t.inkSoft};}
 .card-reading del{text-decoration:line-through;color:${t.inkSoft};}
 .card-reading mark{background:${hexAlpha(t.accent, 0.22)};color:${t.ink};padding:0 .2em;border-radius:3px;}
 .card-reading .katex{font-size:1.05em;}
 .card-reading .katex-display{margin:12px 0;overflow-x:auto;}
 .card-reading p[style],.card-reading font{line-height:inherit;}
-.card-reading hr{border:none;border-top:1px solid ${t.hr};margin:18px 0;}
-.card-reading pre{margin:12px 0;padding:14px 16px;background:${t.preBg};border-radius:10px;overflow-x:auto;overflow-wrap:break-word;max-width:100%;box-sizing:border-box;${codeBorder}}
-.card-reading pre code{display:block;font-size:13px;line-height:1.6;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:${t.ink};background:transparent;border:0;padding:0;white-space:pre-wrap;word-break:break-all;overflow-wrap:anywhere;}
+${hrRules(hrStyleFlag, t)}
+${preCss}
 .card-reading p code,.card-reading li code{font-size:85%;padding:.12em .38em;border-radius:6px;background:${t.codeBg};color:${t.link};font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-all;${codeBorder}}
 .card-reading img{display:block;max-width:100%;height:auto;margin:12px auto;border-radius:10px;border:1px solid ${t.tableBorder};}
-.card-reading table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;}
-.card-reading table th,.card-reading table td{border:1px solid ${t.tableBorder};padding:8px 10px;text-align:left;}
-.card-reading table th{font-weight:600;background:${t.tableHeadBg};border-bottom:2px solid ${t.tableBorder};}
+${tableCss}
 .card-reading input[type="checkbox"]{margin-right:6px;accent-color:${t.accent};width:14px;height:14px;}
 ${isXhs ? '' : `.card-studio-shell{box-sizing:border-box;background:${t.contentBg};position:relative;overflow:hidden;}
 .card-studio-shell > .card-reading,.card-studio-shell > .card-studio-header{position:relative;z-index:1;}

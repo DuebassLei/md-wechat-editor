@@ -30,4 +30,8 @@ export const CARD_THEME_RECOMMENDATIONS: { scene: string; md2card: string; theme
   { scene: '古诗 / 文艺', md2card: '诗意朦胧', themeId: 'xhs-poetic-mist' },
   { scene: '清爽知识', md2card: '苹果备忘录', themeId: 'minimal-light' },
   { scene: '暖色纸张', md2card: '温暖柔和', themeId: 'warm-paper' },
+  { scene: '公众号同款 · 可爱', md2card: '奶茶波波', themeId: 'cuteMilkTea' },
+  { scene: '公众号同款 · 手账', md2card: '薄荷手帐', themeId: 'mintScrapbook' },
+  { scene: '公众号同款 · 正式', md2card: '藏青纪事', themeId: 'formalNavy' },
+  { scene: '公众号同款 · 文化', md2card: '朱砂印谱', themeId: 'zhuYinSeal' },
 ]

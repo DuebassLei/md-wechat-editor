@@ -14,11 +14,13 @@ import { magazineMinimal } from './presets/magazine-minimal'
 import { magazineSerif } from './presets/magazine-serif'
 import { quoteGold } from './presets/quote-gold'
 import { XHS_CANVA_THEMES } from './presets/xhs-canva'
+import { WECHAT_DRAFT_CARD_THEMES } from './presets/wechat-drafts'
 
 export type { CardThemeDef, CardThemeId, CardThemeGroup, CardThemeTokens, CardHeaderDecor } from './types'
 
 export const CARD_THEMES: CardThemeDef[] = [
   ...XHS_CANVA_THEMES,
+  ...WECHAT_DRAFT_CARD_THEMES,
   minimalLight,
   oceanBlue,
   forestGreen,

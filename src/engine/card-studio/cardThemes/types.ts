@@ -1,4 +1,15 @@
-export type CardThemeGroup = 'light' | 'dark' | 'gradient' | 'morandi' | 'magazine' | 'xhs'
+export type CardThemeGroup =
+  | 'light'
+  | 'dark'
+  | 'gradient'
+  | 'morandi'
+  | 'magazine'
+  | 'xhs'
+  | 'culture'
+  | 'scrapbook'
+  | 'modern'
+  | 'formal'
+  | 'cute'
 
 export type CardThemeId =
   | 'minimal-light'
@@ -31,12 +42,32 @@ export type CardThemeId =
   | 'xhs-poetic-mist'
   | 'xhs-solar-science'
   | 'xhs-spring-art'
+  | 'zhuYinSeal'
+  | 'deepLetter'
+  | 'mintScrapbook'
+  | 'peachScrapbook'
+  | 'lavenderScrapbook'
+  | 'skyScrapbook'
+  | 'softRound'
+  | 'freshBreeze'
+  | 'formalGraphite'
+  | 'formalNavy'
+  | 'formalEditorial'
+  | 'cuteBubble'
+  | 'cuteMilkTea'
+  | 'cuteStarDream'
+  | 'cuteLemonFizz'
+  | 'cuteMatchaCloud'
+  | 'cuteBlueberryJelly'
+  | 'cuteShuitunLulu'
+  | 'techGrid'
 
 export type CardH1Style = 'default' | 'center-line' | 'accent-bar' | 'highlight-marker' | 'serif-elegant'
 export type CardH2Style =
   | 'border-left'
   | 'accent-underline'
   | 'pill'
+  | 'pill-solid'
   | 'step-tag'
   | 'numbered-box'
   | 'bracket-square'
@@ -106,6 +137,27 @@ export interface CardThemeStyleFlags {
   blockquoteStyle?: CardBlockquoteStyle
   /** Canva 小红书结构化壳层；设置后启用 cardXhsChrome */
   shellLayout?: CardXhsShellLayout
+
+  /** h3 装饰样式 */
+  h3Style?: 'none' | 'emoji' | 'symbol'
+  /** 分割线样式 */
+  hrStyle?: 'line' | 'stripes' | 'dots' | 'text'
+  /** strong 样式 */
+  strongStyle?: 'default' | 'highlight'
+  /** 链接下划线样式 */
+  linkUnderline?: 'solid' | 'wavy'
+  /** 列表 marker 自定义内容，如 '🍡 ' */
+  liMarker?: string
+  /** blockquote 偏移阴影偏移量（px），默认 0 */
+  bqShadowOffset?: number
+  /** h1 旋转角度（deg），默认 0 */
+  h1Rotate?: number
+  /** 代码块样式 */
+  preStyle?: 'default' | 'card'
+  /** 表格圆角半径（px），默认 0 */
+  tableRadius?: number
+  /** 是否显示 h1/h3 的 prefix/suffix 装饰 */
+  showHeadingDecor?: boolean
 }
 
 export interface CardThemeTokens {
