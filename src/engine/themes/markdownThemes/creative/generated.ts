@@ -9,8 +9,6 @@ import comicPanel from './comicPanel'
 import crayonDiary from './crayonDiary'
 import cuteBunnyCloud from './cuteBunnyCloud'
 import cuteSakura from './cuteSakura'
-import cuteStarMoon from './cuteStarMoon'
-import cuteCatPaw from './cuteCatPaw'
 
 export const CREATIVE_THEME_DEFINITIONS = [
   {
@@ -90,20 +88,6 @@ export const CREATIVE_THEME_DEFINITIONS = [
     primary: '#E8879B',
     series: '可爱系列' as const,
   },
-  {
-    id: 'cuteStarMoon',
-    name: '星月童话',
-    description: '薰衣草星月 + 标题角标，适合晚安、梦境、轻小说风',
-    primary: '#8B7FD8',
-    series: '可爱系列' as const,
-  },
-  {
-    id: 'cuteCatPaw',
-    name: '猫爪日常',
-    description: '暖杏猫爪 + 标题角标，适合宠物、宅家、美食日记',
-    primary: '#E8987A',
-    series: '可爱系列' as const,
-  },
 ] as const
 
 export const CREATIVE_THEMES: Record<string, string> = {
@@ -118,8 +102,6 @@ export const CREATIVE_THEMES: Record<string, string> = {
   crayonDiary,
   cuteBunnyCloud,
   cuteSakura,
-  cuteStarMoon,
-  cuteCatPaw,
 }
 
 export type CreativeThemeId = (typeof CREATIVE_THEME_DEFINITIONS)[number]['id']

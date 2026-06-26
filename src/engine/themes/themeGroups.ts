@@ -1,6 +1,10 @@
 /** 分组展示顺序（靠前优先） */
 export const THEME_GROUP_ORDER = [
   '基础常用',
+  '文化系列',
+  '手账系列',
+  '现代系列',
+  '正式系列',
   '可爱系列',
   '卡通系列',
   '创意系列',
@@ -65,10 +69,4 @@ export function groupThemeOptions<T extends ThemeGroupable>(
   }
 
   return ordered
-}
-
-/** 分组摘要（用于统计文案） */
-export function themeGroupSummary(themes: readonly ThemeGroupable[]): string {
-  const groups = groupThemeOptions(themes)
-  return groups.map((g) => `${g.label} ${g.themes.length}`).join(' · ')
 }

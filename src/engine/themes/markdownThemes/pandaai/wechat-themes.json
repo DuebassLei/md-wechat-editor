@@ -2,7 +2,7 @@
   "meta": {
     "source": "pandaai v0.32.1",
     "file": "assets/sidebar-BnpcxXUQ.js",
-    "totalThemes": 20,
+    "totalThemes": 11,
     "note": "除 midnight 外均为 #FFFFFF 白底；样式通过 juice 内联注入"
   },
   "fontStacks": {
@@ -55,81 +55,6 @@
       "blockquote": "border-left",
       "strong": "bold"
     },
-    "finance": {
-      "id": "finance",
-      "name": "财经 · 金质权威",
-      "description": "金色 + 深蓝主导，表格友好，数字优先，适合商业分析、投资观察、财报解读",
-      "primary": "#C9A961",
-      "secondary": "#1A2540",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "body": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 26,
-        "h2": 21,
-        "h3": 18,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.75,
-        "letterSpacing": 0.04
-      },
-      "blockquote": "side-block",
-      "strong": "bold"
-    },
-    "story": {
-      "id": "story",
-      "name": "故事 · 暖意叙事",
-      "description": "木褐主色 + 橙暖副色，宋体 + 首字下沉，适合人物专访、情感散文、读书札记",
-      "primary": "#7B5E3F",
-      "secondary": "#C97D4D",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'Songti SC', 'STSong', 'Source Han Serif SC', 'PingFang SC', -apple-system, BlinkMacSystemFont, serif",
-        "body": "'Songti SC', 'STSong', 'Source Han Serif SC', 'PingFang SC', -apple-system, BlinkMacSystemFont, serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 28,
-        "h2": 22,
-        "h3": 19,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.85,
-        "letterSpacing": 0.05
-      },
-      "blockquote": "italic-card",
-      "strong": "highlight"
-    },
-    "edu": {
-      "id": "edu",
-      "name": "教育 · 学院系统",
-      "description": "蓝橙搭配，步骤式编号 + 重点框，适合知识科普、技能教程、方法论拆解",
-      "primary": "#3B82F6",
-      "secondary": "#FB923C",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "body": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 26,
-        "h2": 21,
-        "h3": 18,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.8,
-        "letterSpacing": 0.04
-      },
-      "blockquote": "side-block",
-      "strong": "highlight"
-    },
     "life": {
       "id": "life",
       "name": "生活 · 薄荷樱花",
@@ -180,31 +105,6 @@
       "blockquote": "italic-card",
       "strong": "bold"
     },
-    "academic": {
-      "id": "academic",
-      "name": "学术 · 严谨论述",
-      "description": "深灰 + 暗红，宋体衬线，引用规范，适合论文评论、政策解读、历史考据",
-      "primary": "#1F2937",
-      "secondary": "#B91C1C",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'Songti SC', 'STSong', 'Source Han Serif SC', 'PingFang SC', -apple-system, BlinkMacSystemFont, serif",
-        "body": "'Songti SC', 'STSong', 'Source Han Serif SC', 'PingFang SC', -apple-system, BlinkMacSystemFont, serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 26,
-        "h2": 21,
-        "h3": 18,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.8,
-        "letterSpacing": 0.04
-      },
-      "blockquote": "border-left",
-      "strong": "underline"
-    },
     "literary": {
       "id": "literary",
       "name": "文艺 · 棕红书卷",
@@ -254,81 +154,6 @@
       },
       "blockquote": "side-block",
       "strong": "bold"
-    },
-    "workplace": {
-      "id": "workplace",
-      "name": "职场 · 干货成长",
-      "description": "紫色主导 + 步骤编号 + 重点框，适合职场技能、效率工具、个人成长",
-      "primary": "#6B46C1",
-      "secondary": "#9F7AEA",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "body": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 26,
-        "h2": 21,
-        "h3": 18,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.8,
-        "letterSpacing": 0.04
-      },
-      "blockquote": "side-block",
-      "strong": "highlight"
-    },
-    "health": {
-      "id": "health",
-      "name": "健康 · 薄荷清新",
-      "description": "青绿主色 + 翠叶副色，圆角友好，适合健康科普、心理、养生、医美",
-      "primary": "#319795",
-      "secondary": "#68D391",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "body": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 26,
-        "h2": 21,
-        "h3": 18,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.85,
-        "letterSpacing": 0.04
-      },
-      "blockquote": "italic-card",
-      "strong": "highlight"
-    },
-    "parenting": {
-      "id": "parenting",
-      "name": "育儿 · 暖橙亲子",
-      "description": "暖橙主色 + 杏橙副色，柔和圆角，适合亲子教育、母婴、家庭关系",
-      "primary": "#DD6B20",
-      "secondary": "#F6AD55",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "body": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 26,
-        "h2": 21,
-        "h3": 18,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.85,
-        "letterSpacing": 0.05
-      },
-      "blockquote": "italic-card",
-      "strong": "highlight"
     },
     "fashion": {
       "id": "fashion",
@@ -429,56 +254,6 @@
       },
       "blockquote": "border-left",
       "strong": "bold"
-    },
-    "tech-startup": {
-      "id": "tech-startup",
-      "name": "科技 · 创投独角",
-      "description": "深蓝主色 + 亮绿副色，sans 字体投资界范，适合创业观察、风险投资、独角兽报道",
-      "primary": "#0F4C81",
-      "secondary": "#00BFA5",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "body": "'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', -apple-system, BlinkMacSystemFont, sans-serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 26,
-        "h2": 21,
-        "h3": 18,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.75,
-        "letterSpacing": 0.03
-      },
-      "blockquote": "side-block",
-      "strong": "bold"
-    },
-    "culture": {
-      "id": "culture",
-      "name": "文化 · 人文笔谈",
-      "description": "茶绿主色 + 棕褐副色，宋体衬线，三联生活周刊气质，适合文化随笔、人物专访、思想评论",
-      "primary": "#2D5016",
-      "secondary": "#8B4513",
-      "background": "#FFFFFF",
-      "font": {
-        "heading": "'Songti SC', 'STSong', 'Source Han Serif SC', 'PingFang SC', -apple-system, BlinkMacSystemFont, serif",
-        "body": "'Songti SC', 'STSong', 'Source Han Serif SC', 'PingFang SC', -apple-system, BlinkMacSystemFont, serif",
-        "code": "'JetBrains Mono', 'SF Mono', Menlo, Monaco, Consolas, 'Source Han Mono SC', monospace"
-      },
-      "sizes": {
-        "h1": 28,
-        "h2": 22,
-        "h3": 19,
-        "p": 16
-      },
-      "spacing": {
-        "lineHeight": 1.88,
-        "letterSpacing": 0.05
-      },
-      "blockquote": "italic-card",
-      "strong": "highlight"
     },
     "tutorial": {
       "id": "tutorial",
