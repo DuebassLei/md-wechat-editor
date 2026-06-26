@@ -69,12 +69,20 @@ export async function resolve(specifier, context, nextResolve) {
 
 export async function load(url, context, nextLoad) {
   const href = typeof url === 'string' ? url : url.href
+  const filePath = fileURLToPath(href.split('?')[0])
   if (href.includes('katex.min.css') && href.includes('raw')) {
-    const filePath = fileURLToPath(href.split('?')[0])
     const css = fs.readFileSync(filePath, 'utf8')
     return {
       format: 'module',
       source: `export default ${JSON.stringify(css)}`,
+      shortCircuit: true,
+    }
+  }
+  if (filePath.endsWith('.json')) {
+    const json = fs.readFileSync(filePath, 'utf8')
+    return {
+      format: 'module',
+      source: `export default ${json}`,
       shortCircuit: true,
     }
   }
