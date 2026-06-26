@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { THEME_OPTIONS, getThemeName, getThemeSwatch, type ThemeId } from '@/engine'
+import {
+  THEME_OPTIONS,
+  getThemeName,
+  getThemeSwatch,
+  groupThemeOptions,
+  type ThemeId,
+} from '@/engine'
 import { useDismissible } from '@/composables/useDismissible'
 
 const model = defineModel<ThemeId>({ required: true })
@@ -15,12 +21,25 @@ const filtered = computed(() => {
   const q = search.value.trim().toLowerCase()
   if (!q) return THEME_OPTIONS
   return THEME_OPTIONS.filter(
-    (t) => t.name.toLowerCase().includes(q) || t.id.toLowerCase().includes(q),
+    (t) =>
+      t.name.toLowerCase().includes(q)
+      || t.id.toLowerCase().includes(q)
+      || (t.series?.toLowerCase().includes(q) ?? false)
+      || (t.description?.toLowerCase().includes(q) ?? false),
   )
 })
 
+const grouped = computed(() => groupThemeOptions(filtered.value))
+
+const totalCount = computed(() => THEME_OPTIONS.length)
+
 function swatchStyle(themeId: string) {
   return { backgroundColor: getThemeSwatch(themeId) }
+}
+
+function pick(id: ThemeId) {
+  model.value = id
+  open.value = false
 }
 </script>
 
@@ -42,27 +61,54 @@ function swatchStyle(themeId: string) {
       <span class="theme-trigger__label">主题：{{ getThemeName(model) }}</span>
     </button>
     <div v-if="open" class="theme-menu card">
-      <input v-model="search" class="input mb-2" type="search" placeholder="搜索主题…">
-      <ul class="theme-menu__list" role="listbox">
-        <li v-for="t in filtered" :key="t.id">
-          <button
-            type="button"
-            class="theme-menu__item"
-            :class="{ 'theme-menu__item--active': model === t.id }"
-            role="option"
-            :aria-selected="model === t.id"
-            @click="model = t.id as ThemeId; open = false"
-          >
-            <span
-              class="theme-swatch"
-              :style="swatchStyle(t.id)"
-              :title="t.name"
-              aria-hidden="true"
-            />
-            <span class="theme-menu__label">{{ t.name }}</span>
-          </button>
-        </li>
-      </ul>
+      <div class="theme-menu__head">
+        <input
+          v-model="search"
+          class="input"
+          type="search"
+          placeholder="搜索主题名、系列…"
+        >
+        <p class="theme-menu__meta">
+          共 {{ totalCount }} 套 · {{ grouped.length }} 个分类
+        </p>
+      </div>
+      <div class="theme-menu__scroll" role="listbox" :aria-label="`文章主题，共 ${totalCount} 套`">
+        <section
+          v-for="g in grouped"
+          :key="g.label"
+          class="theme-menu__group"
+        >
+          <h3 class="theme-menu__group-title">
+            {{ g.label }}
+            <span class="theme-menu__group-count">{{ g.themes.length }}</span>
+          </h3>
+          <ul class="theme-menu__list">
+            <li v-for="t in g.themes" :key="t.id">
+              <button
+                type="button"
+                class="theme-menu__item"
+                :class="{ 'theme-menu__item--active': model === t.id }"
+                role="option"
+                :aria-selected="model === t.id"
+                :title="t.description"
+                @click="pick(t.id as ThemeId)"
+              >
+                <span
+                  class="theme-swatch"
+                  :style="swatchStyle(t.id)"
+                  :title="t.name"
+                  aria-hidden="true"
+                />
+                <span class="theme-menu__label">{{ t.name }}</span>
+                <span v-if="t.isNew" class="theme-menu__badge">新</span>
+              </button>
+            </li>
+          </ul>
+        </section>
+        <p v-if="grouped.length === 0" class="theme-menu__empty">
+          没有匹配的主题
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -79,7 +125,26 @@ function swatchStyle(themeId: string) {
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.25);
 }
 .theme-menu {
-  @apply absolute right-0 top-full z-50 mt-1 max-h-64 w-64 overflow-auto bg-paper-bright p-2 shadow-card-hover;
+  @apply absolute right-0 top-full z-50 mt-1 flex w-72 flex-col bg-paper-bright p-0 shadow-card-hover;
+  max-height: min(24rem, calc(100vh - 8rem));
+}
+.theme-menu__head {
+  @apply shrink-0 space-y-1.5 border-b border-paper-line p-2;
+}
+.theme-menu__meta {
+  @apply px-0.5 text-[11px] text-ink-faint;
+}
+.theme-menu__scroll {
+  @apply min-h-0 flex-1 overflow-y-auto p-2;
+}
+.theme-menu__group + .theme-menu__group {
+  @apply mt-3;
+}
+.theme-menu__group-title {
+  @apply sticky top-0 z-[1] mb-1 flex items-center gap-1.5 bg-paper-bright/95 px-1 py-1 text-[11px] font-bold tracking-wide text-ink-faint backdrop-blur-sm;
+}
+.theme-menu__group-count {
+  @apply rounded-full bg-paper-dim px-1.5 py-px text-[10px] font-semibold text-ink-soft;
 }
 .theme-menu__list {
   @apply space-y-0.5;
@@ -92,5 +157,12 @@ function swatchStyle(themeId: string) {
 }
 .theme-menu__label {
   @apply min-w-0 flex-1 truncate;
+}
+.theme-menu__badge {
+  @apply shrink-0 rounded px-1 py-px text-[10px] font-bold leading-none text-cinnabar-dark;
+  background: rgb(220 38 38 / 0.1);
+}
+.theme-menu__empty {
+  @apply py-6 text-center text-sm text-ink-faint;
 }
 </style>

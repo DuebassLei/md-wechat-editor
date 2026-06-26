@@ -4,8 +4,11 @@ import {
   THEMES,
   getThemeTier,
   isProTheme,
+  groupThemeOptions,
+  themeGroupSummary,
   type ThemeTier,
   type ThemeOption,
+  type ThemeGroup,
 } from '@/themes/index'
 import { getThemeSwatch } from '@/utils/themeSwatch'
 
@@ -16,8 +19,11 @@ export {
   THEMES,
   getThemeTier,
   isProTheme,
+  groupThemeOptions,
+  themeGroupSummary,
   type ThemeTier,
   type ThemeOption,
+  type ThemeGroup,
 }
 
 export type ThemeId = (typeof THEME_OPTIONS)[number]['id']

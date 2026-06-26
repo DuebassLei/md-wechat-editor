@@ -18,7 +18,10 @@ export {
   normalizeThemeId,
   getThemeName,
   getThemeSwatch,
+  groupThemeOptions,
+  themeGroupSummary,
   type ThemeId,
+  type ThemeGroup,
 } from '@/types/theme'
 
 export { buildPlatformMarkdown } from '@/engine/export/platformMarkdown'

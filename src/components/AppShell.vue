@@ -27,17 +27,6 @@ defineProps<{
       <AppStudioNav class="app-header__nav" />
 
       <button
-        v-if="promo.enabled && promo.miniprogramBannerEnabled"
-        type="button"
-        class="app-header__miniprogram"
-        :aria-label="`${promo.miniprogramBannerText}，点击查看小程序码`"
-        @click="qrOpen = true"
-      >
-        <span class="app-header__miniprogram-badge" aria-hidden="true">NEW</span>
-        <span class="app-header__miniprogram-text">{{ promo.miniprogramBannerText }}</span>
-      </button>
-
-      <button
         v-if="promo.enabled"
         type="button"
         class="app-header__promo app-header__promo--link"
@@ -107,11 +96,6 @@ defineProps<{
 }
 
 .app-header--has-promo {
-  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
-  grid-template-areas: 'brand nav miniprogram promo actions';
-}
-
-.app-header--has-promo:not(:has(.app-header__miniprogram)) {
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   grid-template-areas: 'brand nav promo actions';
 }
@@ -134,13 +118,7 @@ defineProps<{
     grid-template-areas:
       'brand actions'
       'nav nav'
-      'miniprogram promo';
-  }
-
-  .app-header--has-promo:not(:has(.app-header__miniprogram)) {
-    grid-template-areas:
-      'brand actions'
-      'nav promo';
+      'promo promo';
   }
 
   .app-header__nav {
@@ -175,56 +153,7 @@ defineProps<{
   }
 }
 
-.app-header__miniprogram {
-  grid-area: miniprogram;
-  @apply shrink-0 items-center gap-2 rounded-[var(--radius-pill)] border px-3 py-1.5 text-left transition-shadow duration-200;
-  border-color: rgb(var(--jade-rgb) / 0.28);
-  background: linear-gradient(
-    135deg,
-    rgb(var(--jade-light-rgb) / 0.55) 0%,
-    rgb(var(--paper-bright-rgb) / 0.98) 100%
-  );
-  box-shadow: 0 1px 0 rgb(var(--paper-bright-rgb) / 0.85) inset;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-}
-
-@media (min-width: 1024px) {
-  .app-header__miniprogram {
-    @apply flex;
-  }
-}
-
-@media (max-width: 1023px) {
-  .app-header__miniprogram {
-    @apply hidden;
-  }
-}
-
-.app-header__miniprogram:hover {
-  border-color: rgb(var(--jade-rgb) / 0.42);
-  box-shadow: 0 0 0 2px rgb(var(--jade-rgb) / 0.12);
-}
-
-.app-header__miniprogram:focus-visible {
-  @apply outline-none ring-2 ring-jade/35 ring-offset-2 ring-offset-paper-bright;
-}
-
-.app-header__miniprogram-badge {
-  @apply rounded-[var(--radius-pill)] px-1.5 py-0.5 text-[9px] font-bold tracking-wide text-white;
-  background: linear-gradient(135deg, rgb(var(--jade-dark-rgb) / 1) 0%, rgb(var(--jade-rgb) / 1) 100%);
-}
-
-.app-header__miniprogram-text {
-  @apply whitespace-nowrap text-xs font-semibold text-jade-dark;
-}
-
 @media (max-width: 767px) {
-  .app-header__miniprogram {
-    @apply flex flex-1 justify-self-stretch;
-  }
-
   .app-header__promo {
     max-width: none;
     @apply flex-1 justify-self-stretch;

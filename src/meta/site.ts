@@ -29,19 +29,16 @@ export const WECHAT_MP_PROMO = {
   /** 默认小程序码；未设置时使用 public/miniprogram_logo.jpg */
   miniprogramQrCodeUrl:
     (import.meta.env.VITE_MINIPROGRAM_QR_URL as string | undefined)?.trim() || '',
-  /** 顶栏小程序上线提示（设 VITE_MINIPROGRAM_BANNER_ENABLED=false 可关闭） */
-  miniprogramBannerEnabled:
-    import.meta.env.VITE_MINIPROGRAM_BANNER_ENABLED !== 'false',
-  miniprogramBannerText:
-    (import.meta.env.VITE_MINIPROGRAM_BANNER_TEXT as string | undefined)?.trim() ||
-    '小程序上线啦，扫码体验',
-  /** 个人微信号；可通过 VITE_WECHAT_PERSONAL_ID 配置 */
-  personalWechatId:
-    (import.meta.env.VITE_WECHAT_PERSONAL_ID as string | undefined)?.trim() || '15121769372',
-  /** 个人微信引导文案 */
-  personalWechatHint:
-    (import.meta.env.VITE_WECHAT_PERSONAL_HINT as string | undefined)?.trim() ||
-    '欢迎加我进群交流',
+  /** 支付宝打赏二维码；未设置时使用 public/alipay-donation-qr.png */
+  alipayDonationQrUrl:
+    (import.meta.env.VITE_ALIPAY_DONATION_QR_URL as string | undefined)?.trim() || '',
+  /** 微信打赏二维码；未设置时使用 public/wechat-donation-qr.png */
+  wechatDonationQrUrl:
+    (import.meta.env.VITE_WECHAT_DONATION_QR_URL as string | undefined)?.trim() || '',
+  /** 打赏引导文案 */
+  donationHint:
+    (import.meta.env.VITE_DONATION_HINT as string | undefined)?.trim() ||
+    '感谢支持，您的打赏是我持续创作的动力',
   topics: ['Cursor', 'Vibe Coding', 'Agent', '提示词', 'MCP', '效率工具'] as const,
   benefits: [
     'AI 编程工作流拆解与工具实测',

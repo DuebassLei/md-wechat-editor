@@ -22,6 +22,14 @@ import extremeBlack from './markdownThemes/extremeBlack';
 import cupidBusy from './markdownThemes/cupidBusy';
 import aiIndigo from './markdownThemes/aiIndigo';
 import { PRO_THEME_DEFINITIONS, PRO_THEMES } from './markdownThemes/pro/generated';
+import {
+  PANDAAI_THEME_DEFINITIONS,
+  PANDAAI_THEMES,
+} from './markdownThemes/pandaai/generated';
+import {
+  CREATIVE_THEME_DEFINITIONS,
+  CREATIVE_THEMES,
+} from './markdownThemes/creative/generated';
 
 export type ThemeTier = 'basic' | 'pro';
 
@@ -82,8 +90,30 @@ const PRO_THEME_OPTIONS: ThemeOption[] = PRO_THEME_DEFINITIONS.map((t) => ({
   isNew: true,
 }));
 
+const PANDAAI_THEME_OPTIONS: ThemeOption[] = PANDAAI_THEME_DEFINITIONS.map((t) => ({
+  id: t.id,
+  name: t.name,
+  description: t.description,
+  author: 'PandaAI',
+  series: t.series,
+  tier: 'pro' as const,
+  isNew: true,
+}));
+
+const CREATIVE_THEME_OPTIONS: ThemeOption[] = CREATIVE_THEME_DEFINITIONS.map((t) => ({
+  id: t.id,
+  name: t.name,
+  description: t.description,
+  author: '墨韵简排',
+  series: t.series,
+  tier: 'pro' as const,
+  isNew: true,
+}));
+
 export const THEME_OPTIONS: ThemeOption[] = [
   ...BASE_THEME_OPTIONS.map((t) => ({ ...t, tier: tierFor(t.id) })),
+  ...CREATIVE_THEME_OPTIONS,
+  ...PANDAAI_THEME_OPTIONS,
   ...PRO_THEME_OPTIONS,
 ];
 
@@ -111,6 +141,8 @@ export const THEMES: Record<string, string> = {
   extremeBlack,
   cupidBusy,
   aiIndigo,
+  ...CREATIVE_THEMES,
+  ...PANDAAI_THEMES,
   ...PRO_THEMES,
 };
 
@@ -148,3 +180,11 @@ export function getThemeTier(themeId: string): ThemeTier {
 export function isProTheme(themeId: string): boolean {
   return getThemeTier(themeId) === 'pro';
 }
+
+export {
+  THEME_GROUP_ORDER,
+  groupThemeOptions,
+  resolveThemeGroup,
+  themeGroupSummary,
+  type ThemeGroup,
+} from './themeGroups';
